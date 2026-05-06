@@ -1,0 +1,21 @@
+[package]
+name = "automaton-engine"
+version = "0.1.0"
+edition = "2024"
+description = "DAG planner and execution engine for Automaton"
+
+[dependencies]
+automaton-core.workspace = true
+automaton-registry.workspace = true
+automaton-runtime.workspace = true
+automaton-graph.workspace = true
+petgraph.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+sha2.workspace = true
+semver.workspace = true

@@ -1,0 +1,16 @@
+[package]
+name = "automaton-graph"
+version = "0.1.0"
+edition = "2024"
+description = "Property graph store for automation design and run-time graphs"
+
+[dependencies]
+automaton-core.workspace = true
+petgraph.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rusqlite.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+tracing.workspace = true
+anyhow.workspace = true

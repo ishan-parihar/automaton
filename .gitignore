@@ -1,0 +1,15 @@
+/target
+**/*.rs.bk
+Cargo.lock
+*.so
+*.dylib
+*.dll
+.env
+.automaton/
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+*.log
+.oh-my-opencode-pi-debug/
+.oh-my-opencode-pi-workflow.json

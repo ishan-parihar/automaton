@@ -1,0 +1,17 @@
+[package]
+name = "automaton-runtime"
+version = "0.1.0"
+edition = "2024"
+description = "Local execution runtime for Automaton automation modules"
+
+[dependencies]
+automaton-core.workspace = true
+automaton-registry.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+sha2.workspace = true

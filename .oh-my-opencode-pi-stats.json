@@ -1,0 +1,365 @@
+{
+  "updatedAt": 1778095093809,
+  "categories": {
+    "delegate": {
+      "success": 4,
+      "failed": 0,
+      "totalDurationMs": 726586
+    }
+  },
+  "agents": {
+    "librarian": {
+      "success": 4,
+      "failed": 0,
+      "totalDurationMs": 726586
+    }
+  },
+  "tools": {
+    "pantheon_repo_map": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 178
+    },
+    "pantheon_github_file": {
+      "success": 36,
+      "failed": 18,
+      "totalDurationMs": 26107
+    },
+    "pantheon_fetch_docs": {
+      "success": 36,
+      "failed": 0,
+      "totalDurationMs": 9345
+    },
+    "pantheon_search": {
+      "success": 13,
+      "failed": 0,
+      "totalDurationMs": 11647
+    },
+    "pantheon_stats": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 8
+    },
+    "pantheon_background_overview": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 8
+    },
+    "pantheon_delegate": {
+      "success": 4,
+      "failed": 0,
+      "totalDurationMs": 726586
+    },
+    "pantheon_code_map": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 166
+    }
+  },
+  "adapters": {},
+  "failureKinds": {
+    "pantheon": 18
+  },
+  "background": {
+    "queued": 0,
+    "completed": 0,
+    "failed": 2,
+    "cancelled": 0
+  },
+  "recent": [
+    {
+      "kind": "tool",
+      "label": "pantheon_fetch_docs",
+      "status": "success",
+      "durationMs": 68,
+      "ts": 1778092007027
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "success",
+      "durationMs": 367,
+      "ts": 1778092007325
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 606,
+      "ts": 1778092007564,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_fetch_docs",
+      "status": "success",
+      "durationMs": 81,
+      "ts": 1778092013889
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 292,
+      "ts": 1778092014099,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 628,
+      "ts": 1778092014435,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 643,
+      "ts": 1778092020619,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 653,
+      "ts": 1778092020631,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_search",
+      "status": "success",
+      "durationMs": 978,
+      "ts": 1778092020955
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "success",
+      "durationMs": 384,
+      "ts": 1778092027934
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "success",
+      "durationMs": 394,
+      "ts": 1778092027942
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 577,
+      "ts": 1778092028126,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_search",
+      "status": "success",
+      "durationMs": 1000,
+      "ts": 1778092028552
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_delegate",
+      "status": "success",
+      "durationMs": 182151,
+      "ts": 1778092029148
+    },
+    {
+      "kind": "delegate",
+      "label": "single",
+      "status": "success",
+      "durationMs": 182151,
+      "ts": 1778092029148
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 288,
+      "ts": 1778092035138,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_search",
+      "status": "success",
+      "durationMs": 894,
+      "ts": 1778092035745
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 1395,
+      "ts": 1778092036244,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_delegate",
+      "status": "success",
+      "durationMs": 194022,
+      "ts": 1778092041019
+    },
+    {
+      "kind": "delegate",
+      "label": "single",
+      "status": "success",
+      "durationMs": 194022,
+      "ts": 1778092041019
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 596,
+      "ts": 1778092042783,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 609,
+      "ts": 1778092042795,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 620,
+      "ts": 1778092042807,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 279,
+      "ts": 1778092049543,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "success",
+      "durationMs": 393,
+      "ts": 1778092049656
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "success",
+      "durationMs": 373,
+      "ts": 1778092055665
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 567,
+      "ts": 1778092055859,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_fetch_docs",
+      "status": "success",
+      "durationMs": 117,
+      "ts": 1778092061541
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "failed",
+      "durationMs": 617,
+      "ts": 1778092062040,
+      "failureKind": "pantheon"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_github_file",
+      "status": "success",
+      "durationMs": 45,
+      "ts": 1778092067587
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_fetch_docs",
+      "status": "success",
+      "durationMs": 75,
+      "ts": 1778092067618
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_fetch_docs",
+      "status": "success",
+      "durationMs": 402,
+      "ts": 1778092067945
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_delegate",
+      "status": "success",
+      "durationMs": 323465,
+      "ts": 1778092170461
+    },
+    {
+      "kind": "delegate",
+      "label": "single",
+      "status": "success",
+      "durationMs": 323465,
+      "ts": 1778092170461
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778093669806,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778095071564,
+      "failureKind": "background"
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_repo_map",
+      "status": "success",
+      "durationMs": 166,
+      "ts": 1778095087183
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_code_map",
+      "status": "success",
+      "durationMs": 166,
+      "ts": 1778095087184
+    },
+    {
+      "kind": "tool",
+      "label": "pantheon_delegate",
+      "status": "success",
+      "durationMs": 26948,
+      "ts": 1778095093809
+    },
+    {
+      "kind": "delegate",
+      "label": "single",
+      "status": "success",
+      "durationMs": 26948,
+      "ts": 1778095093809
+    }
+  ]
+}

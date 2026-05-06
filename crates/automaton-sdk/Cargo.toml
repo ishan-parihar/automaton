@@ -1,0 +1,15 @@
+[package]
+name = "automaton-sdk"
+version = "0.1.0"
+edition = "2024"
+description = "Authoring SDK for Automaton automation modules"
+
+[dependencies]
+automaton-core.workspace = true
+automaton-sdk-derive = { path = "../automaton-sdk-derive" }
+serde.workspace = true
+serde_json.workspace = true
+schemars.workspace = true
+tokio.workspace = true
+anyhow.workspace = true
+uuid.workspace = true
