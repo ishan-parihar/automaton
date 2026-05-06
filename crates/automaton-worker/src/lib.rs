@@ -1,0 +1,1 @@
+//! automaton-worker crate

@@ -1,0 +1,16 @@
+[package]
+name = "automaton-build"
+version = "0.1.0"
+edition = "2024"
+description = "Compilation pipeline for Automaton — builds modules into WASM or native binaries"
+
+[dependencies]
+automaton-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+sha2.workspace = true
+uuid.workspace = true
+walkdir.workspace = true

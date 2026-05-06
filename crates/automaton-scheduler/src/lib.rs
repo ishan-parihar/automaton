@@ -1,0 +1,1 @@
+//! automaton-scheduler crate

@@ -7,16 +7,12 @@ pub struct ContentHash(pub String);
 
 impl ContentHash {
     pub fn compute(bytes: &[u8]) -> Self {
-        let hash = Sha256::digest(bytes);
-        ContentHash(format!("{:x}", hash))
+        ContentHash(format!("{:x}", Sha256::digest(bytes)))
     }
-
-    pub fn as_str(&self) -> &str {
-        &self.0
-    }
+    pub fn as_str(&self) -> &str { &self.0 }
 }
 
-/// A dependency reference by name
+/// A dependency reference by name and optional version constraint
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct DepRef {
     pub name: String,
@@ -25,21 +21,11 @@ pub struct DepRef {
 
 impl DepRef {
     pub fn new(name: &str) -> Self {
-        Self {
-            name: name.to_string(),
-            version_req: None,
-        }
-    }
-
-    pub fn with_version(name: &str, version: &str) -> Self {
-        Self {
-            name: name.to_string(),
-            version_req: Some(version.to_string()),
-        }
+        Self { name: name.to_string(), version_req: None }
     }
 }
 
-/// Retry configuration for a module
+/// Retry configuration
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RetryConfig {
     pub max_attempts: u32,
@@ -49,51 +35,40 @@ pub struct RetryConfig {
 
 impl Default for RetryConfig {
     fn default() -> Self {
-        Self {
-            max_attempts: 3,
-            delay_ms: 1000,
-            backoff: BackoffKind::Exponential,
-        }
+        Self { max_attempts: 3, delay_ms: 1000, backoff: BackoffKind::Exponential }
     }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub enum BackoffKind {
-    Fixed,
-    Linear,
-    Exponential,
-}
+pub enum BackoffKind { Fixed, Linear, Exponential }
 
-/// Retry state for a running module
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct RetryState {
-    pub attempt: u32,
-    pub last_error: String,
-    pub next_delay_ms: u64,
-}
-
-/// Module identity
+/// Module identity — content-addressed with version and hash
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct ModuleId {
-    /// Human-readable path, e.g. "github.issue_triage"
     pub path: String,
-    /// Semantic version
     pub version: semver::Version,
-    /// Content hash of the source + metadata
     pub hash: ContentHash,
-    /// Time of creation
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-/// Permission descriptor for access control
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub struct Permission {
-    pub resource: String,
-    pub action: String,
+/// Execution state for a running module
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum ExecutionState {
+    Pending,
+    Running,
+    Completed(serde_json::Value),
+    Failed(String),
+    Skipped(String),
+    Retrying(u32),
 }
 
-impl std::fmt::Display for Permission {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}.{}", self.resource, self.action)
-    }
+/// Language runtime for scripts
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum Language {
+    Rust,
+    Python,
+    TypeScript,
+    Go,
+    Bash,
+    Sql,
 }

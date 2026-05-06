@@ -1,48 +1,23 @@
-use crate::module::{ContentHash, DepRef, RetryConfig};
 use serde::{Deserialize, Serialize};
 
-/// The serializable manifest for an automation module.
-/// Mirrors Windmill's script.yaml pattern.
+use crate::module::{ContentHash, DepRef, RetryConfig};
+
+/// The serializable manifest for an automation module
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AutomationManifest {
-    /// Unique path-style name, e.g. "github.issue_triage"
     pub name: String,
-
-    /// Semantic version
     pub version: String,
-
-    /// Which function to call (matches the #[automation] fn name)
     pub entry: String,
-
-    /// Optional summary / description
     pub summary: Option<String>,
     pub description: Option<String>,
-
-    /// JSON Schema for inputs (auto-generated if "auto")
     pub inputs_schema: SchemaMode,
-
-    /// JSON Schema for outputs (auto-generated if "auto")
     pub outputs_schema: SchemaMode,
-
-    /// Required permissions
     pub permissions: Vec<String>,
-
-    /// Bound resources
     pub resources: Vec<String>,
-
-    /// Module dependencies
     pub depends_on: Vec<DepRef>,
-
-    /// Retry policy
     pub retry: Option<RetryConfig>,
-
-    /// Timeout in milliseconds
     pub timeout_ms: u64,
-
-    /// Tags for categorization
     pub tags: Vec<String>,
-
-    /// Human-in-the-loop: require approval before execution
     pub require_approval: bool,
 }
 
@@ -75,6 +50,7 @@ pub enum SchemaMode {
     Auto,
     Inline(serde_json::Value),
 }
+
 
 /// A full automation module — manifest + source + hash
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

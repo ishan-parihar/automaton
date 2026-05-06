@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use automaton_core::*;
 use automaton_graph::GraphStore;
 use automaton_registry::Registry;
-use automaton_runtime::{Runtime, RuntimeConfig};
+use automaton_runtime::Runtime;
 use petgraph::graph::DiGraph;
 use petgraph::algo::toposort;
 use petgraph::prelude::*;
@@ -90,6 +90,7 @@ impl Engine {
             id: run_id,
             workflow_name: start_module.to_string(),
             modules,
+            steps: vec![],
             created_at: chrono::Utc::now(),
         })
     }
@@ -117,11 +118,10 @@ impl Engine {
                 None => continue,
             };
             for dep in &module.depends_on {
-                if let Some(found) = run_graph.modules.iter().find(|m| m.module_id.path == *dep) {
-                    if let Some(source_idx) = node_indices.get(&found.id) {
+                if let Some(found) = run_graph.modules.iter().find(|m| m.module_id.path == *dep)
+                    && let Some(source_idx) = node_indices.get(&found.id) {
                         dag.add_edge(*source_idx, target_idx, ());
                     }
-                }
             }
         }
 
@@ -143,7 +143,7 @@ impl Engine {
         let mut states: HashMap<NodeIndex, ExecutionState> = HashMap::new();
 
         for node_idx in &order {
-            let exec_node = &dag.graph[*node_idx];
+            let _exec_node = &dag.graph[*node_idx];
             states.insert(*node_idx, ExecutionState::Pending);
         }
 

@@ -1,8 +1,8 @@
 [package]
 name = "automaton-core"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
-description = "Core types and traits for the Automaton automation framework"
+description = "Core types for Automaton — production-grade automation substrate"
 
 [dependencies]
 serde.workspace = true

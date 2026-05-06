@@ -1,0 +1,16 @@
+[package]
+name = "automaton-scheduler"
+version = "0.1.0"
+edition = "2024"
+description = "Cron and event scheduler for Automaton — triggers script/flow execution"
+
+[dependencies]
+automaton-core.workspace = true
+croner.workspace = true
+tokio.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+clap.workspace = true

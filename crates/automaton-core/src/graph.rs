@@ -1,61 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-
-use super::module::ModuleId;
-
-/// Node types in the property graph
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub enum NodeKind {
-    /// A compiled automation module
-    Module,
-    /// A composed workflow of multiple modules
-    Workflow,
-    /// A trigger (schedule, webhook, event)
-    Trigger,
-    /// An external resource binding
-    Resource,
-    /// A reference to a secret
-    SecretRef,
-    /// A declared capability
-    Capability,
-    /// An artifact produced by a run
-    Artifact,
-    /// A recorded run
-    Run,
-    /// An observation from a run (metrics, logs)
-    Observation,
-    /// A constraint on execution
-    Constraint,
-    /// An alternative execution path
-    AlternativePath,
-    /// An input parameter definition
-    Input,
-}
-
-/// Edge types in the property graph
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub enum EdgeKind {
-    /// A depends on B (A's execution requires B's output)
-    DependsOn,
-    /// A calls/invokes B
-    Calls,
-    /// A emits data to B
-    Emits,
-    /// A consumes data from B
-    Consumes,
-    /// A triggers B (event-driven)
-    Triggers,
-    /// A uses resource B
-    UsesResource,
-    /// A is blocked by B
-    BlockedBy,
-    /// B is an alternative to A
-    AlternativeTo,
-    /// B upgrades/replaces A
-    Upgrades,
-    /// B is derived from A
-    DerivedFrom,
-}
+use crate::module::{ModuleId, RetryConfig};
 
 /// A node in the property graph
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -63,7 +7,7 @@ pub struct Node {
     pub id: String,
     pub kind: NodeKind,
     pub name: String,
-    pub properties: HashMap<String, serde_json::Value>,
+    pub properties: serde_json::Map<String, serde_json::Value>,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
@@ -74,25 +18,31 @@ pub struct Edge {
     pub source: String,
     pub target: String,
     pub kind: EdgeKind,
-    pub properties: HashMap<String, serde_json::Value>,
+    pub properties: serde_json::Map<String, serde_json::Value>,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-/// The persistent design graph — what exists in the system
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct DesignGraph {
-    pub name: String,
-    pub nodes: Vec<Node>,
-    pub edges: Vec<Edge>,
+/// Node types in the property graph
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum NodeKind {
+    Module, Workflow, Trigger, Resource, SecretRef,
+    Capability, Artifact, Run, Observation, Constraint, AlternativePath, Input,
 }
 
-/// A module node in a materialized run graph (for one execution)
+/// Edge types in the property graph
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum EdgeKind {
+    DependsOn, Calls, Emits, Consumes, Triggers,
+    UsesResource, BlockedBy, AlternativeTo, Upgrades, DerivedFrom,
+}
+
+/// A module node in a materialized run graph
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ModuleNode {
     pub id: String,
     pub module_id: ModuleId,
     pub input: serde_json::Value,
-    pub retry: Option<crate::module::RetryConfig>,
+    pub retry: Option<RetryConfig>,
     pub timeout_ms: u64,
     pub depends_on: Vec<String>,
     pub parallel_group: Option<String>,
@@ -100,22 +50,50 @@ pub struct ModuleNode {
     pub error_handler: Option<Box<ModuleNode>>,
 }
 
-/// A materialized run DAG — compiled from the design graph for one execution
+/// A step in a flow DAG
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct FlowStep {
+    pub id: String,
+    pub kind: FlowStepKind,
+    pub script_path: Option<String>,
+    pub input: serde_json::Value,
+    pub retry: Option<RetryConfig>,
+    pub timeout_ms: u64,
+    pub depends_on: Vec<String>,
+    pub sleep_after_ms: Option<u64>,
+    pub stop_if: Option<String>,
+    pub failure_step: Option<String>,
+}
+
+/// Flow step execution kind
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum FlowStepKind {
+    Script,
+    BranchOne(Vec<Vec<FlowStep>>),
+    BranchAll(Vec<Vec<FlowStep>>),
+    ForLoop { iterator: String, steps: Vec<FlowStep> },
+    WhileLoop { condition: String, steps: Vec<FlowStep>, max_iterations: u32 },
+    Sleep,
+    FailureModule,
+}
+
+/// A complete flow definition
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct FlowDefinition {
+    pub name: String,
+    pub summary: Option<String>,
+    pub steps: Vec<FlowStep>,
+    pub default_retry: Option<RetryConfig>,
+    pub default_timeout_ms: u64,
+    pub on_failure: Option<String>,
+}
+
+/// A materialized run graph for a flow execution
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RunGraph {
     pub id: String,
     pub workflow_name: String,
     pub modules: Vec<ModuleNode>,
+    pub steps: Vec<FlowStep>,
     pub created_at: chrono::DateTime<chrono::Utc>,
-}
-
-/// Execution state for a running module
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub enum ExecutionState {
-    Pending,
-    Running,
-    Completed(serde_json::Value),
-    Failed(String),
-    Skipped(String),
-    Retrying(u32),
 }

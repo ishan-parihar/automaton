@@ -10,10 +10,12 @@ members = [
   "crates/automaton-graph",
   "crates/automaton-registry",
   "crates/automaton-mcp",
+  "crates/automaton-build",
+  "crates/automaton-worker",
+  "crates/automaton-scheduler",
 ]
 
 [workspace.dependencies]
-# Workspace member crates (path)
 automaton-core = { path = "crates/automaton-core" }
 automaton-sdk = { path = "crates/automaton-sdk" }
 automaton-sdk-derive = { path = "crates/automaton-sdk-derive" }
@@ -23,8 +25,10 @@ automaton-runtime = { path = "crates/automaton-runtime" }
 automaton-graph = { path = "crates/automaton-graph" }
 automaton-registry = { path = "crates/automaton-registry" }
 automaton-mcp = { path = "crates/automaton-mcp" }
+automaton-build = { path = "crates/automaton-build" }
+automaton-worker = { path = "crates/automaton-worker" }
+automaton-scheduler = { path = "crates/automaton-scheduler" }
 
-# External dependencies
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serde_yaml = "0.9"
@@ -45,3 +49,8 @@ semver = { version = "1", features = ["serde"] }
 glob = "0.3"
 walkdir = "2"
 dirs = "6"
+hex = "0.4"
+rand = "0.8"
+aes-gcm = "0.10"
+base64 = "0.22"
+croner = "2"
