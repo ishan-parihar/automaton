@@ -1,0 +1,25 @@
+[package]
+name = "automaton-db"
+version = "0.1.0"
+edition = "2024"
+description = "Database layer for Automaton — DbPool trait with SQLite (rusqlite) and Postgres (tokio-postgres) backends"
+
+[features]
+default = ["sqlite"]
+sqlite = ["dep:rusqlite"]
+postgres = ["dep:tokio-postgres", "dep:deadpool-postgres"]
+
+[dependencies]
+automaton-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+sha2.workspace = true
+async-trait = "0.1"
+
+rusqlite = { workspace = true, optional = true }
+tokio-postgres = { version = "0.7", features = ["with-uuid-1", "with-chrono-0_4", "with-serde_json-1"], optional = true }
+deadpool-postgres = { version = "0.14", optional = true }

@@ -48,15 +48,15 @@ CREATE TABLE IF NOT EXISTS scripts (
     path        TEXT NOT NULL,              -- e.g. "social.post_scheduler"
     version     TEXT NOT NULL DEFAULT '0.1.0',
     parent_hash TEXT REFERENCES scripts(hash),  -- Previous version chain
-    
+
     -- Content
     source      TEXT NOT NULL,              -- The Rust/TS/Python source code
     manifest    JSONB NOT NULL DEFAULT '{}', -- AutomationManifest as JSON
-    
+
     -- Status
     built       BOOLEAN NOT NULL DEFAULT false,
     language    TEXT NOT NULL DEFAULT 'rust',
-    
+
     -- Metadata
     folder_id   TEXT REFERENCES folders(id),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -88,10 +88,10 @@ CREATE TABLE IF NOT EXISTS flows (
     path            TEXT NOT NULL,                -- e.g. "social.daily_pipeline"
     version         TEXT NOT NULL DEFAULT '0.1.0',
     parent_hash     TEXT REFERENCES flows(hash),
-    
+
     definition      JSONB NOT NULL,               -- FlowDefinition as JSON
     -- Steps, branches, forloops, error handlers are all in the JSON
-    
+
     folder_id       TEXT REFERENCES folders(id),
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -135,6 +135,7 @@ CREATE INDEX idx_edges_kind ON graph_edges(workspace_id, kind);
 ```
 
 **Pathfinding query (Postgres CTE):**
+
 ```sql
 WITH RECURSIVE walk AS (
     SELECT source, target, kind, 1 AS depth, ARRAY[source, target] AS path
@@ -157,23 +158,23 @@ SELECT * FROM walk WHERE target = 'target_node_id';
 CREATE TABLE IF NOT EXISTS jobs (
     id              BIGSERIAL PRIMARY KEY,
     workspace_id    TEXT NOT NULL DEFAULT 'default',
-    
+
     -- What to run
     kind            TEXT NOT NULL DEFAULT 'script',  -- script | flow | flow_step
     target_path     TEXT NOT NULL,        -- Script or flow path
     args            JSONB NOT NULL DEFAULT '{}',
-    
+
     -- Scheduling
     scheduled_for   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     priority        INT NOT NULL DEFAULT 0,     -- Higher = runs first
     tag             TEXT,                       -- Worker group tag ("rust", "python", "gpu")
-    
+
     -- Execution
     running         BOOLEAN NOT NULL DEFAULT false,
     worker_id       TEXT,
     max_attempts    INT NOT NULL DEFAULT 3,
     attempt         INT NOT NULL DEFAULT 0,
-    
+
     -- Lifecycle
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -184,6 +185,7 @@ CREATE INDEX idx_jobs_pending ON jobs(scheduled_for, priority DESC)
 ```
 
 **Worker dequeue (Postgres):**
+
 ```sql
 UPDATE jobs SET running = true, worker_id = $1, attempt = attempt + 1
 WHERE id = (
@@ -197,6 +199,7 @@ RETURNING id, kind, target_path, args;
 ```
 
 **Worker dequeue (SQLite):**
+
 ```sql
 UPDATE jobs SET running = true, worker_id = $1, attempt = attempt + 1
 WHERE id = (
@@ -218,23 +221,23 @@ RETURNING id, kind, target_path, args;
 CREATE TABLE IF NOT EXISTS runs (
     id              TEXT PRIMARY KEY,            -- UUID
     workspace_id    TEXT NOT NULL DEFAULT 'default',
-    
+
     job_id          BIGINT REFERENCES jobs(id),
     target_path     TEXT NOT NULL,
     kind            TEXT NOT NULL DEFAULT 'script',
-    
+
     -- Input/Output
     args            JSONB NOT NULL DEFAULT '{}',
     result          JSONB,
     error           TEXT,
-    
+
     -- State machine
     state           TEXT NOT NULL DEFAULT 'pending',
     -- pending → running → completed | failed | skipped
-    
+
     attempt         INT NOT NULL DEFAULT 1,
     duration_ms     BIGINT NOT NULL DEFAULT 0,
-    
+
     -- Timeline
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     started_at      TIMESTAMPTZ,
@@ -256,11 +259,11 @@ CREATE INDEX idx_runs_created ON runs(workspace_id, created_at DESC());
 CREATE TABLE IF NOT EXISTS variables (
     path            TEXT PRIMARY KEY,        -- e.g. "slack/api_token"
     workspace_id    TEXT NOT NULL DEFAULT 'default',
-    
+
     encrypted_value TEXT NOT NULL,           -- AES-256-GCM ciphertext (base64)
     is_secret       BOOLEAN NOT NULL DEFAULT true,
     description     TEXT,
-    
+
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -299,11 +302,11 @@ Runtime:       { "api_key": "xoxb-1234-5678-..." }  // decrypted at execution
 CREATE TABLE IF NOT EXISTS resources (
     path            TEXT PRIMARY KEY,        -- e.g. "slack/production"
     workspace_id    TEXT NOT NULL DEFAULT 'default',
-    
+
     resource_type   TEXT NOT NULL,           -- postgresql | slack | github | openai | http | aws
     value           JSONB NOT NULL DEFAULT '{}',  -- Connection config
     description     TEXT,
-    
+
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -335,16 +338,16 @@ INSERT INTO resource_types (name, schema, description) VALUES
 CREATE TABLE IF NOT EXISTS triggers (
     id              TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     workspace_id    TEXT NOT NULL DEFAULT 'default',
-    
+
     target_path     TEXT NOT NULL,           -- What to trigger
     target_is_flow  BOOLEAN NOT NULL DEFAULT false,
-    
+
     trigger_type    TEXT NOT NULL DEFAULT 'cron',   -- cron | webhook | event
     config          JSONB NOT NULL DEFAULT '{}',
     -- Cron:  { "schedule": "*/5 * * * *", "timezone": "UTC", "skip_if": null, "args": {} }
     -- Webhook: { "secret": "whsec_...", "method": "POST", "path": "/hooks/..." }
     -- Event:  { "source": "kafka:topic", "filters": {} }
-    
+
     enabled         BOOLEAN NOT NULL DEFAULT true,
     last_fired_at   TIMESTAMPTZ,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -372,21 +375,21 @@ Every 60 seconds:
 CREATE TABLE IF NOT EXISTS oauth_credentials (
     id              TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     workspace_id    TEXT NOT NULL DEFAULT 'default',
-    
+
     provider        TEXT NOT NULL,           -- slack | github | linkedin | twitter | instagram
     account_name    TEXT,                    -- Human-readable label
     access_token    TEXT NOT NULL,           -- Encrypted
     refresh_token   TEXT,                    -- Encrypted (for refresh flows)
     expires_at      TIMESTAMPTZ,             -- Token expiration
-    
+
     -- Provider-specific metadata
     provider_user_id TEXT,
     provider_team_id TEXT,
     scopes          TEXT,
-    
+
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    
+
     UNIQUE(workspace_id, provider, account_name)
 );
 ```
@@ -399,16 +402,16 @@ CREATE TABLE IF NOT EXISTS oauth_credentials (
 CREATE TABLE IF NOT EXISTS build_cache (
     hash            TEXT PRIMARY KEY,        -- SHA-256 of source + deps
     script_path     TEXT NOT NULL,
-    
+
     language        TEXT NOT NULL,
     binary_path     TEXT NOT NULL,           -- Path to compiled artifact
     binary_size     BIGINT,                  -- Bytes
     build_duration_ms BIGINT,                -- Build time
-    
+
     build_mode      TEXT NOT NULL DEFAULT 'debug',  -- debug | release
     success         BOOLEAN NOT NULL DEFAULT true,
     error_log       TEXT,
-    
+
     built_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -471,7 +474,7 @@ CREATE INDEX IF NOT EXISTS idx_jobs_scheduled ON jobs(scheduled_for) WHERE runni
 ```
 Week 1: scripts + flows + jobs + runs       (core execution loop)
 Week 2: graph_nodes + graph_edges           (infrastructure visualization)
-Week 3: variables + resources               (secrets + connections)  
+Week 3: variables + resources               (secrets + connections)
 Week 4: triggers + oauth_credentials         (scheduling + social integration)
 Week 5: workspaces + build_cache             (organization + performance)
 ```
