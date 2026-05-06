@@ -10,6 +10,7 @@ automaton-engine.workspace = true
 automaton-registry.workspace = true
 automaton-runtime.workspace = true
 automaton-graph.workspace = true
+automaton-scheduler.workspace = true
 rmcp.workspace = true
 serde.workspace = true
 serde_json.workspace = true
