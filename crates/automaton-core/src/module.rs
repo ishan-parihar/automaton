@@ -9,7 +9,9 @@ impl ContentHash {
     pub fn compute(bytes: &[u8]) -> Self {
         ContentHash(format!("{:x}", Sha256::digest(bytes)))
     }
-    pub fn as_str(&self) -> &str { &self.0 }
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
 }
 
 /// A dependency reference by name and optional version constraint
@@ -21,7 +23,10 @@ pub struct DepRef {
 
 impl DepRef {
     pub fn new(name: &str) -> Self {
-        Self { name: name.to_string(), version_req: None }
+        Self {
+            name: name.to_string(),
+            version_req: None,
+        }
     }
 }
 
@@ -35,12 +40,20 @@ pub struct RetryConfig {
 
 impl Default for RetryConfig {
     fn default() -> Self {
-        Self { max_attempts: 3, delay_ms: 1000, backoff: BackoffKind::Exponential }
+        Self {
+            max_attempts: 3,
+            delay_ms: 1000,
+            backoff: BackoffKind::Exponential,
+        }
     }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub enum BackoffKind { Fixed, Linear, Exponential }
+pub enum BackoffKind {
+    Fixed,
+    Linear,
+    Exponential,
+}
 
 /// Module identity — content-addressed with version and hash
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]

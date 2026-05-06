@@ -1,7 +1,40 @@
 use serde::{Deserialize, Serialize};
 
-use super::module::{ContentHash, RetryConfig};
-use super::graph::FlowStep;
+use crate::module::{ContentHash, RetryConfig};
+
+/// A step in a flow DAG
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct FlowStep {
+    pub id: String,
+    pub kind: FlowStepKind,
+    pub script_path: Option<String>,
+    pub input: serde_json::Value,
+    pub retry: Option<RetryConfig>,
+    pub timeout_ms: u64,
+    pub depends_on: Vec<String>,
+    pub sleep_after_ms: Option<u64>,
+    pub stop_if: Option<String>,
+    pub failure_step: Option<String>,
+}
+
+/// Flow step execution kind
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum FlowStepKind {
+    Script,
+    BranchOne(Vec<Vec<FlowStep>>),
+    BranchAll(Vec<Vec<FlowStep>>),
+    ForLoop {
+        iterator: String,
+        steps: Vec<FlowStep>,
+    },
+    WhileLoop {
+        condition: String,
+        steps: Vec<FlowStep>,
+        max_iterations: u32,
+    },
+    Sleep,
+    FailureModule,
+}
 
 /// A complete flow definition — the composition of multiple steps
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

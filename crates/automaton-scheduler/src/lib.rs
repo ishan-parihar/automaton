@@ -10,7 +10,8 @@ impl Scheduler {
     pub fn validate(schedule: &str) -> Result<(), String> {
         let mut c = Cron::new(schedule);
         c.with_seconds_optional();
-        c.parse().map_err(|e| format!("Invalid cron expression '{schedule}': {e}"))?;
+        c.parse()
+            .map_err(|e| format!("Invalid cron expression '{schedule}': {e}"))?;
         Ok(())
     }
 
@@ -19,7 +20,8 @@ impl Scheduler {
         let mut c = Cron::new(schedule);
         c.with_seconds_optional();
         let cron = c.parse().map_err(|e| format!("Invalid cron: {e}"))?;
-        cron.is_time_matching(time).map_err(|e| format!("Cron error: {e}"))
+        cron.is_time_matching(time)
+            .map_err(|e| format!("Cron error: {e}"))
     }
 
     /// Find the next occurrence after a given time

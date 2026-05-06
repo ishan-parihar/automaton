@@ -36,13 +36,34 @@ pub struct ResourceType {
 impl ResourceType {
     pub fn builtin_types() -> Vec<Self> {
         vec![
-            Self { name: "postgresql".into(), schema: serde_json::json!({"type":"object"}) },
-            Self { name: "slack".into(), schema: serde_json::json!({"type":"object"}) },
-            Self { name: "github".into(), schema: serde_json::json!({"type":"object"}) },
-            Self { name: "openai".into(), schema: serde_json::json!({"type":"object"}) },
-            Self { name: "anthropic".into(), schema: serde_json::json!({"type":"object"}) },
-            Self { name: "http".into(), schema: serde_json::json!({"type":"object"}) },
-            Self { name: "aws".into(), schema: serde_json::json!({"type":"object"}) },
+            Self {
+                name: "postgresql".into(),
+                schema: serde_json::json!({"type":"object"}),
+            },
+            Self {
+                name: "slack".into(),
+                schema: serde_json::json!({"type":"object"}),
+            },
+            Self {
+                name: "github".into(),
+                schema: serde_json::json!({"type":"object"}),
+            },
+            Self {
+                name: "openai".into(),
+                schema: serde_json::json!({"type":"object"}),
+            },
+            Self {
+                name: "anthropic".into(),
+                schema: serde_json::json!({"type":"object"}),
+            },
+            Self {
+                name: "http".into(),
+                schema: serde_json::json!({"type":"object"}),
+            },
+            Self {
+                name: "aws".into(),
+                schema: serde_json::json!({"type":"object"}),
+            },
         ]
     }
 }

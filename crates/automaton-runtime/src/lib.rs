@@ -1,6 +1,4 @@
 use automaton_core::*;
-use std::sync::Arc;
-use tokio::sync::Mutex;
 
 /// Local execution runtime.
 /// Runs automation modules as child processes and manages their lifecycle.
@@ -49,7 +47,7 @@ impl Runtime {
         let input_str = serde_json::to_string(input)?;
         let timeout = std::time::Duration::from_millis(timeout_ms);
 
-        let mut child = tokio::process::Command::new(binary_path)
+        let child = tokio::process::Command::new(binary_path)
             .arg("--input")
             .arg(&input_str)
             .stdout(std::process::Stdio::piped())

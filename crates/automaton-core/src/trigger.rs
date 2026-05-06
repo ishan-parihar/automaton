@@ -22,8 +22,7 @@ pub enum TriggerType {
 }
 
 /// Configuration for each trigger type
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct TriggerConfig {
     /// Cron expression (for Cron triggers)
     pub schedule: Option<String>,
@@ -38,4 +37,3 @@ pub struct TriggerConfig {
     /// Arguments to pass to the target script/flow
     pub args: Option<serde_json::Value>,
 }
-

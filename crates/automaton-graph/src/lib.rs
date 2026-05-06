@@ -132,7 +132,7 @@ impl GraphStore {
 
     pub fn get_outgoing_edges(&self, node_id: &str) -> Result<Vec<Edge>> {
         with_db(&self.db, |db| {
-            let mut stmt = db.prepare(
+            let stmt = db.prepare(
                 "SELECT id, source, target, kind, properties, created_at FROM edges WHERE source = ?1 ORDER BY created_at",
             )?;
             map_edges_query(stmt, rusqlite::params![node_id])
@@ -141,7 +141,7 @@ impl GraphStore {
 
     pub fn get_incoming_edges(&self, node_id: &str) -> Result<Vec<Edge>> {
         with_db(&self.db, |db| {
-            let mut stmt = db.prepare(
+            let stmt = db.prepare(
                 "SELECT id, source, target, kind, properties, created_at FROM edges WHERE target = ?1 ORDER BY created_at",
             )?;
             map_edges_query(stmt, rusqlite::params![node_id])
@@ -222,7 +222,7 @@ impl GraphStore {
 
     pub fn all_edges(&self) -> Result<Vec<Edge>> {
         with_db(&self.db, |db| {
-            let mut stmt = db.prepare(
+            let stmt = db.prepare(
                 "SELECT id, source, target, kind, properties, created_at FROM edges ORDER BY created_at",
             )?;
             map_edges_query(stmt, [])

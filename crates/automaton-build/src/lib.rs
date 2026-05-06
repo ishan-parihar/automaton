@@ -15,7 +15,10 @@ impl BuildCache {
         let debug_dir = base_dir.join("build-debug");
         std::fs::create_dir_all(&cache_dir).ok();
         std::fs::create_dir_all(&debug_dir).ok();
-        Self { cache_dir, debug_dir }
+        Self {
+            cache_dir,
+            debug_dir,
+        }
     }
 
     /// Check if a compiled artifact exists for the given content hash
@@ -50,13 +53,18 @@ impl BuildCache {
         }
 
         // Build the project
-        let binary = self.compile_cargo_project(&tmp_dir, name, source)
+        let binary = self
+            .compile_cargo_project(&tmp_dir, name, source)
             .map_err(|e| format!("Build failed: {e}"))?;
 
-        // Cache the binary
+        // Cache the binary (content-addressed by hash)
         std::fs::create_dir_all(&artifact_dir).map_err(|e| format!("Cache dir: {e}"))?;
         std::fs::copy(&binary, artifact_dir.join("binary"))
             .map_err(|e| format!("Cache copy: {e}"))?;
+
+        // Also place at predictable path for the CLI run command
+        let predictable_path = self.cache_dir.join(name.replace('.', "_"));
+        std::fs::copy(&binary, &predictable_path).ok();
 
         Ok((hash, binary))
     }
@@ -94,7 +102,8 @@ serde = {{ version = "1", features = ["derive"] }}
 serde_json = "1"
 tokio = {{ version = "1", features = ["full"] }}
 anyhow = "1"
-"#, sanitized
+"#,
+            sanitized
         );
         std::fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
 
@@ -105,7 +114,10 @@ anyhow = "1"
         let output = Command::new("cargo")
             .args(["build", "--release", "--manifest-path"])
             .arg(project_dir.join("Cargo.toml"))
-            .args(["--target-dir", &self.debug_dir.join("target").to_string_lossy()])
+            .args([
+                "--target-dir",
+                &self.debug_dir.join("target").to_string_lossy(),
+            ])
             .output()
             .map_err(|e| format!("Failed to run cargo: {e}"))?;
 
@@ -114,7 +126,11 @@ anyhow = "1"
             return Err(format!("Cargo build failed:\n{stderr}").into());
         }
 
-        let binary_path = self.debug_dir.join("target").join("release").join(&sanitized);
+        let binary_path = self
+            .debug_dir
+            .join("target")
+            .join("release")
+            .join(&sanitized);
         Ok(binary_path)
     }
 }

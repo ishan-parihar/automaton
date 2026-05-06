@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+
+use crate::flow::FlowStep;
 use crate::module::{ModuleId, RetryConfig};
 
 /// A node in the property graph
@@ -25,15 +27,33 @@ pub struct Edge {
 /// Node types in the property graph
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum NodeKind {
-    Module, Workflow, Trigger, Resource, SecretRef,
-    Capability, Artifact, Run, Observation, Constraint, AlternativePath, Input,
+    Module,
+    Workflow,
+    Trigger,
+    Resource,
+    SecretRef,
+    Capability,
+    Artifact,
+    Run,
+    Observation,
+    Constraint,
+    AlternativePath,
+    Input,
 }
 
 /// Edge types in the property graph
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum EdgeKind {
-    DependsOn, Calls, Emits, Consumes, Triggers,
-    UsesResource, BlockedBy, AlternativeTo, Upgrades, DerivedFrom,
+    DependsOn,
+    Calls,
+    Emits,
+    Consumes,
+    Triggers,
+    UsesResource,
+    BlockedBy,
+    AlternativeTo,
+    Upgrades,
+    DerivedFrom,
 }
 
 /// A module node in a materialized run graph
@@ -48,44 +68,6 @@ pub struct ModuleNode {
     pub parallel_group: Option<String>,
     pub condition: Option<String>,
     pub error_handler: Option<Box<ModuleNode>>,
-}
-
-/// A step in a flow DAG
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct FlowStep {
-    pub id: String,
-    pub kind: FlowStepKind,
-    pub script_path: Option<String>,
-    pub input: serde_json::Value,
-    pub retry: Option<RetryConfig>,
-    pub timeout_ms: u64,
-    pub depends_on: Vec<String>,
-    pub sleep_after_ms: Option<u64>,
-    pub stop_if: Option<String>,
-    pub failure_step: Option<String>,
-}
-
-/// Flow step execution kind
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub enum FlowStepKind {
-    Script,
-    BranchOne(Vec<Vec<FlowStep>>),
-    BranchAll(Vec<Vec<FlowStep>>),
-    ForLoop { iterator: String, steps: Vec<FlowStep> },
-    WhileLoop { condition: String, steps: Vec<FlowStep>, max_iterations: u32 },
-    Sleep,
-    FailureModule,
-}
-
-/// A complete flow definition
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct FlowDefinition {
-    pub name: String,
-    pub summary: Option<String>,
-    pub steps: Vec<FlowStep>,
-    pub default_retry: Option<RetryConfig>,
-    pub default_timeout_ms: u64,
-    pub on_failure: Option<String>,
 }
 
 /// A materialized run graph for a flow execution

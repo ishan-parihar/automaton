@@ -51,7 +51,6 @@ pub enum SchemaMode {
     Inline(serde_json::Value),
 }
 
-
 /// A full automation module — manifest + source + hash
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AutomationModule {
