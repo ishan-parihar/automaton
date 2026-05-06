@@ -166,7 +166,13 @@ async fn main() -> anyhow::Result<()> {
         }
 
         Commands::New { path } => {
-            let module_dir = data_dir.join("modules").join(&path.replace('.', "/"));
+            if path.is_empty() || path.trim().is_empty() {
+                anyhow::bail!("Module path cannot be empty");
+            }
+            if path.contains("..") || path.contains("//") {
+                anyhow::bail!("Invalid module path: {path}");
+            }
+            let module_dir = data_dir.join("modules").join(path.replace('.', "/"));
             std::fs::create_dir_all(&module_dir)?;
             let source = format!(
                 r#"// Automation: {path}
@@ -188,7 +194,7 @@ async fn main(ctx: Context, input: serde_json::Value) -> anyhow::Result<serde_js
             let source_path = module_dir.join("main.rs");
             std::fs::write(&source_path, &source)?;
 
-            let yaml = serde_yaml::to_string(&AutomationManifest {
+            let manifest = AutomationManifest {
                 name: path.clone(),
                 version: "0.1.0".to_string(),
                 entry: "main".to_string(),
@@ -196,9 +202,30 @@ async fn main(ctx: Context, input: serde_json::Value) -> anyhow::Result<serde_js
                 description: None,
                 timeout_ms: 30_000,
                 ..Default::default()
-            })?;
+            };
+            let yaml = serde_yaml::to_string(&manifest)?;
             let yaml_path = module_dir.join("automation.yaml");
             std::fs::write(&yaml_path, &yaml)?;
+
+            // Register module in registry + add to graph (single engine init)
+            if let Err(e) = init_engine(&data_dir).and_then(|engine| {
+                engine.registry().register(&path, &source, &manifest).and_then(|_| {
+                    let mut props = std::collections::HashMap::new();
+                    props.insert("path".into(), serde_json::json!(path));
+                    engine.graph().add_node(NodeKind::Module, &path, props).map(|_| ())
+                })
+            }) {
+                eprintln!("Warning: Failed to register module: {e}");
+            }
+
+            // Add to graph
+            if let Err(e) = init_engine(&data_dir).and_then(|engine| {
+                let mut props = std::collections::HashMap::new();
+                props.insert("path".into(), serde_json::json!(path));
+                engine.graph().add_node(NodeKind::Module, &path, props).map(|_| ())
+            }) {
+                eprintln!("Warning: Failed to add graph node: {e}");
+            }
 
             println!("{}", serde_json::to_string_pretty(&serde_json::json!({
                 "status": "created",
@@ -344,7 +371,7 @@ async fn main(ctx: Context, input: serde_json::Value) -> anyhow::Result<serde_js
 
         Commands::Execute { run_graph_id } => {
             let engine = init_engine(&data_dir)?;
-            let mut modules: Vec<automaton_core::ModuleNode> = vec![];
+            let _modules: Vec<automaton_core::ModuleNode> = vec![];
 
             // Re-plan to get the run graph, then materialize
             let options = PlanOptions::default();

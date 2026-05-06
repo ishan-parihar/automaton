@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::path::PathBuf;
 
 /// Content hash — SHA-256 of source + metadata
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]

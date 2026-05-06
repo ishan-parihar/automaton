@@ -69,15 +69,11 @@ impl Default for AutomationManifest {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(untagged)]
+#[derive(Default)]
 pub enum SchemaMode {
+    #[default]
     Auto,
     Inline(serde_json::Value),
-}
-
-impl Default for SchemaMode {
-    fn default() -> Self {
-        SchemaMode::Auto
-    }
 }
 
 /// A full automation module — manifest + source + hash

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-use super::module::{ContentHash, ModuleId};
+use super::module::ModuleId;
 
 /// Node types in the property graph
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
