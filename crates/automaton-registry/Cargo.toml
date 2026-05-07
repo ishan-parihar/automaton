@@ -5,7 +5,8 @@ edition = "2024"
 description = "Local module registry with content-addressed storage and versioning"
 
 [dependencies]
-automaton-core.workspace = true
+async-trait.workspace = true
+automaton-core = { workspace = true, features = ["sqlite"] }
 serde.workspace = true
 serde_json.workspace = true
 serde_yaml.workspace = true

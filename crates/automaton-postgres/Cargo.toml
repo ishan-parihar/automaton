@@ -5,8 +5,9 @@ edition = "2024"
 description = "Postgres database layer for Automaton"
 
 [dependencies]
+async-trait.workspace = true
 automaton-core.workspace = true
-sqlx = { version = "0.7", features = [
+sqlx = { version = "0.7", default-features = false, features = [
   "runtime-tokio-rustls",
   "postgres",
   "uuid",
@@ -20,6 +21,7 @@ chrono.workspace = true
 tracing.workspace = true
 anyhow.workspace = true
 sha2.workspace = true
+semver.workspace = true
 aes-gcm.workspace = true
 base64.workspace = true
 rand.workspace = true

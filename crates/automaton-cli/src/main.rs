@@ -2,12 +2,18 @@ use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
 
+use std::sync::Arc;
+
+use automaton_build::BuildCache;
 use automaton_core::*;
 use automaton_engine::{Engine, PlanOptions};
 use automaton_graph::GraphStore;
 use automaton_registry::Registry;
 use automaton_runtime::{Runtime, RuntimeConfig};
 use automaton_mcp::McpServer;
+use automaton_scheduler::{SchedulerDaemon, ScheduledTrigger, TriggerProvider};
+use automaton_worker::Worker;
+use automaton_postgres::AutomatonDb;
 
 /// Automaton — AI-native Rust automation substrate.
 ///
@@ -29,6 +35,9 @@ enum Commands {
     New {
         /// Module path, e.g. "github.issue_triage"
         path: String,
+        /// Template pattern (echo, http-fetch, http-server, db-query, slack-notify, data-transform, health-check, rate-limiter, file-watch, cron-worker)
+        #[arg(long, default_value = "echo")]
+        pattern: String,
     },
 
     /// Build a module into a compiled binary
@@ -64,10 +73,16 @@ enum Commands {
         max_depth: usize,
     },
 
-    /// Execute a planned workflow
+    /// Plan and execute a workflow from a module
     Execute {
-        /// Run graph ID from plan output
-        run_graph_id: String,
+        /// Module path to plan and execute from
+        module: String,
+        /// Maximum dependency depth
+        #[arg(long, default_value = "10")]
+        max_depth: usize,
+        /// JSON input to pass to the first module (optional)
+        #[arg(long)]
+        input: Option<String>,
     },
 
     /// Start the MCP server (stdio transport)
@@ -100,8 +115,40 @@ enum Commands {
         run_id: String,
     },
 
+    /// Start the worker daemon (processes queued jobs)
+    Worker {
+        /// Worker name (for multi-worker setups)
+        #[arg(long, default_value = "default")]
+        name: String,
+        /// Number of concurrent jobs
+        #[arg(long, default_value = "4")]
+        concurrency: usize,
+        /// Poll interval in milliseconds
+        #[arg(long, default_value = "5000")]
+        poll_interval_ms: u64,
+        /// Detach and run in background (writes PID to data dir)
+        #[arg(long)]
+        daemon: bool,
+    },
+
     /// Run system diagnostics
     Doctor,
+
+    /// Postgres database operations
+    Postgres {
+        #[command(subcommand)]
+        action: PostgresCommand,
+    },
+}
+
+#[derive(Subcommand)]
+enum PostgresCommand {
+    /// Run database schema migrations
+    Migrate {
+        /// Database connection URL (defaults to DATABASE_URL env var or postgres://localhost:5432/automaton)
+        #[arg(long)]
+        database_url: Option<String>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -121,6 +168,44 @@ enum GraphCommand {
     },
 }
 
+// ── TriggerProvider adapter for Registry ──
+
+struct RegistryTriggerProvider {
+    registry: Registry,
+}
+
+#[async_trait::async_trait]
+impl TriggerProvider for RegistryTriggerProvider {
+    async fn get_cron_triggers(&self) -> std::result::Result<Vec<ScheduledTrigger>, String> {
+        let triggers = self.registry.get_enabled_triggers("cron")
+            .map_err(|e| e.to_string())?;
+        let mut result = Vec::new();
+        for t in triggers {
+            let config = t.get("config").and_then(|c| c.as_object()).cloned().unwrap_or_default();
+            let schedule = config.get("schedule")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+            if schedule.is_empty() {
+                continue;
+            }
+            result.push(ScheduledTrigger {
+                id: t.get("id").and_then(|v| v.as_str()).unwrap_or("").to_string(),
+                target_path: t.get("target_path").and_then(|v| v.as_str()).unwrap_or("").to_string(),
+                target_is_flow: t.get("target_is_flow").and_then(|v| v.as_bool()).unwrap_or(false),
+                schedule,
+                args: config.get("args").cloned(),
+            });
+        }
+        Ok(result)
+    }
+
+    async fn enqueue_job(&self, kind: &str, target: &str, args: &serde_json::Value) -> std::result::Result<i64, String> {
+        self.registry.enqueue(kind, target, args)
+            .map_err(|e| e.to_string())
+    }
+}
+
 fn default_data_dir() -> PathBuf {
     dirs::data_dir()
         .unwrap_or_else(|| PathBuf::from(".local/share"))
@@ -130,14 +215,15 @@ fn default_data_dir() -> PathBuf {
 fn init_engine(data_dir: &PathBuf) -> Result<Engine> {
     std::fs::create_dir_all(data_dir)?;
     let registry = Registry::open(data_dir)?;
-    let graph_store = GraphStore::open(data_dir)?;
+    // Use merged registry.db for graph store (replaces separate graph.db)
+    let graph_store = GraphStore::open_merged(data_dir)?;
     let runtime_config = RuntimeConfig {
         work_dir: data_dir.join("work"),
         temp_dir: data_dir.join("tmp"),
         ..Default::default()
     };
     let runtime = Runtime::new(runtime_config);
-    Ok(Engine::new(registry, graph_store, runtime))
+    Ok(Engine::new(Arc::new(registry), graph_store, runtime))
 }
 
 #[tokio::main]
@@ -165,7 +251,7 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::New { path } => {
+        Commands::New { path, pattern } => {
             if path.is_empty() || path.trim().is_empty() {
                 anyhow::bail!("Module path cannot be empty");
             }
@@ -175,13 +261,13 @@ async fn main() -> anyhow::Result<()> {
             let module_dir = data_dir.join("modules").join(path.replace('.', "/"));
             std::fs::create_dir_all(&module_dir)?;
             let safe = path.replace('.', "_");
-            // Write a simple Rust source that compiles standalone
-            let source_lines = [format!("// Automation: {safe}"),
-                "fn main() {".to_string(),
-                format!("    let msg = serde_json::json!({{ \"status\": \"ok\", \"module\": \"{safe}\" }});"),
-                "    println!(\"{}\", msg);".to_string(),
-                "}".to_string()];
-            let source = source_lines.join("\n");
+            // Check for template pattern
+            let source = if let Some(tmpl) = automaton_build::templates::get_template(&pattern) {
+                tmpl.source.to_string()
+            } else {
+                // Fallback: simple echo source
+                format!("// Automation: {safe}\nfn main() {{\n    let msg = serde_json::json!({{ \"status\": \"ok\", \"module\": \"{safe}\" }});\n    println!(\"{{}}\", msg);\n}}\n")
+            };
             let source_path = module_dir.join("main.rs");
             std::fs::write(&source_path, &source)?;
 
@@ -199,14 +285,18 @@ async fn main() -> anyhow::Result<()> {
             std::fs::write(&yaml_path, &yaml)?;
 
             // Register module in registry + add to graph (single engine init)
-            if let Err(e) = init_engine(&data_dir).and_then(|engine| {
-                engine.registry().register(&path, &source, &manifest).and_then(|_| {
-                    let mut props = std::collections::HashMap::new();
-                    props.insert("path".into(), serde_json::json!(path));
-                    engine.graph().add_node(NodeKind::Module, &path, props).map(|_| ())
-                })
-            }) {
-                eprintln!("Warning: Failed to register module: {e}");
+            match init_engine(&data_dir) {
+                Ok(engine) => {
+                    match engine.backend().register_module(&path, &source, &manifest).await {
+                        Ok(_id) => {
+                            let mut props = std::collections::HashMap::new();
+                            props.insert("path".into(), serde_json::json!(path));
+                            let _ = engine.graph().add_node(NodeKind::Module, &path, props);
+                        }
+                        Err(e) => eprintln!("Warning: Failed to register module: {e}"),
+                    }
+                }
+                Err(e) => eprintln!("Warning: Failed to init engine: {e}"),
             }
 
             println!("{}", serde_json::to_string_pretty(&serde_json::json!({
@@ -219,7 +309,7 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::Build { path, mode } => {
             let engine = init_engine(&data_dir)?;
-            let module = engine.registry().get(&path)?
+            let module = engine.backend().get_module(&path).await?
                 .ok_or_else(|| anyhow::anyhow!("Module not found: {path}"))?;
 
             let build_cache = automaton_build::BuildCache::new(&data_dir);
@@ -229,8 +319,8 @@ async fn main() -> anyhow::Result<()> {
                 &module.manifest,
             ).map_err(|e| anyhow::anyhow!("Build failed: {e}"))?;
 
-            engine.registry().mark_built(&path)?;
-            engine.registry().record_build(&hash, &binary_path.to_string_lossy(), &mode)?;
+            engine.backend().mark_built(&path).await?;
+            engine.backend().record_build(&hash, &binary_path.to_string_lossy(), &mode).await?;
 
             println!("{}", serde_json::to_string_pretty(&serde_json::json!({
                 "status": "built",
@@ -243,7 +333,7 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::Run { path, input } => {
             let engine = init_engine(&data_dir)?;
-            let module = engine.registry().get(&path)?
+            let module = engine.backend().get_module(&path).await?
                 .ok_or_else(|| anyhow::anyhow!("Module not found: {path}"))?;
 
             if !module.built {
@@ -260,7 +350,7 @@ async fn main() -> anyhow::Result<()> {
                 serde_json::json!({})
             };
 
-            let binary_path = engine.registry().build_cache_dir()
+            let binary_path = engine.backend().build_cache_dir()
                 .join(path.replace('.', "_"));
             let runtime = Runtime::new(RuntimeConfig::default());
             let result = runtime.run_binary(&binary_path, &input_value, module.manifest.timeout_ms).await;
@@ -338,7 +428,7 @@ async fn main() -> anyhow::Result<()> {
         Commands::Plan { start, max_depth } => {
             let engine = init_engine(&data_dir)?;
             let options = PlanOptions { max_depth, ..Default::default() };
-            let run_graph = engine.plan(&start, &options)?;
+            let run_graph = engine.plan(&start, &options).await?;
 
             println!("{}", serde_json::to_string_pretty(&serde_json::json!({
                 "run_graph_id": run_graph.id,
@@ -354,13 +444,12 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::Execute { run_graph_id } => {
+        Commands::Execute { module, max_depth, input: _ } => {
             let engine = init_engine(&data_dir)?;
-            let _modules: Vec<automaton_core::ModuleNode> = vec![];
 
-            // Re-plan to get the run graph, then materialize
-            let options = PlanOptions::default();
-            let run_graph = engine.plan(&run_graph_id, &options)?;
+            // Plan from the module path
+            let options = PlanOptions { max_depth, ..Default::default() };
+            let run_graph = engine.plan(&module, &options).await?;
             let dag = engine.materialize(&run_graph)?;
 
             let result = engine.execute(dag).await?;
@@ -380,7 +469,7 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::List { query } => {
             let engine = init_engine(&data_dir)?;
-            let all = engine.registry().list()?;
+            let all = engine.backend().list_modules().await?;
             let filtered: Vec<_> = if let Some(q) = query {
                 all.into_iter().filter(|(p, _, _, _)| p.contains(&q)).collect()
             } else {
@@ -400,7 +489,7 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::Show { path } => {
             let engine = init_engine(&data_dir)?;
-            match engine.registry().get(&path)? {
+            match engine.backend().get_module(&path).await? {
                 Some(module) => {
                     println!("{}", serde_json::to_string_pretty(&serde_json::json!({
                         "path": module.manifest.name,
@@ -428,7 +517,7 @@ async fn main() -> anyhow::Result<()> {
         Commands::Logs { module, limit } => {
             let engine = init_engine(&data_dir)?;
             let runs = if let Some(ref module_path) = module {
-                engine.registry().get_runs(module_path)?
+                engine.backend().get_runs(module_path).await?
             } else {
                 vec![]
             };
@@ -447,9 +536,88 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
+        Commands::Worker { name, concurrency, poll_interval_ms, daemon } => {
+            // Open separate registry instances (SQLite handles concurrent access)
+            let worker_registry = Registry::open(&data_dir)?;
+            let scheduler_registry = Registry::open(&data_dir)?;
+
+            let build_cache = BuildCache::new(&data_dir);
+            let worker = Worker::new(&name, concurrency)
+                .with_build_cache(build_cache);
+
+            // Start the scheduler daemon to fire cron triggers in the background
+            let provider = Arc::new(RegistryTriggerProvider { registry: scheduler_registry });
+            let _scheduler = SchedulerDaemon::start(provider, 60_000);
+
+            if daemon {
+                let pid_path = data_dir.join("worker.pid");
+                let child = std::process::Command::new(std::env::current_exe()?)
+                    .args([
+                        "worker",
+                        "--name", &name,
+                        "--concurrency", &concurrency.to_string(),
+                        "--poll-interval-ms", &poll_interval_ms.to_string(),
+                    ])
+                    .stdout(std::process::Stdio::null())
+                    .stderr(std::process::Stdio::null())
+                    .stdin(std::process::Stdio::null())
+                    .spawn()?;
+                std::fs::write(&pid_path, child.id().to_string())?;
+                println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    "status": "worker_detached",
+                    "name": name,
+                    "pid": child.id(),
+                    "pid_file": pid_path.to_string_lossy(),
+                }))?);
+                std::process::exit(0);
+            }
+
+            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                "status": "worker_started",
+                "name": name,
+                "concurrency": concurrency,
+                "poll_interval_ms": poll_interval_ms,
+                "scheduler": "active",
+            }))?);
+
+            // Worker runs in the foreground, processing jobs from the queue
+            worker.start(&worker_registry, poll_interval_ms).await;
+        }
+
+        Commands::Postgres { action } => {
+            match action {
+                PostgresCommand::Migrate { database_url } => {
+                    let url = database_url
+                        .or_else(|| std::env::var("DATABASE_URL").ok())
+                        .unwrap_or_else(|| "postgres://localhost:5432/automaton".to_string());
+
+                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                        "status": "connecting",
+                        "database_url": url,
+                    }))?);
+
+                    match AutomatonDb::connect(&url).await {
+                        Ok(_db) => {
+                            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                                "status": "migrated",
+                                "database_url": url,
+                            }))?);
+                        }
+                        Err(e) => {
+                            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                                "status": "error",
+                                "error": e.to_string(),
+                            }))?);
+                            std::process::exit(1);
+                        }
+                    }
+                }
+            }
+        }
+
         Commands::Doctor => {
             let engine = init_engine(&data_dir)?;
-            let module_count = engine.registry().list().unwrap_or_default().len();
+            let module_count = engine.backend().list_modules().await.unwrap_or_default().len();
             let graph_nodes = engine.graph().all_nodes().unwrap_or_default().len();
             let graph_edges = engine.graph().all_edges().unwrap_or_default().len();
 

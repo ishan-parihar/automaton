@@ -1,10 +1,10 @@
 {
-  "updatedAt": 1778120677684,
+  "updatedAt": 1778145321705,
   "categories": {
     "delegate": {
-      "success": 4,
+      "success": 6,
       "failed": 0,
-      "totalDurationMs": 296912
+      "totalDurationMs": 416752
     }
   },
   "agents": {
@@ -22,13 +22,18 @@
       "success": 1,
       "failed": 0,
       "totalDurationMs": 20846
+    },
+    "fixer": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 119840
     }
   },
   "tools": {
     "pantheon_delegate": {
-      "success": 4,
+      "success": 6,
       "failed": 0,
-      "totalDurationMs": 296912
+      "totalDurationMs": 416752
     },
     "pantheon_fetch_docs": {
       "success": 36,
@@ -56,305 +61,330 @@
       "totalDurationMs": 25
     },
     "pantheon_repo_map": {
-      "success": 1,
+      "success": 6,
       "failed": 0,
-      "totalDurationMs": 4
+      "totalDurationMs": 100
     },
     "pantheon_workflow_state": {
+      "success": 4,
+      "failed": 1,
+      "totalDurationMs": 41
+    },
+    "pantheon_background": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 125
+    },
+    "pantheon_background_status": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 41
+    },
+    "pantheon_background_log": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 51
+    },
+    "pantheon_background_result": {
       "success": 1,
       "failed": 0,
-      "totalDurationMs": 12
+      "totalDurationMs": 10
+    },
+    "pantheon_code_map": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 16
     }
   },
   "adapters": {},
   "failureKinds": {
-    "pantheon": 6
+    "pantheon": 7
   },
   "background": {
-    "queued": 0,
+    "queued": 2,
     "completed": 0,
-    "failed": 97,
+    "failed": 689,
     "cancelled": 0
   },
   "recent": [
     {
       "kind": "background",
-      "label": "explorer:pantheon_k81j8q0i",
-      "status": "failed",
-      "ts": 1778097938272,
-      "failureKind": "background"
-    },
-    {
-      "kind": "background",
-      "label": "explorer:pantheon_hzw9frya",
-      "status": "failed",
-      "ts": 1778097938272,
-      "failureKind": "background"
-    },
-    {
-      "kind": "background",
-      "label": "fixer:pantheon_lkg7qyjn",
-      "status": "failed",
-      "ts": 1778097938272,
-      "failureKind": "background"
-    },
-    {
-      "kind": "background",
       "label": "explorer:pantheon_lymw7uuf",
       "status": "failed",
-      "ts": 1778098020017,
+      "ts": 1778144724164,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_mehw6mlg",
       "status": "failed",
-      "ts": 1778098020017,
+      "ts": 1778144724164,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_k81j8q0i",
       "status": "failed",
-      "ts": 1778098020017,
+      "ts": 1778144724165,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_hzw9frya",
       "status": "failed",
-      "ts": 1778098020017,
+      "ts": 1778144724166,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "fixer:pantheon_lkg7qyjn",
       "status": "failed",
-      "ts": 1778098020018,
-      "failureKind": "background"
-    },
-    {
-      "kind": "tool",
-      "label": "pantheon_workflow_state",
-      "status": "success",
-      "durationMs": 12,
-      "ts": 1778098039687
-    },
-    {
-      "kind": "tool",
-      "label": "pantheon_background_overview",
-      "status": "success",
-      "durationMs": 14,
-      "ts": 1778098049868
-    },
-    {
-      "kind": "background",
-      "label": "explorer:pantheon_lymw7uuf",
-      "status": "failed",
-      "ts": 1778098061788,
+      "ts": 1778144724166,
       "failureKind": "background"
     },
     {
       "kind": "background",
-      "label": "explorer:pantheon_mehw6mlg",
+      "label": "fixer:pantheon_o93dg234",
       "status": "failed",
-      "ts": 1778098061789,
+      "ts": 1778145193150,
       "failureKind": "background"
     },
     {
       "kind": "background",
-      "label": "explorer:pantheon_k81j8q0i",
+      "label": "fixer:pantheon_r2oxlzcv",
       "status": "failed",
-      "ts": 1778098061789,
-      "failureKind": "background"
-    },
-    {
-      "kind": "background",
-      "label": "explorer:pantheon_hzw9frya",
-      "status": "failed",
-      "ts": 1778098061831,
-      "failureKind": "background"
-    },
-    {
-      "kind": "background",
-      "label": "fixer:pantheon_lkg7qyjn",
-      "status": "failed",
-      "ts": 1778098061832,
+      "ts": 1778145193151,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_lymw7uuf",
       "status": "failed",
-      "ts": 1778098081410,
+      "ts": 1778145193151,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_mehw6mlg",
       "status": "failed",
-      "ts": 1778098081410,
+      "ts": 1778145193151,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_k81j8q0i",
       "status": "failed",
-      "ts": 1778098081410,
+      "ts": 1778145193151,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_hzw9frya",
       "status": "failed",
-      "ts": 1778098081411,
+      "ts": 1778145193151,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "fixer:pantheon_lkg7qyjn",
       "status": "failed",
-      "ts": 1778098081411,
+      "ts": 1778145193152,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145248807,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145248807,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_lymw7uuf",
       "status": "failed",
-      "ts": 1778098164280,
+      "ts": 1778145248807,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_mehw6mlg",
       "status": "failed",
-      "ts": 1778098164280,
+      "ts": 1778145248808,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_k81j8q0i",
       "status": "failed",
-      "ts": 1778098164280,
+      "ts": 1778145248808,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_hzw9frya",
       "status": "failed",
-      "ts": 1778098164281,
+      "ts": 1778145248808,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "fixer:pantheon_lkg7qyjn",
       "status": "failed",
-      "ts": 1778098164281,
+      "ts": 1778145248808,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145270844,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145270846,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_lymw7uuf",
       "status": "failed",
-      "ts": 1778120516419,
+      "ts": 1778145270846,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_mehw6mlg",
       "status": "failed",
-      "ts": 1778120516419,
+      "ts": 1778145270846,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_k81j8q0i",
       "status": "failed",
-      "ts": 1778120516419,
+      "ts": 1778145270846,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_hzw9frya",
       "status": "failed",
-      "ts": 1778120516419,
+      "ts": 1778145270847,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "fixer:pantheon_lkg7qyjn",
       "status": "failed",
-      "ts": 1778120516420,
+      "ts": 1778145270847,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145300169,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145300170,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_lymw7uuf",
       "status": "failed",
-      "ts": 1778120521921,
+      "ts": 1778145300170,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_mehw6mlg",
       "status": "failed",
-      "ts": 1778120521922,
+      "ts": 1778145300171,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_k81j8q0i",
       "status": "failed",
-      "ts": 1778120521922,
+      "ts": 1778145300171,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_hzw9frya",
       "status": "failed",
-      "ts": 1778120521922,
+      "ts": 1778145300171,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "fixer:pantheon_lkg7qyjn",
       "status": "failed",
-      "ts": 1778120521922,
+      "ts": 1778145300171,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145321703,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145321704,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_lymw7uuf",
       "status": "failed",
-      "ts": 1778120677683,
+      "ts": 1778145321705,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_mehw6mlg",
       "status": "failed",
-      "ts": 1778120677683,
+      "ts": 1778145321705,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_k81j8q0i",
       "status": "failed",
-      "ts": 1778120677684,
+      "ts": 1778145321705,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "explorer:pantheon_hzw9frya",
       "status": "failed",
-      "ts": 1778120677684,
+      "ts": 1778145321705,
       "failureKind": "background"
     },
     {
       "kind": "background",
       "label": "fixer:pantheon_lkg7qyjn",
       "status": "failed",
-      "ts": 1778120677684,
+      "ts": 1778145321705,
       "failureKind": "background"
     }
   ]

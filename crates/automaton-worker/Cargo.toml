@@ -8,6 +8,7 @@ description = "Worker daemon for Automaton — pulls jobs from queue and execute
 automaton-core.workspace = true
 automaton-build.workspace = true
 automaton-runtime.workspace = true
+automaton-registry.workspace = true
 tokio.workspace = true
 serde_json.workspace = true
 tracing.workspace = true

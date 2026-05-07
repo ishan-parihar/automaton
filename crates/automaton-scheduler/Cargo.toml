@@ -5,6 +5,7 @@ edition = "2024"
 description = "Cron and event scheduler for Automaton — triggers script/flow execution"
 
 [dependencies]
+async-trait.workspace = true
 automaton-core.workspace = true
 croner.workspace = true
 tokio.workspace = true

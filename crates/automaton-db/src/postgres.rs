@@ -3,7 +3,7 @@
 
 use async_trait::async_trait;
 use chrono::Utc;
-use deadpool_postgres::{Config, Pool, RecyclingMethod, Runtime};
+use deadpool_postgres::{Manager, Pool, RecyclingMethod};
 use serde_json::Value;
 use tokio_postgres::{NoTls, Row};
 
@@ -17,11 +17,19 @@ pub struct PostgresPool {
 
 impl PostgresPool {
     /// Connect to Postgres and run migrations.
-    /// Connection string: "host=localhost user=automaton dbname=automaton"
+    /// Connection string: "host=localhost user=automaton dbname=automaton" or "postgres://user:pass@host/dbname"
     pub async fn connect(database_url: &str) -> Result<Self, String> {
-        let config: Config = database_url.parse().map_err(|e| format!("Invalid DB URL: {e}"))?;
-        let pool = config
-            .create_pool(Some(Runtime::Tokio1), NoTls)
+        // Parse the URL using tokio_postgres::Config, then build Manager from it
+        let pg_config = database_url
+            .parse::<tokio_postgres::Config>()
+            .map_err(|e| format!("Invalid Postgres URL: {e}"))?;
+        let mgr_config = deadpool_postgres::ManagerConfig {
+            recycling_method: RecyclingMethod::Fast,
+        };
+        let mgr = Manager::from_config(pg_config, NoTls, mgr_config);
+        let pool = Pool::builder(mgr)
+            .max_size(10)
+            .build()
             .map_err(|e| format!("Pool creation failed: {e}"))?;
 
         let pg = Self { pool };

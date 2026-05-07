@@ -21,6 +21,10 @@ pub struct FlowStep {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum FlowStepKind {
     Script,
+    Shell {
+        command: String,
+        shell: Option<String>,
+    },
     BranchOne(Vec<Vec<FlowStep>>),
     BranchAll(Vec<Vec<FlowStep>>),
     ForLoop {
@@ -34,6 +38,11 @@ pub enum FlowStepKind {
     },
     Sleep,
     FailureModule,
+    /// Call another flow by path, merging its results
+    CallFlow {
+        flow_path: String,
+        input: Option<serde_json::Value>,
+    },
 }
 
 /// A complete flow definition — the composition of multiple steps
