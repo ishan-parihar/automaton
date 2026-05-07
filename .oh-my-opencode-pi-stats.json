@@ -1,0 +1,391 @@
+{
+  "updatedAt": 1778145321705,
+  "categories": {
+    "delegate": {
+      "success": 6,
+      "failed": 0,
+      "totalDurationMs": 416752
+    }
+  },
+  "agents": {
+    "explorer": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 14572
+    },
+    "librarian": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 261494
+    },
+    "oracle": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 20846
+    },
+    "fixer": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 119840
+    }
+  },
+  "tools": {
+    "pantheon_delegate": {
+      "success": 6,
+      "failed": 0,
+      "totalDurationMs": 416752
+    },
+    "pantheon_fetch_docs": {
+      "success": 36,
+      "failed": 0,
+      "totalDurationMs": 13685
+    },
+    "pantheon_search": {
+      "success": 13,
+      "failed": 0,
+      "totalDurationMs": 13362
+    },
+    "pantheon_github_file": {
+      "success": 5,
+      "failed": 6,
+      "totalDurationMs": 7986
+    },
+    "pantheon_background_wait": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 8
+    },
+    "pantheon_background_overview": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 25
+    },
+    "pantheon_repo_map": {
+      "success": 6,
+      "failed": 0,
+      "totalDurationMs": 100
+    },
+    "pantheon_workflow_state": {
+      "success": 4,
+      "failed": 1,
+      "totalDurationMs": 41
+    },
+    "pantheon_background": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 125
+    },
+    "pantheon_background_status": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 41
+    },
+    "pantheon_background_log": {
+      "success": 2,
+      "failed": 0,
+      "totalDurationMs": 51
+    },
+    "pantheon_background_result": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 10
+    },
+    "pantheon_code_map": {
+      "success": 1,
+      "failed": 0,
+      "totalDurationMs": 16
+    }
+  },
+  "adapters": {},
+  "failureKinds": {
+    "pantheon": 7
+  },
+  "background": {
+    "queued": 2,
+    "completed": 0,
+    "failed": 689,
+    "cancelled": 0
+  },
+  "recent": [
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_lymw7uuf",
+      "status": "failed",
+      "ts": 1778144724164,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_mehw6mlg",
+      "status": "failed",
+      "ts": 1778144724164,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_k81j8q0i",
+      "status": "failed",
+      "ts": 1778144724165,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_hzw9frya",
+      "status": "failed",
+      "ts": 1778144724166,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778144724166,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145193150,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145193151,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_lymw7uuf",
+      "status": "failed",
+      "ts": 1778145193151,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_mehw6mlg",
+      "status": "failed",
+      "ts": 1778145193151,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_k81j8q0i",
+      "status": "failed",
+      "ts": 1778145193151,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_hzw9frya",
+      "status": "failed",
+      "ts": 1778145193151,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778145193152,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145248807,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145248807,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_lymw7uuf",
+      "status": "failed",
+      "ts": 1778145248807,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_mehw6mlg",
+      "status": "failed",
+      "ts": 1778145248808,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_k81j8q0i",
+      "status": "failed",
+      "ts": 1778145248808,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_hzw9frya",
+      "status": "failed",
+      "ts": 1778145248808,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778145248808,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145270844,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145270846,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_lymw7uuf",
+      "status": "failed",
+      "ts": 1778145270846,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_mehw6mlg",
+      "status": "failed",
+      "ts": 1778145270846,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_k81j8q0i",
+      "status": "failed",
+      "ts": 1778145270846,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_hzw9frya",
+      "status": "failed",
+      "ts": 1778145270847,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778145270847,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145300169,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145300170,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_lymw7uuf",
+      "status": "failed",
+      "ts": 1778145300170,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_mehw6mlg",
+      "status": "failed",
+      "ts": 1778145300171,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_k81j8q0i",
+      "status": "failed",
+      "ts": 1778145300171,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_hzw9frya",
+      "status": "failed",
+      "ts": 1778145300171,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778145300171,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_o93dg234",
+      "status": "failed",
+      "ts": 1778145321703,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_r2oxlzcv",
+      "status": "failed",
+      "ts": 1778145321704,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_lymw7uuf",
+      "status": "failed",
+      "ts": 1778145321705,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_mehw6mlg",
+      "status": "failed",
+      "ts": 1778145321705,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_k81j8q0i",
+      "status": "failed",
+      "ts": 1778145321705,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "explorer:pantheon_hzw9frya",
+      "status": "failed",
+      "ts": 1778145321705,
+      "failureKind": "background"
+    },
+    {
+      "kind": "background",
+      "label": "fixer:pantheon_lkg7qyjn",
+      "status": "failed",
+      "ts": 1778145321705,
+      "failureKind": "background"
+    }
+  ]
+}
