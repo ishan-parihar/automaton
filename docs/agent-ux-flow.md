@@ -193,6 +193,7 @@ Server → { status: "flow_created", path: "github.issue_triage_pipeline", steps
 ```
 
 The flow engine validates:
+
 - **No cyclic dependencies** (toposort via petgraph)
 - **All referenced modules exist** (registry lookup)
 - **Branch configs are valid** (branch_one: first success / branch_all: all execute)
@@ -388,12 +389,12 @@ The infrastructure grows organically. Each new module integrates with existing o
 
 ## Key Infrastructure Properties
 
-| Property | How Automaton Handles It |
-|---|---|
-| **Scalability** | Each module = independent binary. Workers pull from queue via `FOR UPDATE SKIP LOCKED`. |
-| **Reproducibility** | Content-addressed builds by SHA-256 hash. Same source → same binary. |
-| **Security** | Secrets encrypted at rest with AES-256-GCM. `$var:` / `$res:` runtime injection. |
-| **Observability** | Every run persisted with full I/O + timing. Graph shows infrastructure state. |
-| **Extensibility** | New modules wire into existing graph via edges. Flow engine validates DAG. |
-| **Resilience** | Retry with exponential backoff. Failure modules handle errors. Circuit breakers stop cascading failures. |
-| **Agent-Native** | Everything available through MCP tools. No UI needed. Full autonomy. |
+| Property            | How Automaton Handles It                                                                                 |
+| ------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Scalability**     | Each module = independent binary. Workers pull from queue via `FOR UPDATE SKIP LOCKED`.                  |
+| **Reproducibility** | Content-addressed builds by SHA-256 hash. Same source → same binary.                                     |
+| **Security**        | Secrets encrypted at rest with AES-256-GCM. `$var:` / `$res:` runtime injection.                         |
+| **Observability**   | Every run persisted with full I/O + timing. Graph shows infrastructure state.                            |
+| **Extensibility**   | New modules wire into existing graph via edges. Flow engine validates DAG.                               |
+| **Resilience**      | Retry with exponential backoff. Failure modules handle errors. Circuit breakers stop cascading failures. |
+| **Agent-Native**    | Everything available through MCP tools. No UI needed. Full autonomy.                                     |
