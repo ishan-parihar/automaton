@@ -24,15 +24,15 @@
 ┌──────▼──────────┐    ┌──────────▼───────────────────┐
 │ automaton-graph │    │ automaton-runtime             │
 │ Property graph   │    │ Process sandbox, retry, I/O │
-│ (SQLite-backed)  │    │                              │
+│ (SQLite/PG-backed)│    │                              │
 └─────────────────┘    └──────────────────────────────┘
        │                          │
        └──────────┬───────────────┘
                   │
 ┌─────────────────▼───────────────────────────────────┐
 │                automaton-registry                    │
-│  SQLite-backed module catalog + content-addressed    │
-│  build cache + run history                          │
+│  SQLite/Postgres-backed module catalog + content-addressed│
+│  build cache + run history + webhooks                │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -69,6 +69,9 @@ automaton mcp
 
 # Diagnostics
 automaton doctor
+
+# Postgres Migration (Production)
+automaton postgres migrate --database-url "postgres://user:pass@host:5432/automaton"
 ```
 
 ## Workspace Layout
@@ -87,15 +90,15 @@ automaton doctor
 
 ```
 crates/
-├── automaton-core/           # Shared types: manifests, graph nodes, errors
+├── automaton-core/           # Shared types: manifests, graph nodes, errors, telemetry
 ├── automaton-sdk/            # #[automaton] proc macro + prelude
 ├── automaton-sdk-derive/     # Proc macro implementation
 ├── automaton-cli/            # CLI binary
-├── automaton-engine/         # Planner, DAG materializer, executor
-├── automaton-registry/       # SQLite-backed module + build + run DB
-├── automaton-graph/          # SQLite-backed property graph store
+├── automaton-engine/         # Planner, DAG materializer, executor (with Parallelism)
+├── automaton-registry/       # SQL-backed module + build + run DB (SQLite/Postgres)
+├── automaton-graph/          # SQL-backed property graph store
 ├── automaton-mcp/            # MCP server (rmcp)
-└── automaton-runtime/        # Child process runner, retry, timeout
+└── automaton-runtime/        # Child process runner, retry, timeout, orphan cleanup
 ```
 
 ## Graph Model
@@ -103,28 +106,23 @@ crates/
 Two-layer architecture:
 
 1. **Design Graph** (persistent property graph): Modules, Workflows, Triggers, Resources, Secrets, Capabilities — interconnected via labeled edges (`DEPENDS_ON`, `CALLS`, `TRIGGERS`, `USES_RESOURCE`, etc.)
-
 2. **Run Graph** (materialized DAG for one execution): Compiled from design graph + context, verified acyclic via `petgraph::toposort`.
 
 ## MCP Surface (for AI agents)
 
-| Tool                   | Description                            |
-| ---------------------- | -------------------------------------- |
-| `module.create`        | Register a new automation module       |
-| `module.build`         | Compile module to binary               |
-| `module.validate`      | Validate manifest + source             |
-| `module.run`           | Execute a module                       |
-| `module.deprecate`     | Remove module                          |
-| `workflow.plan`        | Discover dependencies, build run graph |
-| `workflow.materialize` | Verify DAG validity (cycle check)      |
-| `graph.query`          | Query nodes by kind                    |
-| `graph.pathfind`       | Find paths between nodes               |
-| `graph.add_edge`       | Wire module dependencies               |
-| `registry.search`      | Search registered modules              |
-| `resource.bind`        | Bind typed resources                   |
-| `run.logs`             | Inspect run history                    |
-| `run.retry`            | Retry failed execution                 |
-| `system.health`        | Component health check                 |
+The MCP server exposes 39 tools across 9 categories, enabling deep substrate control:
+
+| Category | Key Tools | Description |
+|---|---|---|
+| **Modules** | `create`, `build`, `validate`, `run`, `deprecate` | Life-cycle management of automation units |
+| **Workflows** | `plan`, `materialize`, `execute`, `execute_telemetry` | DAG planning and execution with full telemetry |
+| **Graph** | `query`, `pathfind`, `add_edge`, `summarize`, `search`, `time_range` | Property graph manipulation and discovery |
+| **Registry** | `search`, `list_templates` | Discovery of registered modules |
+| **Resources** | `bind`, `list` | Binding typed resources to modules |
+| **Runs** | `logs`, `retry` | Inspecting and re-running executions |
+| **System** | `health`, `capability_inventory` | System health and tool capability audit |
+| **Webhooks** | `register`, `list`, `delete` | Configuring outbound execution notifications |
+| **Secrets** | `set`, `get` | Managing sensitive credentials |
 
 ## Module Authoring
 
@@ -180,13 +178,13 @@ tags:
 
 ## Design Decisions
 
-- **Rust-first**: Smallest binary size (~2.7 MB compiled) and runtime memory (~4 MB RSS)
-- **SQLite-backed**: No Postgres dependency for local-first use
-- **petgraph DAG**: Topological scheduling with cycle detection
-- **Windmill-inspired packaging**: Code + YAML manifest, content-addressed builds
-- **MCP-native control**: AI agents interact through the MCP protocol, not raw shell
-- **Property graph**: Two-layer (design + run) enables recursive module composition
-- **Incremental compilation**: Shared build cache, debug/release mode split
+- **Rust-first**: Smallest binary size and runtime memory footprint.
+- **Hybrid Storage**: SQLite for local-first, Postgres for production-grade scalability.
+- **High-Throughput Engine**: Level-based DAG parallelism with `futures::join_all`.
+- **Agent-First UX**: Dedicated MCP tools for telemetry, graph search, and progress notifications.
+- **Resilient Execution**: Process group management (kill_on_drop) to prevent orphan shells.
+- **Strict Typing**: `deny_unknown_fields` on all MCP parameter structs to prevent AI hallucinations.
+- **Incremental compilation**: Shared build cache, debug/release mode split.
 
 ## License
 

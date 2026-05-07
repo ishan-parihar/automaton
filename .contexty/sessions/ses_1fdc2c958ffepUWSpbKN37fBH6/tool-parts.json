@@ -1,0 +1,264 @@
+{
+  "parts": [
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_c1bMpITJAwPYG2WC5H2B9379",
+      "state": {
+        "status": "error",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/graph/"
+        },
+        "error": "File not found: /home/ishanp/Documents/GitHub/automaton/crates/graph/\n\nDid you mean one of these?\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph",
+        "time": {
+          "start": 1778154032220,
+          "end": 1778154032224
+        }
+      },
+      "id": "prt_e023d4a08001hcDCmC8sdWUQlE",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d3782001YjzkP7eFHPOAgm"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_01_obcIcoeGPXSvLHtg9G9R4348",
+      "state": {
+        "status": "error",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/graph/Cargo.toml"
+        },
+        "error": "File not found: /home/ishanp/Documents/GitHub/automaton/crates/graph/Cargo.toml",
+        "time": {
+          "start": 1778154033041,
+          "end": 1778154033045
+        }
+      },
+      "id": "prt_e023d4d280016M1rXzOJjWumzD",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d3782001YjzkP7eFHPOAgm"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_02_czTnHdvFhqQzeBf8Ejr69821",
+      "state": {
+        "status": "error",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/graph/src/lib.rs"
+        },
+        "error": "File not found: /home/ishanp/Documents/GitHub/automaton/crates/graph/src/lib.rs",
+        "time": {
+          "start": 1778154033825,
+          "end": 1778154033830
+        }
+      },
+      "id": "prt_e023d504a0012qSWzNnEqYEj7j",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d3782001YjzkP7eFHPOAgm"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_nnGFRzPCXjnHTaxypU9t1545",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/</path>\n<type>directory</type>\n<entries>\nCargo.toml\nsrc/\n\n(2 entries)\n</entries>\n\n[Project README: /home/ishanp/Documents/GitHub/automaton/README.md]\n# Automaton — AI-Native Rust Automation Substrate\n\n**Automaton** is a CLI-based, graph-native automation framework for AI agents to create, compose, and execute modular Rust workflows. It exposes its entire substrate through an MCP server built on the official [rmcp](https://github.com/modelcontextprotocol/rust-sdk) crate.\n\n## Architecture\n\n```\n┌─────────────────────────────────────────────────────────┐\n│                    AI Agent (LLM)                        │\n│  Uses MCP tools to create modules → plan → execute       │\n└──────────────────────┬──────────────────────────────────┘\n                       │ MCP (stdio/SSE)\n┌──────────────────────▼──────────────────────────────────┐\n│                automaton-mcp (MCP Server)                │\n│  module.* | workflow.* | graph.* | registry.* | run.*   │\n└──────────────────────┬──────────────────────────────────┘\n                       │\n┌──────────────────────▼──────────────────────────────────┐\n│                automaton-engine (Orchestrator)           │\n│  Planner → Materializer → Executor                      │\n│  Converts design graph → run DAG → execution            │\n└──────┬──────────────────────────┬───────────────────────┘\n       │                          │\n┌──────▼──────────┐    ┌──────────▼───────────────────┐\n│ automaton-graph │    │ automaton-runtime             │\n│ Property graph   │    │ Process sandbox, retry, I/O │\n│ (SQLite-backed)  │    │                              │\n└─────────────────┘    └──────────────────────────────┘\n       │                          │\n       └──────────┬───────────────┘\n                  │\n┌─────────────────▼───────────────────────────────────┐\n│                automaton-registry                    │\n│  SQLite-backed module catalog + content-addressed    │\n│  build cache + run history                          │\n└─────────────────────────────────────────────────────┘\n```\n\n## Quick Start\n\n```bash\n# Initialize workspace\nautomaton init\n\n# Scaffold a module\nautomaton new github.issue_triage\n\n# Build it\nautomaton build github.issue_triage\n\n# Run it\nautomaton run github.issue_triage --input '{\"repo\": \"user/repo\"}'\n\n# Plan a workflow from a module\nautomaton plan github.issue_triage --max-depth 5\n\n# List modules\nautomaton list\n\n# Show module details\nautomaton show github.issue_triage\n\n# Inspect the graph\nautomaton graph nodes\nautomaton graph path module_a module_b\n\n# Start MCP server (for AI agents)\nautomaton mcp\n\n# Diagnostics\nautomaton doctor\n```\n\n## Workspace Layout\n\n```\n~/.local/share/automaton/     # Data directory\n├── registry.db               # Module catalog (SQLite)\n├── graph.db                  # Property graph store (SQLite)\n├── builds/                   # Compiled binary cache\n├── modules/                  # Uncompiled module sources\n├── work/                     # Runtime working directory\n└── tmp/                      # Temp execution artifacts\n```\n\n## Project Structure\n\n```\ncrates/\n├── automaton-core/           # Shared types: manifests, graph nodes, errors\n├── automaton-sdk/            # #[automaton] proc macro + prelude\n├── automaton-sdk-derive/     # Proc macro implementation\n├── automaton-cli/            # CLI binary\n├── automaton-engine/         # Planner, DAG materializer, executor\n├── automaton-registry/       # SQLite-backed module + build + run DB\n├── automaton-graph/          # SQLite-backed property graph store\n├── automaton-mcp/            # MCP server (rmcp)\n└── automaton-runtime/        # Child process runner, retry, timeout\n```\n\n## Graph Model\n\nTwo-layer architecture:\n\n1. **Design Graph** (persistent property graph): Modules, Workflows, Triggers, Resources, Secrets, Capabilities — interconnected via labeled edges (`DEPENDS_ON`, `CALLS`, `TRIGGERS`, `USES_RESOURCE`, etc.)\n\n2. **Run Graph** (materialized DAG for one execution): Compiled from design graph + context, verified acyclic via `petgraph::toposort`.\n\n## MCP Surface (for AI agents)\n\n| Tool                   | Description                            |\n| ---------------------- | -------------------------------------- |\n| `module.create`        | Register a new automation module       |\n| `module.build`         | Compile module to binary               |\n| `module.validate`      | Validate manifest + source             |\n| `module.run`           | Execute a module                       |\n| `module.deprecate`     | Remove module                          |\n| `workflow.plan`        | Discover dependencies, build run graph |\n| `workflow.materialize` | Verify DAG validity (cycle check)      |\n| `graph.query`          | Query nodes by kind                    |\n| `graph.pathfind`       | Find paths between nodes               |\n| `graph.add_edge`       | Wire module dependencies               |\n| `registry.search`      | Search registered modules              |\n| `resource.bind`        | Bind typed resources                   |\n| `run.logs`             | Inspect run history                    |\n| `run.retry`            | Retry failed execution                 |\n| `system.health`        | Component health check                 |\n\n## Module Authoring\n\n```rust\nuse automaton_sdk::prelude::*;\nuse serde::{Deserialize, Serialize};\n\n#[derive(Deserialize, JsonSchema)]\nstruct Input {\n    repo: String,\n    issue_number: u32,\n}\n\n#[derive(Serialize, JsonSchema)]\nstruct Output {\n    summary: String,\n    priority: String,\n}\n\n#[automaton]\nasync fn main(ctx: Context, input: Input) -> anyhow::Result<Output> {\n    // Your automation logic\n    Ok(Output {\n        summary: format!(\"Triaged issue #{} from {}\", input.issue_number, input.repo),\n        priority: \"medium\".to_string(),\n    })\n}\n```\n\nManifest: `automation.yaml`\n\n```yaml\nname: github.issue_triage\nversion: 0.1.0\nentry: main\nsummary: \"Triage GitHub issues by priority\"\ntimeout_ms: 30000\nretry:\n  max_attempts: 3\n  delay_ms: 1000\n  backoff: exponential\npermissions:\n  - github.read\nresources:\n  - github.api\ndepends_on:\n  - llm.summarize\ntags:\n  - github\n  - issue\n  - triage\n```\n\n## Design Decisions\n\n- **Rust-first**: Smallest binary size (~2.7 MB compiled) and runtime memory (~4 MB RSS)\n- **SQLite-backed**: No Postgres dependency for local-first use\n- **petgraph DAG**: Topological scheduling with cycle detection\n- **Windmill-inspired packaging**: Code + YAML manifest, content-addressed builds\n- **MCP-native control**: AI agents interact through the MCP protocol, not raw shell\n- **Property graph**: Two-layer (design + run) enables recursive module composition\n- **Incremental compilation**: Shared build cache, debug/release mode split\n\n## License\n\nMIT\n",
+        "metadata": {
+          "preview": "Cargo.toml\nsrc/",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-graph",
+        "time": {
+          "start": 1778154038089,
+          "end": 1778154038112
+        }
+      },
+      "id": "prt_e023d60f0001DFXF6V7n1hw1SK",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d576d001DeP3Qt7RFMUAxO"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_v7s34BoQxJrIqWEBoGDD6902",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/</path>\n<type>directory</type>\n<entries>\nlib.rs\n\n(1 entries)\n</entries>",
+        "metadata": {
+          "preview": "lib.rs",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-graph/src",
+        "time": {
+          "start": 1778154042393,
+          "end": 1778154042406
+        }
+      },
+      "id": "prt_e023d7194001bAOHoXJvEkIKSr",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d67ff001SBE2xAMU1p5JQV"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_01_dlRmvMqtscjBhZqjichD8574",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/Cargo.toml"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/Cargo.toml</path>\n<type>file</type>\n<content>\n1: [package]\n2: name = \"automaton-graph\"\n3: version = \"0.1.0\"\n4: edition = \"2024\"\n5: description = \"Property graph store for automation design and run-time graphs\"\n6: \n7: [dependencies]\n8: automaton-core = { workspace = true, features = [\"sqlite\"] }\n9: petgraph.workspace = true\n10: serde.workspace = true\n11: serde_json.workspace = true\n12: rusqlite.workspace = true\n13: uuid.workspace = true\n14: chrono.workspace = true\n15: tracing.workspace = true\n16: anyhow.workspace = true\n\n(End of file - total 16 lines)\n</content>",
+        "metadata": {
+          "preview": "[package]\nname = \"automaton-graph\"\nversion = \"0.1.0\"\nedition = \"2024\"\ndescription = \"Property graph store for automation design and run-time graphs\"\n\n[dependencies]\nautomaton-core = { workspace = true, features = [\"sqlite\"] }\npetgraph.workspace = true\nserde.workspace = true\nserde_json.workspace = true\nrusqlite.workspace = true\nuuid.workspace = true\nchrono.workspace = true\ntracing.workspace = true\nanyhow.workspace = true",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-graph/Cargo.toml",
+        "time": {
+          "start": 1778154043176,
+          "end": 1778154043186
+        }
+      },
+      "id": "prt_e023d74a1001xfyzunWhlfjlL7",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d67ff001SBE2xAMU1p5JQV"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_sHLzBnuYEO27S19XhpTH8639",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/lib.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/lib.rs</path>\n<type>file</type>\n<content>\n1: use std::collections::{HashMap, HashSet};\n2: use std::path::Path;\n3: use std::sync::Mutex;\n4: \n5: use automaton_core::*;\n6: \n7: use rusqlite::Connection;\n8: use serde::Serialize;\n9: \n10: /// Persistent property graph store backed by SQLite.\n11: pub struct GraphStore {\n12:     db: Mutex<Connection>,\n13: }\n14: \n15: fn with_db<T>(db: &Mutex<Connection>, f: impl FnOnce(&Connection) -> Result<T>) -> Result<T> {\n16:     let conn = db\n17:         .lock()\n18:         .map_err(|e| AutomatonError::Database(e.to_string()))?;\n19:     f(&conn)\n20: }\n21: \n22: impl GraphStore {\n23:     /// Open the graph store from the dedicated graph.db file.\n24:     /// Kept for backward compatibility. Prefer `open_merged` for new installations.\n25:     pub fn open(data_dir: &Path) -> Result<Self> {\n26:         let db_path = data_dir.join(\"graph.db\");\n27:         let db = Connection::open(&db_path)?;\n28:         let store = Self { db: Mutex::new(db) };\n29:         store.init_tables()?;\n30:         Ok(store)\n31:     }\n32: \n33:     /// Open the graph store using registry.db, which now contains merged\n34:     /// graph_nodes and graph_edges tables alongside all registry tables.\n35:     /// This eliminates the separate graph.db file.\n36:     pub fn open_merged(data_dir: &Path) -> Result<Self> {\n37:         let db_path = data_dir.join(\"registry.db\");\n38:         let db = Connection::open(&db_path)?;\n39:         Ok(Self { db: Mutex::new(db) })\n40:     }\n41: \n42:     fn init_tables(&self) -> Result<()> {\n43:         with_db(&self.db, |db| {\n44:             db.execute_batch(\n45:                 \"\n46:                 CREATE TABLE IF NOT EXISTS nodes (\n47:                     id TEXT PRIMARY KEY,\n48:                     kind TEXT NOT NULL,\n49:                     name TEXT NOT NULL,\n50:                     properties TEXT NOT NULL DEFAULT '{}',\n51:                     created_at TEXT NOT NULL DEFAULT (datetime('now'))\n52:                 );\n53:                 CREATE TABLE IF NOT EXISTS edges (\n54:                     id TEXT PRIMARY KEY,\n55:                     source TEXT NOT NULL,\n56:                     target TEXT NOT NULL,\n57:                     kind TEXT NOT NULL,\n58:                     properties TEXT NOT NULL DEFAULT '{}',\n59:                     created_at TEXT NOT NULL DEFAULT (datetime('now')),\n60:                     FOREIGN KEY (source) REFERENCES nodes(id),\n61:                     FOREIGN KEY (target) REFERENCES nodes(id)\n62:                 );\n63:                 CREATE INDEX IF NOT EXISTS idx_edges_source ON edges(source);\n64:                 CREATE INDEX IF NOT EXISTS idx_edges_target ON edges(target);\n65:                 CREATE INDEX IF NOT EXISTS idx_edges_kind ON edges(kind);\n66:                 CREATE INDEX IF NOT EXISTS idx_nodes_kind ON nodes(kind);\n67:                 \",\n68:             )?;\n69:             Ok(())\n70:         })\n71:     }\n72: \n73:     pub fn add_node(\n74:         &self,\n75:         kind: NodeKind,\n76:         name: &str,\n77:         properties: HashMap<String, serde_json::Value>,\n78:     ) -> Result<String> {\n79:         with_db(&self.db, |db| {\n80:             let id = uuid::Uuid::new_v4().to_string();\n81:             let kind_str = serde_json::to_string(&kind)?;\n82:             let props_str = serde_json::to_string(&properties)?;\n83:             db.execute(\n84:                 \"INSERT INTO nodes (id, kind, name, properties) VALUES (?1, ?2, ?3, ?4)\",\n85:                 rusqlite::params![id, kind_str, name, props_str],\n86:             )?;\n87:             Ok(id)\n88:         })\n89:     }\n90: \n91:     pub fn add_edge(\n92:         &self,\n93:         source: &str,\n94:         target: &str,\n95:         kind: EdgeKind,\n96:         properties: HashMap<String, serde_json::Value>,\n97:     ) -> Result<String> {\n98:         with_db(&self.db, |db| {\n99:             let id = uuid::Uuid::new_v4().to_string();\n100:             let kind_str = serde_json::to_string(&kind)?;\n101:             let props_str = serde_json::to_string(&properties)?;\n102:             db.execute(\n103:                 \"INSERT INTO edges (id, source, target, kind, properties) VALUES (?1, ?2, ?3, ?4, ?5)\",\n104:                 rusqlite::params![id, source, target, kind_str, props_str],\n105:             )?;\n106:             Ok(id)\n107:         })\n108:     }\n109: \n110:     pub fn get_node(&self, id: &str) -> Result<Option<Node>> {\n111:         with_db(&self.db, |db| {\n112:             let mut stmt = db.prepare(\n113:                 \"SELECT id, kind, name, properties, created_at FROM nodes WHERE id = ?1\",\n114:             )?;\n115:             let rows = stmt.query_map(rusqlite::params![id], row_to_node)?;\n116:             let mut result = vec![];\n117:             for row in rows {\n118:                 result.push(row?);\n119:             }\n120:             Ok(result.into_iter().next())\n121:         })\n122:     }\n123: \n124:     pub fn find_nodes_by_kind(&self, kind: NodeKind) -> Result<Vec<Node>> {\n125:         with_db(&self.db, |db| {\n126:             let kind_str = serde_json::to_string(&kind)?;\n127:             let mut stmt = db.prepare(\n128:                 \"SELECT id, kind, name, properties, created_at FROM nodes WHERE kind = ?1 ORDER BY created_at DESC\",\n129:             )?;\n130:             let rows = stmt.query_map(rusqlite::params![kind_str], row_to_node)?;\n131:             let mut result = vec![];\n132:             for row in rows {\n133:                 result.push(row?);\n134:             }\n135:             Ok(result)\n136:         })\n137:     }\n138: \n139:     pub fn find_nodes_by_kind_paginated(\n140:         &self,\n141:         kind: NodeKind,\n142:         limit: Option<u32>,\n143:         offset: Option<u32>,\n144:     ) -> Result<Vec<Node>> {\n145:         with_db(&self.db, |db| {\n146:             let kind_str = serde_json::to_string(&kind)?;\n147:             let mut sql = String::from(\n148:                 \"SELECT id, kind, name, properties, created_at FROM nodes WHERE kind = ? ORDER BY created_at DESC\",\n149:             );\n150:             let mut params: Vec<Box<dyn rusqlite::types::ToSql>> = vec![];\n151:             params.push(Box::new(kind_str));\n152:             if let Some(l) = limit {\n153:                 sql.push_str(\" LIMIT ?\");\n154:                 params.push(Box::new(l as i64));\n155:             }\n156:             if let Some(o) = offset {\n157:                 sql.push_str(\" OFFSET ?\");\n158:                 params.push(Box::new(o as i64));\n159:             }\n160:             let mut stmt = db.prepare(&sql)?;\n161:             let param_refs: Vec<&dyn rusqlite::types::ToSql> =\n162:                 params.iter().map(|p| p.as_ref()).collect();\n163:             let rows = stmt.query_map(param_refs.as_slice(), row_to_node)?;\n164:             let mut result = vec![];\n165:             for row in rows {\n166:                 result.push(row?);\n167:             }\n168:             Ok(result)\n169:         })\n170:     }\n171: \n172:     pub fn get_outgoing_edges(&self, node_id: &str) -> Result<Vec<Edge>> {\n173:         with_db(&self.db, |db| {\n174:             let stmt = db.prepare(\n175:                 \"SELECT id, source, target, kind, properties, created_at FROM edges WHERE source = ?1 ORDER BY created_at\",\n176:             )?;\n177:             map_edges_query(stmt, rusqlite::params![node_id])\n178:         })\n179:     }\n180: \n181:     pub fn get_incoming_edges(&self, node_id: &str) -> Result<Vec<Edge>> {\n182:         with_db(&self.db, |db| {\n183:             let stmt = db.prepare(\n184:                 \"SELECT id, source, target, kind, properties, created_at FROM edges WHERE target = ?1 ORDER BY created_at\",\n185:             )?;\n186:             map_edges_query(stmt, rusqlite::params![node_id])\n187:         })\n188:     }\n189: \n190:     pub fn get_dependency_chain(&self, start_id: &str) -> Result<Vec<Node>> {\n191:         let mut visited: HashSet<String> = HashSet::new();\n192:         let mut queue = std::collections::VecDeque::new();\n193:         let mut result = vec![];\n194:         queue.push_back(start_id.to_string());\n195:         while let Some(current) = queue.pop_front() {\n196:             if !visited.insert(current.clone()) {\n197:                 continue;\n198:             }\n199:             if let Some(node) = self.get_node(&current)? {\n200:                 result.push(node);\n201:             }\n202:             let edges = self.get_outgoing_edges(&current)?;\n203:             for edge in edges {\n204:                 if matches!(edge.kind, EdgeKind::DependsOn) {\n205:                     queue.push_back(edge.target);\n206:                 }\n207:             }\n208:         }\n209:         Ok(result)\n210:     }\n211: \n212:     pub fn find_path(&self, from: &str, to: &str) -> Result<Vec<Vec<NodeAndEdge>>> {\n213:         let all_edges = self.all_edges()?;\n214:         let mut adj: HashMap<String, Vec<(String, EdgeKind)>> = HashMap::new();\n215:         for edge in &all_edges {\n216:             adj.entry(edge.source.clone())\n217:                 .or_default()\n218:                 .push((edge.target.clone(), edge.kind.clone()));\n219:         }\n220: \n221:         type StackEntry = (String, Vec<(String, EdgeKind)>, HashSet<String>);\n222:         let mut paths: Vec<Vec<(String, EdgeKind)>> = vec![];\n223:         let mut stack: Vec<StackEntry> = vec![(from.to_string(), vec![], HashSet::new())];\n224: \n225:         while let Some((node, path_so_far, visited)) = stack.pop() {\n226:             let mut visited = visited;\n227:             if node == to {\n228:                 paths.push(path_so_far.clone());\n229:                 continue;\n230:             }\n231:             if !visited.insert(node.clone()) {\n232:                 continue;\n233:             }\n234:             if path_so_far.len() > 10 {\n235:                 continue;\n236:             }\n237:             if let Some(neighbors) = adj.get(&node) {\n238:                 for (next, kind) in neighbors {\n239:                     let mut new_path = path_so_far.clone();\n240:                     new_path.push((next.clone(), kind.clone()));\n241:                     stack.push((next.clone(), new_path, visited.clone()));\n242:                 }\n243:             }\n244:         }\n245: \n246:         let mut result = vec![];\n247:         for raw_path in &paths {\n248:             let mut segment = vec![];\n249:             // Add the start node (not included in DFS path traversal)\n250:             if let Some(node) = self.get_node(from)? {\n251:                 segment.push(NodeAndEdge {\n252:                     node,\n253:                     edge_kind: raw_path.first().map(|(_, ek)| ek.clone()).unwrap_or(EdgeKind::DependsOn),\n254:                 });\n255:             }\n256:             for (node_id, edge_kind) in raw_path {\n257:                 if let Some(node) = self.get_node(node_id)? {\n258:                     segment.push(NodeAndEdge {\n259:                         node,\n260:                         edge_kind: edge_kind.clone(),\n261:                     });\n262:                 }\n263:             }\n264:             result.push(segment);\n265:         }\n266:         Ok(result)\n267:     }\n268: \n269:     pub fn all_edges(&self) -> Result<Vec<Edge>> {\n270:         with_db(&self.db, |db| {\n271:             let stmt = db.prepare(\n272:                 \"SELECT id, source, target, kind, properties, created_at FROM edges ORDER BY created_at\",\n273:             )?;\n274:             map_edges_query(stmt, [])\n275:         })\n276:     }\n277: \n278:     pub fn all_nodes(&self) -> Result<Vec<Node>> {\n279:         with_db(&self.db, |db| {\n280:             let mut stmt = db.prepare(\n281:                 \"SELECT id, kind, name, properties, created_at FROM nodes ORDER BY created_at\",\n282:             )?;\n283:             let rows = stmt.query_map([], row_to_node)?;\n284:             let mut result = vec![];\n285:             for row in rows {\n286:                 result.push(row?);\n287:             }\n288:             Ok(result)\n289:         })\n290:     }\n291: \n292:     pub fn all_nodes_paginated(&self, limit: Option<u32>, offset: Option<u32>) -> Result<Vec<Node>> {\n293:         with_db(&self.db, |db| {\n294:             let mut sql = String::from(\n295:                 \"SELECT id, kind, name, properties, created_at FROM nodes ORDER BY created_at\",\n296:             );\n297:             let mut params: Vec<Box<dyn rusqlite::types::ToSql>> = vec![];\n298:             if let Some(l) = limit {\n299:                 sql.push_str(\" LIMIT ?\");\n300:                 params.push(Box::new(l as i64));\n301:             }\n302:             if let Some(o) = offset {\n303:                 sql.push_str(\" OFFSET ?\");\n304:                 params.push(Box::new(o as i64));\n305:             }\n306:             let mut stmt = db.prepare(&sql)?;\n307:             let param_refs: Vec<&dyn rusqlite::types::ToSql> =\n308:                 params.iter().map(|p| p.as_ref()).collect();\n309:             let rows = stmt.query_map(param_refs.as_slice(), row_to_node)?;\n310:             let mut result = vec![];\n311:             for row in rows {\n312:                 result.push(row?);\n313:             }\n314:             Ok(result)\n315:         })\n316:     }\n317: \n318:     /// Find all nodes whose properties match all the given key-value pairs.\n319:     /// Since SQLite stores properties as JSON text, this iterates all nodes\n320:     /// and performs in-memory filtering — suitable for moderate-sized graphs.\n321:     pub fn find_nodes_by_properties(\n322:         &self,\n323:         properties: &HashMap<String, serde_json::Value>,\n324:     ) -> Result<Vec<NodeAndEdge>> {\n325:         with_db(&self.db, |conn| {\n326:             let mut stmt = conn.prepare(\n327:                 \"SELECT id, kind, name, properties, created_at FROM nodes ORDER BY created_at\",\n328:             )?;\n329:             let rows = stmt.query_map([], row_to_node)?;\n330:             let mut result = vec![];\n331:             for row in rows {\n332:                 let node = row?;\n333:                 if properties\n334:                     .iter()\n335:                     .all(|(k, v)| node.properties.get(k) == Some(v))\n336:                 {\n337:                     result.push(NodeAndEdge {\n338:                         node,\n339:                         edge_kind: EdgeKind::DependsOn,\n340:                     });\n341:                 }\n342:             }\n343:             Ok(result)\n344:         })\n345:     }\n346: \n347:     /// Paginated variant of `find_nodes_by_properties`.\n348:     /// Filters all nodes by properties, then applies limit/offset.\n349:     pub fn find_nodes_by_properties_paginated(\n350:         &self,\n351:         properties: &HashMap<String, serde_json::Value>,\n352:         limit: usize,\n353:         offset: usize,\n354:     ) -> Result<Vec<NodeAndEdge>> {\n355:         let all = self.find_nodes_by_properties(properties)?;\n356:         let result: Vec<NodeAndEdge> = all.into_iter().skip(offset).take(limit).collect();\n357:         Ok(result)\n358:     }\n359: \n360:     pub fn delete_node(&self, id: &str) -> Result<()> {\n361:         with_db(&self.db, |db| {\n362:             db.execute(\n363:                 \"DELETE FROM edges WHERE source = ?1 OR target = ?1\",\n364:                 rusqlite::params![id],\n365:             )?;\n366:             db.execute(\"DELETE FROM nodes WHERE id = ?1\", rusqlite::params![id])?;\n367:             Ok(())\n368:         })\n369:     }\n370: \n371:     pub fn delete_edge(&self, id: &str) -> Result<()> {\n372:         with_db(&self.db, |db| {\n373:             db.execute(\"DELETE FROM edges WHERE id = ?1\", rusqlite::params![id])?;\n374:             Ok(())\n375:         })\n376:     }\n377: \n378:     /// Get aggregated summary statistics about the graph.\n379:     pub fn summarize(&self) -> Result<GraphSummary> {\n380:         with_db(&self.db, |db| {\n381:             let total_nodes: u64 = db.query_row(\"SELECT COUNT(*) FROM nodes\", [], |row| {\n382:                 row.get(0)\n383:             })?;\n384:             let total_edges: u64 = db.query_row(\"SELECT COUNT(*) FROM edges\", [], |row| {\n385:                 row.get(0)\n386:             })?;\n387: \n388:             let mut nodes_by_kind: HashMap<String, u64> = HashMap::new();\n389:             let mut stmt = db.prepare(\"SELECT kind, COUNT(*) as cnt FROM nodes GROUP BY kind\")?;\n390:             let rows = stmt.query_map([], |row| {\n391:                 let kind: String = row.get(0)?;\n392:                 let cnt: u64 = row.get(1)?;\n393:                 Ok((kind.trim_matches('\"').to_string(), cnt))\n394:             })?;\n395:             for row in rows {\n396:                 let (kind, cnt) = row?;\n397:                 nodes_by_kind.insert(kind, cnt);\n398:             }\n399: \n400:             let mut edges_by_kind: HashMap<String, u64> = HashMap::new();\n401:             let mut stmt = db.prepare(\"SELECT kind, COUNT(*) as cnt FROM edges GROUP BY kind\")?;\n402:             let rows = stmt.query_map([], |row| {\n403:                 let kind: String = row.get(0)?;\n404:                 let cnt: u64 = row.get(1)?;\n405:                 Ok((kind.trim_matches('\"').to_string(), cnt))\n406:             })?;\n407:             for row in rows {\n408:                 let (kind, cnt) = row?;\n409:                 edges_by_kind.insert(kind, cnt);\n410:             }\n411: \n412:             Ok(GraphSummary {\n413:                 total_nodes,\n414:                 total_edges,\n415:                 nodes_by_kind,\n416:                 edges_by_kind,\n417:             })\n418:         })\n419:     }\n420: }\n421: \n422: /// Summary statistics about the knowledge graph.\n423: #[derive(Debug, Clone, serde::Serialize)]\n424: pub struct GraphSummary {\n425:     pub total_nodes: u64,\n426:     pub total_edges: u64,\n427:     pub nodes_by_kind: HashMap<String, u64>,\n428:     pub edges_by_kind: HashMap<String, u64>,\n429: }\n430: \n431: fn row_to_node(row: &rusqlite::Row) -> rusqlite::Result<Node> {\n432:     let props_str: String = row.get(3)?;\n433:     Ok(Node {\n434:         id: row.get(0)?,\n435:         kind: serde_json::from_str(&row.get::<_, String>(1)?).unwrap_or(NodeKind::Module),\n436:         name: row.get(2)?,\n437:         properties: serde_json::from_str(&props_str).unwrap_or_default(),\n438:         created_at: chrono::DateTime::parse_from_rfc3339(&row.get::<_, String>(4)?)\n439:             .map(|dt| dt.to_utc())\n440:             .unwrap_or_default(),\n441:     })\n442: }\n443: \n444: fn map_edges_query(\n445:     mut stmt: rusqlite::Statement,\n446:     params: impl rusqlite::Params,\n447: ) -> Result<Vec<Edge>> {\n448:     let rows = stmt.query_map(params, |row| {\n449:         let props_str: String = row.get(4)?;\n450:         Ok(Edge {\n451:             id: row.get(0)?,\n452:             source: row.get(1)?,\n453:             target: row.get(2)?,\n454:             kind: serde_json::from_str(&row.get::<_, String>(3)?).unwrap_or(EdgeKind::DependsOn),\n455:             properties: serde_json::from_str(&props_str).unwrap_or_default(),\n456:             created_at: chrono::DateTime::parse_from_rfc3339(&row.get::<_, String>(5)?)\n457:                 .map(|dt| dt.to_utc())\n458:                 .unwrap_or_default(),\n459:         })\n460:     })?;\n461:     let mut result = vec![];\n462:     for row in rows {\n463:         result.push(row?);\n464:     }\n465:     Ok(result)\n466: }\n467: \n468: #[derive(Debug, Clone, Serialize)]\n469: pub struct NodeAndEdge {\n470:     pub node: Node,\n471:     pub edge_kind: EdgeKind,\n472: }\n473: \n474: #[cfg(test)]\n475: mod tests {\n476:     use super::*;\n477:     use std::collections::HashMap;\n478: \n479:     fn test_store() -> GraphStore {\n480:         let dir =\n481:             std::env::temp_dir().join(format!(\"automaton_graph_test_{}\", uuid::Uuid::new_v4()));\n482:         std::fs::create_dir_all(&dir).unwrap();\n483:         GraphStore::open(&dir).unwrap()\n484:     }\n485: \n486:     #[test]\n487:     fn test_add_and_get_node() {\n488:         let store = test_store();\n489:         let mut props = HashMap::new();\n490:         props.insert(\"key\".to_string(), serde_json::json!(\"value\"));\n491:         let id = store\n492:             .add_node(NodeKind::Module, \"test.module\", props)\n493:             .unwrap();\n494:         assert!(!id.is_empty());\n495: \n496:         let node = store.get_node(&id).unwrap().expect(\"Node should exist\");\n497:         assert_eq!(node.name, \"test.module\");\n498:         assert_eq!(node.kind, NodeKind::Module);\n499:     }\n500: \n501:     #[test]\n502:     fn test_add_and_get_edge() {\n503:         let store = test_store();\n504:         let a = store\n505:             .add_node(NodeKind::Module, \"mod.a\", HashMap::new())\n506:             .unwrap();\n507:         let b = store\n508:             .add_node(NodeKind::Module, \"mod.b\", HashMap::new())\n509:             .unwrap();\n510:         let eid = store\n511:             .add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new())\n512:             .unwrap();\n513:         assert!(!eid.is_empty());\n514: \n515:         let outgoing = store.get_outgoing_edges(&a).unwrap();\n516:         assert_eq!(outgoing.len(), 1);\n517:         assert_eq!(outgoing[0].target, b);\n518: \n519:         let incoming = store.get_incoming_edges(&b).unwrap();\n520:         assert_eq!(incoming.len(), 1);\n521:         assert_eq!(incoming[0].source, a);\n522:     }\n523: \n524:     #[test]\n525:     fn test_find_nodes_by_kind() {\n526:         let store = test_store();\n527:         store\n528:             .add_node(NodeKind::Module, \"mod.a\", HashMap::new())\n529:             .unwrap();\n530:         store\n531:             .add_node(NodeKind::Trigger, \"trig.x\", HashMap::new())\n532:             .unwrap();\n533:         store\n534:             .add_node(NodeKind::Workflow, \"flow.y\", HashMap::new())\n535:             .unwrap();\n536: \n537:         let modules = store.find_nodes_by_kind(NodeKind::Module).unwrap();\n538:         assert_eq!(modules.len(), 1);\n539:         assert_eq!(modules[0].name, \"mod.a\");\n540:     }\n541: \n542:     #[test]\n543:     fn test_delete_node() {\n544:         let store = test_store();\n545:         let id = store\n546:             .add_node(NodeKind::Module, \"to_delete\", HashMap::new())\n547:             .unwrap();\n548:         store.delete_node(&id).unwrap();\n549:         assert!(store.get_node(&id).unwrap().is_none());\n550:     }\n551: \n552:     #[test]\n553:     fn test_delete_edge() {\n554:         let store = test_store();\n555:         let a = store\n556:             .add_node(NodeKind::Module, \"a\", HashMap::new())\n557:             .unwrap();\n558:         let b = store\n559:             .add_node(NodeKind::Module, \"b\", HashMap::new())\n560:             .unwrap();\n561:         let eid = store\n562:             .add_edge(&a, &b, EdgeKind::Calls, HashMap::new())\n563:             .unwrap();\n564:         store.delete_edge(&eid).unwrap();\n565:         assert_eq!(store.get_outgoing_edges(&a).unwrap().len(), 0);\n566:     }\n567: \n568:     #[test]\n569:     fn test_dependency_chain() {\n570:         let store = test_store();\n571:         let a = store\n572:             .add_node(NodeKind::Module, \"root\", HashMap::new())\n573:             .unwrap();\n574:         let b = store\n575:             .add_node(NodeKind::Module, \"dep1\", HashMap::new())\n576:             .unwrap();\n577:         let c = store\n578:             .add_node(NodeKind::Module, \"dep2\", HashMap::new())\n579:             .unwrap();\n580:         store\n581:             .add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new())\n582:             .unwrap();\n583:         store\n584:             .add_edge(&b, &c, EdgeKind::DependsOn, HashMap::new())\n585:             .unwrap();\n586: \n587:         let chain = store.get_dependency_chain(&a).unwrap();\n588:         assert_eq!(chain.len(), 3);\n589:         // root, dep1, dep2 in traversal order\n590:         let names: Vec<&str> = chain.iter().map(|n| n.name.as_str()).collect();\n591:         assert!(names.contains(&\"root\"));\n592:         assert!(names.contains(&\"dep1\"));\n593:         assert!(names.contains(&\"dep2\"));\n594:     }\n595: \n596:     #[test]\n597:     fn test_pathfinding() {\n598:         let store = test_store();\n599:         let a = store\n600:             .add_node(NodeKind::Module, \"start\", HashMap::new())\n601:             .unwrap();\n602:         let b = store\n603:             .add_node(NodeKind::Module, \"mid\", HashMap::new())\n604:             .unwrap();\n605:         let c = store\n606:             .add_node(NodeKind::Module, \"end\", HashMap::new())\n607:             .unwrap();\n608:         store\n609:             .add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new())\n610:             .unwrap();\n611:         store\n612:             .add_edge(&b, &c, EdgeKind::DependsOn, HashMap::new())\n613:             .unwrap();\n614: \n615:         let paths = store.find_path(&a, &c).unwrap();\n616:         assert!(!paths.is_empty());\n617:     }\n618: }\n\n(End of file - total 618 lines)\n</content>",
+        "metadata": {
+          "preview": "use std::collections::{HashMap, HashSet};\nuse std::path::Path;\nuse std::sync::Mutex;\n\nuse automaton_core::*;\n\nuse rusqlite::Connection;\nuse serde::Serialize;\n\n/// Persistent property graph store backed by SQLite.\npub struct GraphStore {\n    db: Mutex<Connection>,\n}\n\nfn with_db<T>(db: &Mutex<Connection>, f: impl FnOnce(&Connection) -> Result<T>) -> Result<T> {\n    let conn = db\n        .lock()\n        .map_err(|e| AutomatonError::Database(e.to_string()))?;\n    f(&conn)\n}",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-graph/src/lib.rs",
+        "time": {
+          "start": 1778154047927,
+          "end": 1778154047939
+        }
+      },
+      "id": "prt_e023d870d001aMmaUgCFMq4gdI",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d7caf001UNPTHt9qIgUQMg"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_01_716NegSDMmxhJS1iRLkA8898",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "rusqlite",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "include": "Cargo.toml",
+          "output_mode": "content"
+        },
+        "output": "Found 8 match(es) in 5 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/Cargo.toml\n  48: rusqlite = { version = \"0.30\", features = [\"bundled\"] }\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/Cargo.toml\n  5: description = \"Database layer for Automaton — DbPool trait with SQLite (rusqlite) and Postgres (tokio-postgres) backends\"\n  9: sqlite = [\"dep:rusqlite\"]\n  23: rusqlite = { workspace = true, optional = true }\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/Cargo.toml\n  13: rusqlite.workspace = true\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/Cargo.toml\n  12: rusqlite.workspace = true\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/Cargo.toml\n  22: rusqlite = { workspace = true, optional = true }\n  25: sqlite = [\"dep:rusqlite\"]\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778154049281,
+          "end": 1778154049300
+        }
+      },
+      "id": "prt_e023d8a1d001jFS0JpGrBeKxH5",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d7caf001UNPTHt9qIgUQMg"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_e5o5bs097bYblvesQJgD2479",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/Cargo.toml",
+          "offset": 40,
+          "limit": 20
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/Cargo.toml</path>\n<type>file</type>\n<content>\n40: anyhow = \"1\"\n41: thiserror = \"2\"\n42: tokio = { version = \"1\", features = [\"full\"] }\n43: tracing = \"0.1\"\n44: tracing-subscriber = { version = \"0.3\", features = [\"json\", \"env-filter\"] }\n45: clap = { version = \"4\", features = [\"derive\"] }\n46: petgraph = \"0.7\"\n47: sha2 = \"0.10\"\n48: rusqlite = { version = \"0.30\", features = [\"bundled\"] }\n49: uuid = { version = \"1\", features = [\"v4\", \"serde\"] }\n50: chrono = { version = \"0.4\", features = [\"serde\"] }\n51: schemars = \"0.8\"\n52: rmcp = { version = \"1.6\", features = [\"server\", \"transport-io\"] }\n53: semver = { version = \"1\", features = [\"serde\"] }\n54: glob = \"0.3\"\n55: walkdir = \"2\"\n56: dirs = \"6\"\n57: hex = \"0.4\"\n58: rand = \"0.8\"\n59: aes-gcm = \"0.10\"\n\n(Showing lines 40-59 of 67. Use offset=60 to continue.)\n</content>",
+        "metadata": {
+          "preview": "anyhow = \"1\"\nthiserror = \"2\"\ntokio = { version = \"1\", features = [\"full\"] }\ntracing = \"0.1\"\ntracing-subscriber = { version = \"0.3\", features = [\"json\", \"env-filter\"] }\nclap = { version = \"4\", features = [\"derive\"] }\npetgraph = \"0.7\"\nsha2 = \"0.10\"\nrusqlite = { version = \"0.30\", features = [\"bundled\"] }\nuuid = { version = \"1\", features = [\"v4\", \"serde\"] }\nchrono = { version = \"0.4\", features = [\"serde\"] }\nschemars = \"0.8\"\nrmcp = { version = \"1.6\", features = [\"server\", \"transport-io\"] }\nsemver = { version = \"1\", features = [\"serde\"] }\nglob = \"0.3\"\nwalkdir = \"2\"\ndirs = \"6\"\nhex = \"0.4\"\nrand = \"0.8\"\naes-gcm = \"0.10\"",
+          "truncated": true,
+          "loaded": []
+        },
+        "title": "Cargo.toml",
+        "time": {
+          "start": 1778154054820,
+          "end": 1778154054843
+        }
+      },
+      "id": "prt_e023da0cb001IfzO05ddXOsxh7",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d93f7001xNx2B5UwUM0VcW"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_01_cBWMmRXWk0akOk6mH45H7073",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "pub (struct|enum) (Node|Edge|NodeKind|EdgeKind|GraphSummary|NodeAndEdge)",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core",
+          "output_mode": "content"
+        },
+        "output": "Found 4 match(es) in 1 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/graph.rs\n  8: pub struct Node {\n  18: pub struct Edge {\n  29: pub enum NodeKind {\n  46: pub enum EdgeKind {\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778154056354,
+          "end": 1778154056371
+        }
+      },
+      "id": "prt_e023da5510014Q8gqR54e2tYh3",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d93f7001xNx2B5UwUM0VcW"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_02_Vqns5tATeuWt4LvZVP2P0811",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "AutomatonError",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src",
+          "output_mode": "files_with_matches"
+        },
+        "output": "Found 2 match(es) in 2 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/lib.rs\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/error.rs\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778154057638,
+          "end": 1778154057667
+        }
+      },
+      "id": "prt_e023dab500015f2i27CukG30M4",
+      "sessionID": "ses_1fdc2c958ffepUWSpbKN37fBH6",
+      "messageID": "msg_e023d93f7001xNx2B5UwUM0VcW"
+    }
+  ]
+}

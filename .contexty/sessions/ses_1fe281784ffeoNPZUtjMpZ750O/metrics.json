@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "sessionID": "ses_1fe281784ffeoNPZUtjMpZ750O",
+  "timestamp": "2026-05-07T09:52:48.895Z",
+  "tokens": {
+    "input": 25784,
+    "output": 4137,
+    "reasoning": 4034,
+    "cacheRead": 961024,
+    "cacheWrite": 0
+  },
+  "files": [],
+  "tools": [
+    {
+      "name": "todowrite",
+      "count": 4,
+      "successCount": 4,
+      "failCount": 0
+    },
+    {
+      "name": "read",
+      "count": 10,
+      "successCount": 8,
+      "failCount": 2
+    },
+    {
+      "name": "grep",
+      "count": 1,
+      "successCount": 1,
+      "failCount": 0
+    },
+    {
+      "name": "glob",
+      "count": 2,
+      "successCount": 2,
+      "failCount": 0
+    },
+    {
+      "name": "edit",
+      "count": 4,
+      "successCount": 4,
+      "failCount": 0
+    },
+    {
+      "name": "lsp_diagnostics",
+      "count": 3,
+      "successCount": 3,
+      "failCount": 0
+    }
+  ],
+  "acpm": {
+    "activePreset": null,
+    "allowCount": 552,
+    "denyCount": 0,
+    "sanitizeCount": 0,
+    "deniedByCategory": {},
+    "folderAccessDistribution": {
+      "denied": 0,
+      "read-only": 0,
+      "read-write": 0
+    },
+    "toolCategoryStatus": []
+  }
+}

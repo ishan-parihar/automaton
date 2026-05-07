@@ -5,7 +5,7 @@ edition = "2024"
 description = "Property graph store for automation design and run-time graphs"
 
 [dependencies]
-automaton-core.workspace = true
+automaton-core = { workspace = true, features = ["sqlite"] }
 petgraph.workspace = true
 serde.workspace = true
 serde_json.workspace = true

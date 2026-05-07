@@ -1,0 +1,488 @@
+{
+  "parts": [
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_QuxWbeyAWByhTy17cgBa5348",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs</path>\n<type>file</type>\n<content>\n1: use serde_json::Value;\n2: use std::collections::HashMap;\n3: use std::sync::Arc;\n4: \n5: use schemars::JsonSchema;\n6: \n7: /// Generate a JSON Schema from a JsonSchema-derived type\n8: pub fn schema_for<T: JsonSchema>() -> Arc<serde_json::Map<String, serde_json::Value>> {\n9:     let schema = schemars::schema_for!(T);\n10:     let value = serde_json::to_value(&schema).unwrap_or_default();\n11:     match value {\n12:         Value::Object(map) => Arc::new(map),\n13:         _ => Arc::new(serde_json::Map::new()),\n14:     }\n15: }\n16: \n17: // ── Module Tools ──\n18: #[derive(serde::Deserialize, JsonSchema)]\n19: pub struct ModuleCreateParams {\n20:     pub path: String,\n21:     pub source: String,\n22:     pub version: Option<String>,\n23:     pub summary: Option<String>,\n24:     pub depends_on: Option<Vec<String>>,\n25:     pub timeout_ms: Option<u64>,\n26: }\n27: \n28: #[derive(serde::Deserialize, JsonSchema)]\n29: pub struct ModuleBuildParams {\n30:     pub path: String,\n31:     pub mode: Option<String>,\n32: }\n33: \n34: #[derive(serde::Deserialize, JsonSchema)]\n35: pub struct ModuleRunParams {\n36:     pub path: String,\n37:     pub input: Option<serde_json::Value>,\n38: }\n39: \n40: #[derive(serde::Deserialize, JsonSchema)]\n41: pub struct ModuleDeprecateParams {\n42:     pub path: String,\n43: }\n44: \n45: #[derive(serde::Deserialize, JsonSchema)]\n46: pub struct ModuleSearchParams {\n47:     pub query: String,\n48:     pub limit: Option<usize>,\n49: }\n50: \n51: #[derive(serde::Deserialize, JsonSchema)]\n52: pub struct ModuleTemplateParams {\n53:     pub path: String,\n54:     pub pattern: String,\n55:     pub description: Option<String>,\n56: }\n57: \n58: // ── Workflow Tools ──\n59: #[derive(serde::Deserialize, JsonSchema)]\n60: pub struct WorkflowPlanParams {\n61:     pub start: String,\n62:     pub max_depth: Option<usize>,\n63: }\n64: \n65: // ── Graph Tools ──\n66: #[derive(serde::Deserialize, JsonSchema)]\n67: pub struct GraphQueryParams {\n68:     pub kind: Option<String>,\n69:     pub limit: Option<u32>,\n70:     pub offset: Option<u32>,\n71:     pub properties: Option<HashMap<String, Value>>,\n72: }\n73: \n74: #[derive(serde::Deserialize, JsonSchema)]\n75: pub struct GraphPathfindParams {\n76:     pub from: String,\n77:     pub to: String,\n78: }\n79: \n80: #[derive(serde::Deserialize, JsonSchema)]\n81: pub struct GraphAddEdgeParams {\n82:     pub source: String,\n83:     pub target: String,\n84:     pub kind: String,\n85: }\n86: \n87: // ── Flow Tools ──\n88: #[derive(serde::Deserialize, JsonSchema)]\n89: pub struct FlowCreateParams {\n90:     pub path: String,\n91:     pub steps: serde_json::Value,\n92:     pub summary: Option<String>,\n93:     pub on_failure: Option<String>,\n94: }\n95: \n96: #[derive(serde::Deserialize, JsonSchema)]\n97: pub struct FlowShowParams {\n98:     pub path: String,\n99: }\n100: \n101: // ── Schedule Tools ──\n102: #[derive(serde::Deserialize, JsonSchema)]\n103: pub struct ScheduleCreateParams {\n104:     pub target_path: String,\n105:     pub schedule: String,\n106:     pub args: Option<serde_json::Value>,\n107: }\n108: \n109: #[derive(serde::Deserialize, JsonSchema)]\n110: pub struct ScheduleValidateParams {\n111:     pub schedule: String,\n112: }\n113: \n114: // ── Secret Tools ──\n115: #[derive(serde::Deserialize, JsonSchema)]\n116: pub struct SecretSetParams {\n117:     pub path: String,\n118:     pub value: String,\n119:     pub description: Option<String>,\n120: }\n121: \n122: #[derive(serde::Deserialize, JsonSchema)]\n123: pub struct SecretGetParams {\n124:     pub path: String,\n125: }\n126: \n127: // ── Resource Tools ──\n128: #[derive(serde::Deserialize, JsonSchema)]\n129: pub struct ResourceBindParams {\n130:     pub path: String,\n131:     pub resource_type: String,\n132:     pub value: serde_json::Value,\n133: }\n134: \n135: // ── Job Tools ──\n136: #[derive(serde::Deserialize, JsonSchema)]\n137: pub struct JobQueueParams {\n138:     pub target_path: String,\n139:     pub args: Option<serde_json::Value>,\n140:     pub kind: Option<String>,\n141: }\n142: \n143: // ── Flow Tools (continued) ──\n144: #[derive(serde::Deserialize, JsonSchema)]\n145: pub struct FlowExecuteParams {\n146:     pub path: String,\n147:     pub input: Option<serde_json::Value>,\n148: }\n149: \n150: // ── Run Tools ──\n151: #[derive(serde::Deserialize, JsonSchema)]\n152: pub struct RunLogsParams {\n153:     pub module_path: Option<String>,\n154:     pub limit: Option<usize>,\n155: }\n156: \n157: #[derive(serde::Deserialize, JsonSchema)]\n158: pub struct RunRetryParams {\n159:     pub run_id: String,\n160: }\n161: \n162: // ── Graph Tools (continued) ──\n163: #[derive(serde::Deserialize, JsonSchema)]\n164: pub struct GraphSummarizeParams {}\n165: \n166: // ── Registry Tools ──\n167: #[derive(serde::Deserialize, JsonSchema)]\n168: pub struct RegistrySearchParams {\n169:     pub query: String,\n170: }\n\n(End of file - total 170 lines)\n</content>\n\n[Project README: /home/ishanp/Documents/GitHub/automaton/README.md]\n# Automaton — AI-Native Rust Automation Substrate\n\n**Automaton** is a CLI-based, graph-native automation framework for AI agents to create, compose, and execute modular Rust workflows. It exposes its entire substrate through an MCP server built on the official [rmcp](https://github.com/modelcontextprotocol/rust-sdk) crate.\n\n## Architecture\n\n```\n┌─────────────────────────────────────────────────────────┐\n│                    AI Agent (LLM)                        │\n│  Uses MCP tools to create modules → plan → execute       │\n└──────────────────────┬──────────────────────────────────┘\n                       │ MCP (stdio/SSE)\n┌──────────────────────▼──────────────────────────────────┐\n│                automaton-mcp (MCP Server)                │\n│  module.* | workflow.* | graph.* | registry.* | run.*   │\n└──────────────────────┬──────────────────────────────────┘\n                       │\n┌──────────────────────▼──────────────────────────────────┐\n│                automaton-engine (Orchestrator)           │\n│  Planner → Materializer → Executor                      │\n│  Converts design graph → run DAG → execution            │\n└──────┬──────────────────────────┬───────────────────────┘\n       │                          │\n┌──────▼──────────┐    ┌──────────▼───────────────────┐\n│ automaton-graph │    │ automaton-runtime             │\n│ Property graph   │    │ Process sandbox, retry, I/O │\n│ (SQLite-backed)  │    │                              │\n└─────────────────┘    └──────────────────────────────┘\n       │                          │\n       └──────────┬───────────────┘\n                  │\n┌─────────────────▼───────────────────────────────────┐\n│                automaton-registry                    │\n│  SQLite-backed module catalog + content-addressed    │\n│  build cache + run history                          │\n└─────────────────────────────────────────────────────┘\n```\n\n## Quick Start\n\n```bash\n# Initialize workspace\nautomaton init\n\n# Scaffold a module\nautomaton new github.issue_triage\n\n# Build it\nautomaton build github.issue_triage\n\n# Run it\nautomaton run github.issue_triage --input '{\"repo\": \"user/repo\"}'\n\n# Plan a workflow from a module\nautomaton plan github.issue_triage --max-depth 5\n\n# List modules\nautomaton list\n\n# Show module details\nautomaton show github.issue_triage\n\n# Inspect the graph\nautomaton graph nodes\nautomaton graph path module_a module_b\n\n# Start MCP server (for AI agents)\nautomaton mcp\n\n# Diagnostics\nautomaton doctor\n```\n\n## Workspace Layout\n\n```\n~/.local/share/automaton/     # Data directory\n├── registry.db               # Module catalog (SQLite)\n├── graph.db                  # Property graph store (SQLite)\n├── builds/                   # Compiled binary cache\n├── modules/                  # Uncompiled module sources\n├── work/                     # Runtime working directory\n└── tmp/                      # Temp execution artifacts\n```\n\n## Project Structure\n\n```\ncrates/\n├── automaton-core/           # Shared types: manifests, graph nodes, errors\n├── automaton-sdk/            # #[automaton] proc macro + prelude\n├── automaton-sdk-derive/     # Proc macro implementation\n├── automaton-cli/            # CLI binary\n├── automaton-engine/         # Planner, DAG materializer, executor\n├── automaton-registry/       # SQLite-backed module + build + run DB\n├── automaton-graph/          # SQLite-backed property graph store\n├── automaton-mcp/            # MCP server (rmcp)\n└── automaton-runtime/        # Child process runner, retry, timeout\n```\n\n## Graph Model\n\nTwo-layer architecture:\n\n1. **Design Graph** (persistent property graph): Modules, Workflows, Triggers, Resources, Secrets, Capabilities — interconnected via labeled edges (`DEPENDS_ON`, `CALLS`, `TRIGGERS`, `USES_RESOURCE`, etc.)\n\n2. **Run Graph** (materialized DAG for one execution): Compiled from design graph + context, verified acyclic via `petgraph::toposort`.\n\n## MCP Surface (for AI agents)\n\n| Tool                   | Description                            |\n| ---------------------- | -------------------------------------- |\n| `module.create`        | Register a new automation module       |\n| `module.build`         | Compile module to binary               |\n| `module.validate`      | Validate manifest + source             |\n| `module.run`           | Execute a module                       |\n| `module.deprecate`     | Remove module                          |\n| `workflow.plan`        | Discover dependencies, build run graph |\n| `workflow.materialize` | Verify DAG validity (cycle check)      |\n| `graph.query`          | Query nodes by kind                    |\n| `graph.pathfind`       | Find paths between nodes               |\n| `graph.add_edge`       | Wire module dependencies               |\n| `registry.search`      | Search registered modules              |\n| `resource.bind`        | Bind typed resources                   |\n| `run.logs`             | Inspect run history                    |\n| `run.retry`            | Retry failed execution                 |\n| `system.health`        | Component health check                 |\n\n## Module Authoring\n\n```rust\nuse automaton_sdk::prelude::*;\nuse serde::{Deserialize, Serialize};\n\n#[derive(Deserialize, JsonSchema)]\nstruct Input {\n    repo: String,\n    issue_number: u32,\n}\n\n#[derive(Serialize, JsonSchema)]\nstruct Output {\n    summary: String,\n    priority: String,\n}\n\n#[automaton]\nasync fn main(ctx: Context, input: Input) -> anyhow::Result<Output> {\n    // Your automation logic\n    Ok(Output {\n        summary: format!(\"Triaged issue #{} from {}\", input.issue_number, input.repo),\n        priority: \"medium\".to_string(),\n    })\n}\n```\n\nManifest: `automation.yaml`\n\n```yaml\nname: github.issue_triage\nversion: 0.1.0\nentry: main\nsummary: \"Triage GitHub issues by priority\"\ntimeout_ms: 30000\nretry:\n  max_attempts: 3\n  delay_ms: 1000\n  backoff: exponential\npermissions:\n  - github.read\nresources:\n  - github.api\ndepends_on:\n  - llm.summarize\ntags:\n  - github\n  - issue\n  - triage\n```\n\n## Design Decisions\n\n- **Rust-first**: Smallest binary size (~2.7 MB compiled) and runtime memory (~4 MB RSS)\n- **SQLite-backed**: No Postgres dependency for local-first use\n- **petgraph DAG**: Topological scheduling with cycle detection\n- **Windmill-inspired packaging**: Code + YAML manifest, content-addressed builds\n- **MCP-native control**: AI agents interact through the MCP protocol, not raw shell\n- **Property graph**: Two-layer (design + run) enables recursive module composition\n- **Incremental compilation**: Shared build cache, debug/release mode split\n\n## License\n\nMIT\n",
+        "metadata": {
+          "preview": "use serde_json::Value;\nuse std::collections::HashMap;\nuse std::sync::Arc;\n\nuse schemars::JsonSchema;\n\n/// Generate a JSON Schema from a JsonSchema-derived type\npub fn schema_for<T: JsonSchema>() -> Arc<serde_json::Map<String, serde_json::Value>> {\n    let schema = schemars::schema_for!(T);\n    let value = serde_json::to_value(&schema).unwrap_or_default();\n    match value {\n        Value::Object(map) => Arc::new(map),\n        _ => Arc::new(serde_json::Map::new()),\n    }\n}\n\n// ── Module Tools ──\n#[derive(serde::Deserialize, JsonSchema)]\npub struct ModuleCreateParams {\n    pub path: String,",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-mcp/src/tools.rs",
+        "time": {
+          "start": 1778154498313,
+          "end": 1778154498334
+        }
+      },
+      "id": "prt_e0244668c001ITpdjfoVujMtoM",
+      "sessionID": "ses_1fdbba701ffeqPuDI1mhas727J",
+      "messageID": "msg_e0244590f0010jG6Ly0PYDARfC"
+    },
+    {
+      "type": "tool",
+      "tool": "edit",
+      "callID": "call_00_lZfzf9AEZIoWp79v1Fv11948",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs",
+          "oldString": "#[derive(serde::Deserialize, JsonSchema)]",
+          "newString": "#[derive(serde::Deserialize, JsonSchema)]\n#[serde(deny_unknown_fields)]",
+          "replaceAll": true
+        },
+        "output": "Edit applied successfully.",
+        "metadata": {
+          "diagnostics": {
+            "/home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/src/lib.rs": [
+              {
+                "range": {
+                  "start": {
+                    "line": 829,
+                    "character": 8
+                  },
+                  "end": {
+                    "line": 829,
+                    "character": 26
+                  }
+                },
+                "severity": 2,
+                "code": "unused_imports",
+                "source": "rustc",
+                "message": "unused import: `std::path::PathBuf`\n`#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 829,
+                          "character": 4
+                        },
+                        "end": {
+                          "line": 829,
+                          "character": 27
+                        }
+                      }
+                    },
+                    "message": "remove the whole `use` item"
+                  }
+                ],
+                "tags": [
+                  1
+                ],
+                "data": {
+                  "rendered": "warning: unused import: `std::path::PathBuf`\n   --> crates/automaton-registry/src/lib.rs:830:9\n    |\n830 |     use std::path::PathBuf;\n    |         ^^^^^^^^^^^^^^^^^^\n    |\n    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\n"
+                }
+              },
+              {
+                "range": {
+                  "start": {
+                    "line": 829,
+                    "character": 4
+                  },
+                  "end": {
+                    "line": 829,
+                    "character": 27
+                  }
+                },
+                "severity": 4,
+                "code": "unused_imports",
+                "source": "rustc",
+                "message": "remove the whole `use` item",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 829,
+                          "character": 8
+                        },
+                        "end": {
+                          "line": 829,
+                          "character": 26
+                        }
+                      }
+                    },
+                    "message": "original diagnostic"
+                  }
+                ]
+              }
+            ],
+            "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs": [
+              {
+                "range": {
+                  "start": {
+                    "line": 81,
+                    "character": 9
+                  },
+                  "end": {
+                    "line": 81,
+                    "character": 111
+                  }
+                },
+                "severity": 2,
+                "code": "refining_impl_trait_reachable",
+                "source": "rustc",
+                "message": "impl trait in impl method signature does not match trait method signature\nadd `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\nwe are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\n`#[warn(refining_impl_trait_reachable)]` (part of `#[warn(refining_impl_trait)]`) on by default\nthe full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-abd2130f8ba3f691.long-type-3353903191372498763.txt'\nconsider using `--verbose` to print the full type name to the console",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 81,
+                          "character": 9
+                        },
+                        "end": {
+                          "line": 81,
+                          "character": 111
+                        }
+                      }
+                    },
+                    "message": "replace the return type so that it matches the trait: `impl Future<Output = Result<rmcp::model::CallToolResult, rmcp::ErrorData>> + MaybeSendFuture + '_`"
+                  }
+                ],
+                "data": {
+                  "rendered": "warning: impl trait in impl method signature does not match trait method signature\n  --> crates/automaton-mcp/src/lib.rs:82:10\n   |\n82 |     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<CallToolResult, ErrorData>> + Send + '_>> {\n   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n   |\n   = note: add `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\n   = note: we are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\n   = note: `#[warn(refining_impl_trait_reachable)]` (part of `#[warn(refining_impl_trait)]`) on by default\n   = note: the full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-abd2130f8ba3f691.long-type-3353903191372498763.txt'\n   = note: consider using `--verbose` to print the full type name to the console\nhelp: replace the return type so that it matches the trait\n   |\n82 -     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<CallToolResult, ErrorData>> + Send + '_>> {\n82 +     ) -> impl Future<Output = Result<rmcp::model::CallToolResult, rmcp::ErrorData>> + MaybeSendFuture + '_ {\n   |\n\n"
+                }
+              },
+              {
+                "range": {
+                  "start": {
+                    "line": 81,
+                    "character": 9
+                  },
+                  "end": {
+                    "line": 81,
+                    "character": 111
+                  }
+                },
+                "severity": 4,
+                "code": "refining_impl_trait_reachable",
+                "source": "rustc",
+                "message": "replace the return type so that it matches the trait: `impl Future<Output = Result<rmcp::model::CallToolResult, rmcp::ErrorData>> + MaybeSendFuture + '_`",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 81,
+                          "character": 9
+                        },
+                        "end": {
+                          "line": 81,
+                          "character": 111
+                        }
+                      }
+                    },
+                    "message": "original diagnostic"
+                  }
+                ]
+              },
+              {
+                "range": {
+                  "start": {
+                    "line": 439,
+                    "character": 9
+                  },
+                  "end": {
+                    "line": 439,
+                    "character": 112
+                  }
+                },
+                "severity": 2,
+                "code": "refining_impl_trait_reachable",
+                "source": "rustc",
+                "message": "impl trait in impl method signature does not match trait method signature\nadd `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\nwe are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\nthe full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-abd2130f8ba3f691.long-type-3916882413727667615.txt'\nconsider using `--verbose` to print the full type name to the console",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 439,
+                          "character": 9
+                        },
+                        "end": {
+                          "line": 439,
+                          "character": 112
+                        }
+                      }
+                    },
+                    "message": "replace the return type so that it matches the trait: `impl Future<Output = Result<rmcp::model::ListToolsResult, rmcp::ErrorData>> + MaybeSendFuture + '_`"
+                  }
+                ],
+                "data": {
+                  "rendered": "warning: impl trait in impl method signature does not match trait method signature\n   --> crates/automaton-mcp/src/lib.rs:440:10\n    |\n440 |     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<ListToolsResult, ErrorData>> + Send + '_>> {\n    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    |\n    = note: add `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\n    = note: we are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\n    = note: the full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-abd2130f8ba3f691.long-type-3916882413727667615.txt'\n    = note: consider using `--verbose` to print the full type name to the console\nhelp: replace the return type so that it matches the trait\n    |\n440 -     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<ListToolsResult, ErrorData>> + Send + '_>> {\n440 +     ) -> impl Future<Output = Result<rmcp::model::ListToolsResult, rmcp::ErrorData>> + MaybeSendFuture + '_ {\n    |\n\n"
+                }
+              },
+              {
+                "range": {
+                  "start": {
+                    "line": 439,
+                    "character": 9
+                  },
+                  "end": {
+                    "line": 439,
+                    "character": 112
+                  }
+                },
+                "severity": 4,
+                "code": "refining_impl_trait_reachable",
+                "source": "rustc",
+                "message": "replace the return type so that it matches the trait: `impl Future<Output = Result<rmcp::model::ListToolsResult, rmcp::ErrorData>> + MaybeSendFuture + '_`",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 439,
+                          "character": 9
+                        },
+                        "end": {
+                          "line": 439,
+                          "character": 112
+                        }
+                      }
+                    },
+                    "message": "original diagnostic"
+                  }
+                ]
+              },
+              {
+                "range": {
+                  "start": {
+                    "line": 81,
+                    "character": 9
+                  },
+                  "end": {
+                    "line": 81,
+                    "character": 111
+                  }
+                },
+                "severity": 2,
+                "code": "refining_impl_trait_reachable",
+                "source": "rustc",
+                "message": "impl trait in impl method signature does not match trait method signature\nadd `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\nwe are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\n`#[warn(refining_impl_trait_reachable)]` (part of `#[warn(refining_impl_trait)]`) on by default\nthe full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-236b14b917232e10.long-type-2200382400475765376.txt'\nconsider using `--verbose` to print the full type name to the console",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 81,
+                          "character": 9
+                        },
+                        "end": {
+                          "line": 81,
+                          "character": 111
+                        }
+                      }
+                    },
+                    "message": "replace the return type so that it matches the trait: `impl Future<Output = Result<rmcp::model::CallToolResult, rmcp::ErrorData>> + MaybeSendFuture + '_`"
+                  }
+                ],
+                "data": {
+                  "rendered": "warning: impl trait in impl method signature does not match trait method signature\n  --> crates/automaton-mcp/src/lib.rs:82:10\n   |\n82 |     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<CallToolResult, ErrorData>> + Send + '_>> {\n   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n   |\n   = note: add `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\n   = note: we are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\n   = note: `#[warn(refining_impl_trait_reachable)]` (part of `#[warn(refining_impl_trait)]`) on by default\n   = note: the full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-236b14b917232e10.long-type-2200382400475765376.txt'\n   = note: consider using `--verbose` to print the full type name to the console\nhelp: replace the return type so that it matches the trait\n   |\n82 -     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<CallToolResult, ErrorData>> + Send + '_>> {\n82 +     ) -> impl Future<Output = Result<rmcp::model::CallToolResult, rmcp::ErrorData>> + MaybeSendFuture + '_ {\n   |\n\n"
+                }
+              },
+              {
+                "range": {
+                  "start": {
+                    "line": 439,
+                    "character": 9
+                  },
+                  "end": {
+                    "line": 439,
+                    "character": 112
+                  }
+                },
+                "severity": 2,
+                "code": "refining_impl_trait_reachable",
+                "source": "rustc",
+                "message": "impl trait in impl method signature does not match trait method signature\nadd `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\nwe are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\nthe full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-236b14b917232e10.long-type-4569099754674726367.txt'\nconsider using `--verbose` to print the full type name to the console",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 439,
+                          "character": 9
+                        },
+                        "end": {
+                          "line": 439,
+                          "character": 112
+                        }
+                      }
+                    },
+                    "message": "replace the return type so that it matches the trait: `impl Future<Output = Result<rmcp::model::ListToolsResult, rmcp::ErrorData>> + MaybeSendFuture + '_`"
+                  }
+                ],
+                "data": {
+                  "rendered": "warning: impl trait in impl method signature does not match trait method signature\n   --> crates/automaton-mcp/src/lib.rs:440:10\n    |\n440 |     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<ListToolsResult, ErrorData>> + Send + '_>> {\n    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    |\n    = note: add `#[allow(refining_impl_trait)]` if it is intended for this to be part of the public API of this crate\n    = note: we are soliciting feedback, see issue #121718 <https://github.com/rust-lang/rust/issues/121718> for more information\n    = note: the full name for the type has been written to '/home/ishanp/Documents/GitHub/automaton/target/debug/deps/automaton_mcp-236b14b917232e10.long-type-4569099754674726367.txt'\n    = note: consider using `--verbose` to print the full type name to the console\nhelp: replace the return type so that it matches the trait\n    |\n440 -     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<ListToolsResult, ErrorData>> + Send + '_>> {\n440 +     ) -> impl Future<Output = Result<rmcp::model::ListToolsResult, rmcp::ErrorData>> + MaybeSendFuture + '_ {\n    |\n\n"
+                }
+              }
+            ],
+            "/home/ishanp/Documents/GitHub/automaton/crates/automaton-api/src/lib.rs": [
+              {
+                "range": {
+                  "start": {
+                    "line": 97,
+                    "character": 4
+                  },
+                  "end": {
+                    "line": 97,
+                    "character": 19
+                  }
+                },
+                "severity": 2,
+                "code": "dead_code",
+                "source": "rustc",
+                "message": "field `build_cache_dir` is never read\n`#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-api/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 95,
+                          "character": 7
+                        },
+                        "end": {
+                          "line": 95,
+                          "character": 15
+                        }
+                      }
+                    },
+                    "message": "field in this struct"
+                  }
+                ],
+                "tags": [
+                  1
+                ],
+                "data": {
+                  "rendered": "warning: field `build_cache_dir` is never read\n  --> crates/automaton-api/src/lib.rs:98:5\n   |\n96 | struct AppState {\n   |        -------- field in this struct\n97 |     db: Arc<automaton_postgres::AutomatonDb>,\n98 |     build_cache_dir: PathBuf,\n   |     ^^^^^^^^^^^^^^^\n   |\n   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\n"
+                }
+              },
+              {
+                "range": {
+                  "start": {
+                    "line": 95,
+                    "character": 7
+                  },
+                  "end": {
+                    "line": 95,
+                    "character": 15
+                  }
+                },
+                "severity": 4,
+                "code": "dead_code",
+                "source": "rustc",
+                "message": "field in this struct",
+                "relatedInformation": [
+                  {
+                    "location": {
+                      "uri": "file:///home/ishanp/Documents/GitHub/automaton/crates/automaton-api/src/lib.rs",
+                      "range": {
+                        "start": {
+                          "line": 97,
+                          "character": 4
+                        },
+                        "end": {
+                          "line": 97,
+                          "character": 19
+                        }
+                      }
+                    },
+                    "message": "original diagnostic"
+                  }
+                ]
+              }
+            ],
+            "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/lib.rs": [],
+            "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs": [],
+            "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/flow.rs": [],
+            "/home/ishanp/Documents/GitHub/automaton/crates/automaton-engine/src/flow.rs": [],
+            "/home/ishanp/Documents/GitHub/automaton/tests/src/main.rs": []
+          },
+          "diff": "Index: /home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n===================================================================\n--- /home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n+++ /home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n@@ -15,8 +15,9 @@\n }\n \n // ── Module Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleCreateParams {\n     pub path: String,\n     pub source: String,\n     pub version: Option<String>,\n@@ -25,146 +26,168 @@\n     pub timeout_ms: Option<u64>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleBuildParams {\n     pub path: String,\n     pub mode: Option<String>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleRunParams {\n     pub path: String,\n     pub input: Option<serde_json::Value>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleDeprecateParams {\n     pub path: String,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleSearchParams {\n     pub query: String,\n     pub limit: Option<usize>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleTemplateParams {\n     pub path: String,\n     pub pattern: String,\n     pub description: Option<String>,\n }\n \n // ── Workflow Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct WorkflowPlanParams {\n     pub start: String,\n     pub max_depth: Option<usize>,\n }\n \n // ── Graph Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphQueryParams {\n     pub kind: Option<String>,\n     pub limit: Option<u32>,\n     pub offset: Option<u32>,\n     pub properties: Option<HashMap<String, Value>>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphPathfindParams {\n     pub from: String,\n     pub to: String,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphAddEdgeParams {\n     pub source: String,\n     pub target: String,\n     pub kind: String,\n }\n \n // ── Flow Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct FlowCreateParams {\n     pub path: String,\n     pub steps: serde_json::Value,\n     pub summary: Option<String>,\n     pub on_failure: Option<String>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct FlowShowParams {\n     pub path: String,\n }\n \n // ── Schedule Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ScheduleCreateParams {\n     pub target_path: String,\n     pub schedule: String,\n     pub args: Option<serde_json::Value>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ScheduleValidateParams {\n     pub schedule: String,\n }\n \n // ── Secret Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct SecretSetParams {\n     pub path: String,\n     pub value: String,\n     pub description: Option<String>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct SecretGetParams {\n     pub path: String,\n }\n \n // ── Resource Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ResourceBindParams {\n     pub path: String,\n     pub resource_type: String,\n     pub value: serde_json::Value,\n }\n \n // ── Job Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct JobQueueParams {\n     pub target_path: String,\n     pub args: Option<serde_json::Value>,\n     pub kind: Option<String>,\n }\n \n // ── Flow Tools (continued) ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct FlowExecuteParams {\n     pub path: String,\n     pub input: Option<serde_json::Value>,\n }\n \n // ── Run Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct RunLogsParams {\n     pub module_path: Option<String>,\n     pub limit: Option<usize>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct RunRetryParams {\n     pub run_id: String,\n }\n \n // ── Graph Tools (continued) ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphSummarizeParams {}\n \n // ── Registry Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct RegistrySearchParams {\n     pub query: String,\n }\n",
+          "filediff": {
+            "file": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs",
+            "patch": "Index: /home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n===================================================================\n--- /home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n+++ /home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n@@ -15,8 +15,9 @@\n }\n \n // ── Module Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleCreateParams {\n     pub path: String,\n     pub source: String,\n     pub version: Option<String>,\n@@ -25,146 +26,168 @@\n     pub timeout_ms: Option<u64>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleBuildParams {\n     pub path: String,\n     pub mode: Option<String>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleRunParams {\n     pub path: String,\n     pub input: Option<serde_json::Value>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleDeprecateParams {\n     pub path: String,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleSearchParams {\n     pub query: String,\n     pub limit: Option<usize>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ModuleTemplateParams {\n     pub path: String,\n     pub pattern: String,\n     pub description: Option<String>,\n }\n \n // ── Workflow Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct WorkflowPlanParams {\n     pub start: String,\n     pub max_depth: Option<usize>,\n }\n \n // ── Graph Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphQueryParams {\n     pub kind: Option<String>,\n     pub limit: Option<u32>,\n     pub offset: Option<u32>,\n     pub properties: Option<HashMap<String, Value>>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphPathfindParams {\n     pub from: String,\n     pub to: String,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphAddEdgeParams {\n     pub source: String,\n     pub target: String,\n     pub kind: String,\n }\n \n // ── Flow Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct FlowCreateParams {\n     pub path: String,\n     pub steps: serde_json::Value,\n     pub summary: Option<String>,\n     pub on_failure: Option<String>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct FlowShowParams {\n     pub path: String,\n }\n \n // ── Schedule Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ScheduleCreateParams {\n     pub target_path: String,\n     pub schedule: String,\n     pub args: Option<serde_json::Value>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ScheduleValidateParams {\n     pub schedule: String,\n }\n \n // ── Secret Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct SecretSetParams {\n     pub path: String,\n     pub value: String,\n     pub description: Option<String>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct SecretGetParams {\n     pub path: String,\n }\n \n // ── Resource Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct ResourceBindParams {\n     pub path: String,\n     pub resource_type: String,\n     pub value: serde_json::Value,\n }\n \n // ── Job Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct JobQueueParams {\n     pub target_path: String,\n     pub args: Option<serde_json::Value>,\n     pub kind: Option<String>,\n }\n \n // ── Flow Tools (continued) ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct FlowExecuteParams {\n     pub path: String,\n     pub input: Option<serde_json::Value>,\n }\n \n // ── Run Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct RunLogsParams {\n     pub module_path: Option<String>,\n     pub limit: Option<usize>,\n }\n \n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct RunRetryParams {\n     pub run_id: String,\n }\n \n // ── Graph Tools (continued) ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct GraphSummarizeParams {}\n \n // ── Registry Tools ──\n #[derive(serde::Deserialize, JsonSchema)]\n+#[serde(deny_unknown_fields)]\n pub struct RegistrySearchParams {\n     pub query: String,\n }\n",
+            "additions": 23,
+            "deletions": 0
+          },
+          "truncated": false
+        },
+        "title": "crates/automaton-mcp/src/tools.rs",
+        "time": {
+          "start": 1778154516292,
+          "end": 1778154517287
+        }
+      },
+      "id": "prt_e0244a7fb001dzFMX84kHI87IY",
+      "sessionID": "ses_1fdbba701ffeqPuDI1mhas727J",
+      "messageID": "msg_e0244711a001byGNTXrxfrqZBm"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_Alh5kQnBx1BCvGxgYxeH0960",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs</path>\n<type>file</type>\n<content>\n1: use serde_json::Value;\n2: use std::collections::HashMap;\n3: use std::sync::Arc;\n4: \n5: use schemars::JsonSchema;\n6: \n7: /// Generate a JSON Schema from a JsonSchema-derived type\n8: pub fn schema_for<T: JsonSchema>() -> Arc<serde_json::Map<String, serde_json::Value>> {\n9:     let schema = schemars::schema_for!(T);\n10:     let value = serde_json::to_value(&schema).unwrap_or_default();\n11:     match value {\n12:         Value::Object(map) => Arc::new(map),\n13:         _ => Arc::new(serde_json::Map::new()),\n14:     }\n15: }\n16: \n17: // ── Module Tools ──\n18: #[derive(serde::Deserialize, JsonSchema)]\n19: #[serde(deny_unknown_fields)]\n20: pub struct ModuleCreateParams {\n21:     pub path: String,\n22:     pub source: String,\n23:     pub version: Option<String>,\n24:     pub summary: Option<String>,\n25:     pub depends_on: Option<Vec<String>>,\n26:     pub timeout_ms: Option<u64>,\n27: }\n28: \n29: #[derive(serde::Deserialize, JsonSchema)]\n30: #[serde(deny_unknown_fields)]\n31: pub struct ModuleBuildParams {\n32:     pub path: String,\n33:     pub mode: Option<String>,\n34: }\n35: \n36: #[derive(serde::Deserialize, JsonSchema)]\n37: #[serde(deny_unknown_fields)]\n38: pub struct ModuleRunParams {\n39:     pub path: String,\n40:     pub input: Option<serde_json::Value>,\n41: }\n42: \n43: #[derive(serde::Deserialize, JsonSchema)]\n44: #[serde(deny_unknown_fields)]\n45: pub struct ModuleDeprecateParams {\n46:     pub path: String,\n47: }\n48: \n49: #[derive(serde::Deserialize, JsonSchema)]\n50: #[serde(deny_unknown_fields)]\n51: pub struct ModuleSearchParams {\n52:     pub query: String,\n53:     pub limit: Option<usize>,\n54: }\n55: \n56: #[derive(serde::Deserialize, JsonSchema)]\n57: #[serde(deny_unknown_fields)]\n58: pub struct ModuleTemplateParams {\n59:     pub path: String,\n60:     pub pattern: String,\n61:     pub description: Option<String>,\n62: }\n63: \n64: // ── Workflow Tools ──\n65: #[derive(serde::Deserialize, JsonSchema)]\n66: #[serde(deny_unknown_fields)]\n67: pub struct WorkflowPlanParams {\n68:     pub start: String,\n69:     pub max_depth: Option<usize>,\n70: }\n71: \n72: // ── Graph Tools ──\n73: #[derive(serde::Deserialize, JsonSchema)]\n74: #[serde(deny_unknown_fields)]\n75: pub struct GraphQueryParams {\n76:     pub kind: Option<String>,\n77:     pub limit: Option<u32>,\n78:     pub offset: Option<u32>,\n79:     pub properties: Option<HashMap<String, Value>>,\n80: }\n81: \n82: #[derive(serde::Deserialize, JsonSchema)]\n83: #[serde(deny_unknown_fields)]\n84: pub struct GraphPathfindParams {\n85:     pub from: String,\n86:     pub to: String,\n87: }\n88: \n89: #[derive(serde::Deserialize, JsonSchema)]\n90: #[serde(deny_unknown_fields)]\n91: pub struct GraphAddEdgeParams {\n92:     pub source: String,\n93:     pub target: String,\n94:     pub kind: String,\n95: }\n96: \n97: // ── Flow Tools ──\n98: #[derive(serde::Deserialize, JsonSchema)]\n99: #[serde(deny_unknown_fields)]\n100: pub struct FlowCreateParams {\n101:     pub path: String,\n102:     pub steps: serde_json::Value,\n103:     pub summary: Option<String>,\n104:     pub on_failure: Option<String>,\n105: }\n106: \n107: #[derive(serde::Deserialize, JsonSchema)]\n108: #[serde(deny_unknown_fields)]\n109: pub struct FlowShowParams {\n110:     pub path: String,\n111: }\n112: \n113: // ── Schedule Tools ──\n114: #[derive(serde::Deserialize, JsonSchema)]\n115: #[serde(deny_unknown_fields)]\n116: pub struct ScheduleCreateParams {\n117:     pub target_path: String,\n118:     pub schedule: String,\n119:     pub args: Option<serde_json::Value>,\n120: }\n121: \n122: #[derive(serde::Deserialize, JsonSchema)]\n123: #[serde(deny_unknown_fields)]\n124: pub struct ScheduleValidateParams {\n125:     pub schedule: String,\n126: }\n127: \n128: // ── Secret Tools ──\n129: #[derive(serde::Deserialize, JsonSchema)]\n130: #[serde(deny_unknown_fields)]\n131: pub struct SecretSetParams {\n132:     pub path: String,\n133:     pub value: String,\n134:     pub description: Option<String>,\n135: }\n136: \n137: #[derive(serde::Deserialize, JsonSchema)]\n138: #[serde(deny_unknown_fields)]\n139: pub struct SecretGetParams {\n140:     pub path: String,\n141: }\n142: \n143: // ── Resource Tools ──\n144: #[derive(serde::Deserialize, JsonSchema)]\n145: #[serde(deny_unknown_fields)]\n146: pub struct ResourceBindParams {\n147:     pub path: String,\n148:     pub resource_type: String,\n149:     pub value: serde_json::Value,\n150: }\n151: \n152: // ── Job Tools ──\n153: #[derive(serde::Deserialize, JsonSchema)]\n154: #[serde(deny_unknown_fields)]\n155: pub struct JobQueueParams {\n156:     pub target_path: String,\n157:     pub args: Option<serde_json::Value>,\n158:     pub kind: Option<String>,\n159: }\n160: \n161: // ── Flow Tools (continued) ──\n162: #[derive(serde::Deserialize, JsonSchema)]\n163: #[serde(deny_unknown_fields)]\n164: pub struct FlowExecuteParams {\n165:     pub path: String,\n166:     pub input: Option<serde_json::Value>,\n167: }\n168: \n169: // ── Run Tools ──\n170: #[derive(serde::Deserialize, JsonSchema)]\n171: #[serde(deny_unknown_fields)]\n172: pub struct RunLogsParams {\n173:     pub module_path: Option<String>,\n174:     pub limit: Option<usize>,\n175: }\n176: \n177: #[derive(serde::Deserialize, JsonSchema)]\n178: #[serde(deny_unknown_fields)]\n179: pub struct RunRetryParams {\n180:     pub run_id: String,\n181: }\n182: \n183: // ── Graph Tools (continued) ──\n184: #[derive(serde::Deserialize, JsonSchema)]\n185: #[serde(deny_unknown_fields)]\n186: pub struct GraphSummarizeParams {}\n187: \n188: // ── Registry Tools ──\n189: #[derive(serde::Deserialize, JsonSchema)]\n190: #[serde(deny_unknown_fields)]\n191: pub struct RegistrySearchParams {\n192:     pub query: String,\n193: }\n\n(End of file - total 193 lines)\n</content>\n[Category+Skill Reminder]\n\n**Built-in**: playwright, frontend-ui-ux, git-master, dev-browser, review-work, ai-slop-remover\n**⚡ YOUR SKILLS (PRIORITY)**: minimax-pdf, graphify, happy-notes, text-to-image-prompt-optimizer, context7, supabase-postgres-best-practices, notion-api, notion-knowledge-capture (+102 more)\n\n> User-installed skills OVERRIDE built-in defaults. ALWAYS prefer YOUR SKILLS when domain matches.\n\n```typescript\ntask(category=\"visual-engineering\", load_skills=[\"minimax-pdf\"], run_in_background=true)\n```\n",
+        "metadata": {
+          "preview": "use serde_json::Value;\nuse std::collections::HashMap;\nuse std::sync::Arc;\n\nuse schemars::JsonSchema;\n\n/// Generate a JSON Schema from a JsonSchema-derived type\npub fn schema_for<T: JsonSchema>() -> Arc<serde_json::Map<String, serde_json::Value>> {\n    let schema = schemars::schema_for!(T);\n    let value = serde_json::to_value(&schema).unwrap_or_default();\n    match value {\n        Value::Object(map) => Arc::new(map),\n        _ => Arc::new(serde_json::Map::new()),\n    }\n}\n\n// ── Module Tools ──\n#[derive(serde::Deserialize, JsonSchema)]\n#[serde(deny_unknown_fields)]\npub struct ModuleCreateParams {",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-mcp/src/tools.rs",
+        "time": {
+          "start": 1778154521676,
+          "end": 1778154521691
+        }
+      },
+      "id": "prt_e0244c1c6001mVMBc287xfIqyr",
+      "sessionID": "ses_1fdbba701ffeqPuDI1mhas727J",
+      "messageID": "msg_e0244b787001JiNgaGPSuA6tDj"
+    },
+    {
+      "type": "tool",
+      "tool": "lsp_diagnostics",
+      "callID": "call_01_jXs42Ecx4cSf2bBv7Qz07117",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs",
+          "severity": "error"
+        },
+        "output": "No diagnostics found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778154522826,
+          "end": 1778154527864
+        }
+      },
+      "id": "prt_e0244c535003JqQ8O23gHWgzbC",
+      "sessionID": "ses_1fdbba701ffeqPuDI1mhas727J",
+      "messageID": "msg_e0244b787001JiNgaGPSuA6tDj"
+    }
+  ]
+}

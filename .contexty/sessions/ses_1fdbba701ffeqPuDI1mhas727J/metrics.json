@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sessionID": "ses_1fdbba701ffeqPuDI1mhas727J",
+  "timestamp": "2026-05-07T11:48:47.960Z",
+  "tokens": {
+    "input": 4360,
+    "output": 400,
+    "reasoning": 768,
+    "cacheRead": 257408,
+    "cacheWrite": 0
+  },
+  "files": [],
+  "tools": [
+    {
+      "name": "read",
+      "count": 2,
+      "successCount": 2,
+      "failCount": 0
+    },
+    {
+      "name": "edit",
+      "count": 1,
+      "successCount": 1,
+      "failCount": 0
+    },
+    {
+      "name": "lsp_diagnostics",
+      "count": 1,
+      "successCount": 1,
+      "failCount": 0
+    }
+  ],
+  "acpm": {
+    "activePreset": null,
+    "allowCount": 2490,
+    "denyCount": 0,
+    "sanitizeCount": 0,
+    "deniedByCategory": {},
+    "folderAccessDistribution": {
+      "denied": 0,
+      "read-only": 0,
+      "read-write": 0
+    },
+    "toolCategoryStatus": []
+  }
+}

@@ -1,4 +1,6 @@
+pub mod backend;
 pub mod error;
+pub mod execution;
 pub mod flow;
 pub mod graph;
 pub mod job;
@@ -8,6 +10,7 @@ pub mod secrets;
 pub mod trigger;
 
 pub use error::{AutomatonError, Result};
+pub use execution::*;
 pub use flow::*;
 pub use graph::*;
 pub use job::*;

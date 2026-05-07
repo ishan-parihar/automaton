@@ -1,0 +1,781 @@
+{
+  "parts": [
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_00_bDkIDCn3LnnTquJM0jVY4786",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "graph_query",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "files_with_matches"
+        },
+        "output": "Found 1 match(es) in 1 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146913628,
+          "end": 1778146913678
+        }
+      },
+      "id": "prt_e01d0a853001xuJBPCVkMO3pEi",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_01_eFnfhnQOAPFSC0Gw7cKq8001",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "fn summarize",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146915076,
+          "end": 1778146915173
+        }
+      },
+      "id": "prt_e01d0ae650015xOoS51OW3M5rs",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_02_ijo3mqoeb9O4TPJqvSmM2261",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "fn aggregate",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146916561,
+          "end": 1778146916652
+        }
+      },
+      "id": "prt_e01d0b3c2001NDgudIiqm6T0dI",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_03_xbINjBaY3BHJYxSXo6SG9111",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "fn count",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146917911,
+          "end": 1778146917975
+        }
+      },
+      "id": "prt_e01d0b93f001tsFGtBzUueP0WX",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_04_8hq28SOjICWowkkFHQ285061",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "fn list_domains",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146919403,
+          "end": 1778146919433
+        }
+      },
+      "id": "prt_e01d0bee9001WYcfNKQJbi82Pz",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_05_b6j7f4WmBkS1mzLR1iaE5525",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "impl.*Display.*for.*GraphNode|impl.*Display.*for.*GraphEdge|impl.*Display.*for.*KnowledgeGraph",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146921236,
+          "end": 1778146921308
+        }
+      },
+      "id": "prt_e01d0c491001wrSkeZg7wWuuLw",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_06_OwUx63DscK5DlabUW3mU8497",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "CREATE TABLE.*graph|graph\\.nodes|graph\\.edges",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "Found 8 match(es) in 4 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/sqlite.rs\n  56: CREATE TABLE IF NOT EXISTS graph_nodes (\n  60: CREATE TABLE IF NOT EXISTS graph_edges (\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/postgres.rs\n  77: \"CREATE TABLE IF NOT EXISTS graph_nodes (\n  82: \"CREATE TABLE IF NOT EXISTS graph_edges (\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-postgres/src/lib.rs\n  74: CREATE TABLE IF NOT EXISTS graph_nodes (\n  81: CREATE TABLE IF NOT EXISTS graph_edges (\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/src/lib.rs\n  110: CREATE TABLE IF NOT EXISTS graph_nodes (\n  117: CREATE TABLE IF NOT EXISTS graph_edges (\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146922789,
+          "end": 1778146922829
+        }
+      },
+      "id": "prt_e01d0cbac001Ck5ZhC16XYkDyR",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_07_KhMHwqatasWOGcnMW7600665",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "limit|offset|pagination",
+          "include": "*.rs",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content",
+          "head_limit": 60
+        },
+        "output": "Found 36 match(es) in 11 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/sqlite.rs\n  239: async fn get_runs(&self, target: &str, limit: i64) -> Result<Vec<RunRecord>, String> {\n  244: let mut rows = stmt.query(rusqlite::params![t, limit]).map_err(|e| format!(\"Q: {e}\"))?;\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/postgres.rs\n  293: async fn get_runs(&self, target: &str, limit: i64) -> Result<Vec<RunRecord>, String> {\n  299: &[&target, &limit],\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/lib.rs\n  58: async fn get_runs(&self, target: &str, limit: i64) -> Result<Vec<RunRecord>, String>;\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-build/src/templates.rs\n  358: limit: Option<usize>,\n  546: name: \"rate-limiter\",\n  547: description: \"Token-bucket rate limiter module — throttle requests to an API\",\n  549: source: r#\"// Token-bucket rate limiter module — wraps API calls with rate limiting\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-api/src/lib.rs\n  257: let limit = params.get(\"limit\").and_then(|v| v.as_i64()).unwrap_or(50);\n  258: match state.db.list_jobs(limit).await {\n  271: let limit = params.get(\"limit\").and_then(|v| v.as_i64()).unwrap_or(50);\n  272: match state.db.get_runs(path, limit).await {\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-postgres/src/lib.rs\n  254: pub async fn list_jobs(&self, limit: i64) -> Result<Vec<serde_json::Value>, sqlx::Error> {\n  258: .bind(limit)\n  304: pub async fn get_runs(&self, target: &str, limit: i64) -> Result<Vec<serde_json::Value>, sqlx::Error> {\n  310: .bind(limit)\n  679: async fn list_jobs(&self, limit: i64) -> automaton_core::Result<Vec<serde_json::Value>> {\n  680: self.list_jobs(limit).await\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-cli/src/main.rs\n  37: /// Template pattern (echo, http-fetch, http-server, db-query, slack-notify, data-transform, health-check, rate-limiter, file-watch, cron-worker)\n  108: limit: usize,\n  500: Commands::Logs { module, limit } => {\n  508: let truncated: Vec<_> = runs.into_iter().take(limit).collect();\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs\n  129: let limit = p.limit.unwrap_or(20);\n  132: .take(limit)\n  384: let limit = 50i64;\n  385: match engine.backend().list_jobs(limit).await {\n  394: let limit = p.limit.unwrap_or(20);\n  396: ok_json(serde_json::json!({\"count\":runs.len(),\"runs\":runs.into_iter().take(limit).collect::<Vec<_>>()}))\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n  47: pub limit: Option<usize>,\n  150: pub limit: Option<usize>,\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/src/lib.rs\n  517: pub fn list_jobs(&self, limit: i64) -> Result<Vec<serde_json::Value>> {\n  522: let rows = stmt.query_map(rusqlite::params![limit], |row| {\n  774: async fn list_jobs(&self, limit: i64) -> Result<Vec<serde_json::Value>> {\n  775: Registry::list_jobs(self, limit)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/backend.rs\n  53: async fn list_jobs(&self, limit: i64) -> Result<Vec<serde_json::Value>>;\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146924521,
+          "end": 1778146924567
+        }
+      },
+      "id": "prt_e01d0d1c7001rS14H1T19e4l3h",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0913d001RhALW6fjEBWBSY"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_eJ051pqlypnPGm8J9CBn2633",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs</path>\n<type>file</type>\n<content>\n1: use std::collections::HashMap;\n2: use std::result::Result as StdResult;\n3: use std::sync::Arc;\n4: \n5: use automaton_core::*;\n6: use automaton_engine::flow::FlowEngine;\n7: use automaton_engine::{Engine, PlanOptions};\n8: use automaton_runtime::{Runtime, RuntimeConfig};\n9: use automaton_scheduler::Scheduler;\n10: use rmcp::model::*;\n11: use rmcp::{ServerHandler, ServiceExt, transport::stdio};\n12: \n13: pub mod tools;\n14: use tools::*;\n15: \n16: pub struct McpServer {\n17:     engine: Arc<Engine>,\n18:     data_dir: std::path::PathBuf,\n19: }\n20: \n21: impl McpServer {\n22:     pub fn new(engine: Engine, data_dir: std::path::PathBuf) -> Self {\n23:         Self { engine: Arc::new(engine), data_dir }\n24:     }\n25: \n26:     pub async fn serve_stdio(self) -> anyhow::Result<()> {\n27:         let service = self.serve(stdio()).await?;\n28:         service.waiting().await?;\n29:         Ok(())\n30:     }\n31: }\n32: \n33: fn ok_json(value: serde_json::Value) -> StdResult<CallToolResult, ErrorData> {\n34:     Ok(CallToolResult::success(vec![Content::text(serde_json::to_string_pretty(&value).unwrap_or_default())]))\n35: }\n36: \n37: fn err_json(msg: &str) -> StdResult<CallToolResult, ErrorData> {\n38:     Ok(CallToolResult::error(vec![Content::text(serde_json::to_string_pretty(&serde_json::json!({\"error\": msg})).unwrap_or_default())]))\n39: }\n40: \n41: fn parse_args<T: serde::de::DeserializeOwned>(request: &CallToolRequestParams) -> StdResult<T, ErrorData> {\n42:     let val = request.arguments.as_ref()\n43:         .map(|m| serde_json::Value::Object(m.clone()))\n44:         .unwrap_or(serde_json::Value::Object(serde_json::Map::new()));\n45:     serde_json::from_value(val)\n46:         .map_err(|e| ErrorData::new(ErrorCode(-32602), format!(\"Invalid params: {e}\"), None))\n47: }\n48: \n49: async fn handle_module_create(engine: &Engine, path: &str, source: &str, version: Option<&str>, summary: Option<&str>, depends_on: &[String], timeout_ms: Option<u64>) -> StdResult<CallToolResult, ErrorData> {\n50:     let mut manifest = AutomationManifest::default();\n51:     manifest.name = path.to_string();\n52:     manifest.version = version.unwrap_or(\"0.1.0\").to_string();\n53:     manifest.summary = summary.map(|s| s.to_string());\n54:     manifest.timeout_ms = timeout_ms.unwrap_or(30_000);\n55:     manifest.depends_on = depends_on.iter().map(|d| DepRef::new(d)).collect();\n56:     match engine.backend().register_module(path, source, &manifest).await {\n57:         Ok(id) => {\n58:             let mut props = HashMap::new();\n59:             props.insert(\"path\".into(), serde_json::json!(path));\n60:             let _ = engine.graph().add_node(NodeKind::Module, path, props);\n61:             ok_json(serde_json::json!({\"status\":\"created\",\"path\":path,\"hash\":id.hash.as_str(),\"version\":manifest.version}))\n62:         }\n63:         Err(e) => err_json(&e.to_string()),\n64:     }\n65: }\n66: \n67: fn add_tool(tools: &mut Vec<Tool>, name: &'static str, desc: &'static str, schema: impl Into<Arc<JsonObject>>) {\n68:     tools.push(Tool::new(name, desc, schema));\n69: }\n70: \n71: impl ServerHandler for McpServer {\n72:     fn get_info(&self) -> ServerInfo {\n73:         let mut info = ServerInfo::new(ServerCapabilities::builder().enable_tools().build());\n74:         info.instructions = Some(\"Automaton MCP Server — AI-agent-native Rust automation substrate.\".into());\n75:         info\n76:     }\n77: \n78:     fn call_tool(\n79:         &self,\n80:         request: CallToolRequestParams,\n81:         _context: rmcp::service::RequestContext<rmcp::RoleServer>,\n82:     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<CallToolResult, ErrorData>> + Send + '_>> {\n83:         let engine = self.engine.clone();\n84:         Box::pin(async move {\n85:             match request.name.as_ref() {\n86:                 // ── Module Tools ──\n87:                 \"module_create\" => {\n88:                     let p: ModuleCreateParams = parse_args(&request)?;\n89:                     return handle_module_create(&engine, &p.path, &p.source, p.version.as_deref(), p.summary.as_deref(), &p.depends_on.unwrap_or_default(), p.timeout_ms).await;\n90:                 }\n91:                 \"module_build\" => {\n92:                     let p: ModuleBuildParams = parse_args(&request)?;\n93:                     let module = match engine.backend().get_module(&p.path).await { Ok(Some(m)) => m, _ => return err_json(\"Module not found\") };\n94:                     let bc = automaton_build::BuildCache::new(std::path::Path::new(&self.data_dir));\n95:                     match bc.build_rust(&p.path, &module.source, &module.manifest) {\n96:                         Ok((hash, _path)) => {\n97:                             let _ = engine.backend().mark_built(&p.path).await;\n98:                             ok_json(serde_json::json!({\"status\":\"built\",\"path\":p.path,\"hash\":hash}))\n99:                         }\n100:                         Err(e) => err_json(&format!(\"Build failed: {e}\")),\n101:                     }\n102:                 }\n103:                 \"module_validate\" => ok_json(serde_json::json!({\"valid\":true})),\n104:                 \"module_run\" => {\n105:                     let p: ModuleRunParams = parse_args(&request)?;\n106:                     let binary = engine.backend().build_cache_dir().join(p.path.replace('.', \"_\"));\n107:                     if !binary.exists() {\n108:                         return err_json(\"not built yet\");\n109:                     }\n110:                     let rt = Runtime::new(RuntimeConfig {\n111:                         work_dir: self.data_dir.join(\"work\"),\n112:                         temp_dir: self.data_dir.join(\"tmp\"),\n113:                         ..Default::default()\n114:                     });\n115:                     let input = p.input.unwrap_or(serde_json::json!({}));\n116:                     match rt.run_binary(&binary, &input, 30000).await {\n117:                         Ok(output) => ok_json(serde_json::json!({\"status\":\"completed\",\"output\":output})),\n118:                         Err(e) => err_json(&e.to_string()),\n119:                     }\n120:                 }\n121:                 \"module_deprecate\" => {\n122:                     let p: ModuleDeprecateParams = parse_args(&request)?;\n123:                     let _ = engine.graph().delete_node(&p.path);\n124:                     ok_json(serde_json::json!({\"status\":\"deprecated\",\"path\":p.path}))\n125:                 }\n126:                 \"module_search\" => {\n127:                     let p: ModuleSearchParams = parse_args(&request)?;\n128:                     let all = engine.backend().list_modules().await.unwrap_or_default();\n129:                     let limit = p.limit.unwrap_or(20);\n130:                     let results: Vec<_> = all.iter()\n131:                         .filter(|(path, _, _, _)| path.contains(&p.query))\n132:                         .take(limit)\n133:                         .map(|(p, v, h, b)| serde_json::json!({\"path\":p,\"version\":v,\"hash\":h,\"built\":b}))\n134:                         .collect();\n135:                     ok_json(serde_json::json!({\"count\":results.len(),\"results\":results}))\n136:                 }\n137:                 \"module_template\" => {\n138:                     let p: ModuleTemplateParams = parse_args(&request)?;\n139:                     let tmpl = automaton_build::templates::get_template(&p.pattern);\n140:                     let source = tmpl.map(|t| t.source.to_string()).unwrap_or_else(|| {\n141:                         let safe = p.path.replace('.', \"_\");\n142:                         format!(\"fn main() {{ println!(\\\"{{}}\\\", serde_json::json!({{ \\\"status\\\":\\\"ok\\\",\\\"module\\\":\\\"{safe}\\\" }})); }}\\n\")\n143:                     });\n144:                     let mut manifest = AutomationManifest::default();\n145:                     manifest.name = p.path.clone();\n146:                     manifest.summary = p.description;\n147:                     let _ = engine.backend().register_module(&p.path, &source, &manifest).await;\n148:                     ok_json(serde_json::json!({\"status\":\"created\",\"path\":p.path,\"pattern\":p.pattern,\"source_len\":source.len()}))\n149:                 }\n150:                 \"module_list_templates\" => {\n151:                     let templates = automaton_build::templates::all_templates();\n152:                     let list: Vec<serde_json::Value> = templates.iter().map(|t| {\n153:                         serde_json::json!({\n154:                             \"name\": t.name,\n155:                             \"description\": t.description,\n156:                         })\n157:                     }).collect();\n158:                     ok_json(serde_json::json!({\"templates\": list, \"count\": list.len()}))\n159:                 }\n160: \n161:                 // ── Workflow Tools ──\n162:                 \"workflow_plan\" => {\n163:                     let p: WorkflowPlanParams = parse_args(&request)?;\n164:                     let opts = PlanOptions { max_depth: p.max_depth.unwrap_or(10), ..Default::default() };\n165:                     match engine.plan(&p.start, &opts).await {\n166:                         Ok(rg) => ok_json(serde_json::json!({\"run_graph_id\":rg.id,\"workflow\":rg.workflow_name,\"modules\":rg.modules.len()})),\n167:                         Err(e) => err_json(&e.to_string()),\n168:                     }\n169:                 }\n170:                 \"workflow_materialize\" => {\n171:                     let p: WorkflowPlanParams = parse_args(&request)?;\n172:                     let opts = PlanOptions { max_depth: p.max_depth.unwrap_or(10), dry_run: true, ..Default::default() };\n173:                     match engine.plan(&p.start, &opts).await { Ok(rg) => match engine.materialize(&rg) {\n174:                         Ok(_) => ok_json(serde_json::json!({\"status\":\"valid_dag\"})),\n175:                         Err(e) => err_json(&format!(\"Invalid DAG: {e}\")),\n176:                     }, Err(e) => err_json(&e.to_string()) }\n177:                 }\n178: \n179:                 // ── Graph Tools ──\n180:                 \"graph_query\" => {\n181:                     let p: GraphQueryParams = parse_args(&request)?;\n182:                     let nodes = match p.kind.as_deref().unwrap_or(\"\") {\n183:                         \"\" => engine.graph().all_nodes().unwrap_or_default(),\n184:                         \"module\" => engine.graph().find_nodes_by_kind(NodeKind::Module).unwrap_or_default(),\n185:                         \"workflow\" => engine.graph().find_nodes_by_kind(NodeKind::Workflow).unwrap_or_default(),\n186:                         \"trigger\" => engine.graph().find_nodes_by_kind(NodeKind::Trigger).unwrap_or_default(),\n187:                         \"resource\" => engine.graph().find_nodes_by_kind(NodeKind::Resource).unwrap_or_default(),\n188:                         k => return err_json(&format!(\"Unknown kind: {k}\")),\n189:                     };\n190:                     ok_json(serde_json::json!({\"count\":nodes.len(),\"nodes\":nodes}))\n191:                 }\n192:                 \"graph_pathfind\" => {\n193:                     let p: GraphPathfindParams = parse_args(&request)?;\n194:                     let paths = engine.graph().find_path(&p.from, &p.to).unwrap_or_default();\n195:                     ok_json(serde_json::json!({\"paths_found\":paths.len()}))\n196:                 }\n197:                 \"graph_add_edge\" => {\n198:                     let p: GraphAddEdgeParams = parse_args(&request)?;\n199:                     let ek = match p.kind.to_uppercase().as_str() {\n200:                         \"DEPENDS_ON\" => EdgeKind::DependsOn, \"CALLS\" => EdgeKind::Calls,\n201:                         \"TRIGGERS\" => EdgeKind::Triggers, \"USES_RESOURCE\" => EdgeKind::UsesResource,\n202:                         \"EMITS\" => EdgeKind::Emits, \"CONSUMES\" => EdgeKind::Consumes,\n203:                         \"BLOCKED_BY\" => EdgeKind::BlockedBy, \"ALTERNATIVE_TO\" => EdgeKind::AlternativeTo,\n204:                         \"UPGRADES\" => EdgeKind::Upgrades, \"DERIVED_FROM\" => EdgeKind::DerivedFrom,\n205:                         _ => return err_json(\"Unknown edge kind\"),\n206:                     };\n207:                     match engine.graph().add_edge(&p.source, &p.target, ek, HashMap::new()) {\n208:                         Ok(eid) => ok_json(serde_json::json!({\"id\":eid})),\n209:                         Err(e) => err_json(&e.to_string()),\n210:                     }\n211:                 }\n212: \n213:                 // ── Flow Tools ──\n214:                 \"flow_create\" => {\n215:                     let p: FlowCreateParams = parse_args(&request)?;\n216:                     let steps: Vec<FlowStep> = serde_json::from_value(p.steps).unwrap_or_default();\n217:                     let def = FlowDefinition {\n218:                         path: p.path.clone(),\n219:                         steps,\n220:                         summary: p.summary.clone(),\n221:                         on_failure: p.on_failure.clone(),\n222:                         ..Default::default()\n223:                     };\n224:                     let flat = FlowEngine::flatten(&def);\n225:                     match flat {\n226:                         Ok(s) => {\n227:                             // Persist the flow\n228:                             let def_json = serde_json::to_value(&def).unwrap_or_default();\n229:                             match engine.backend().store_flow(\n230:                                 &p.path, \"0.1.0\", &def_json,\n231:                                 p.summary.as_deref(), p.on_failure.as_deref(),\n232:                             ).await {\n233:                                 Ok(id) => ok_json(serde_json::json!({\n234:                                     \"status\":\"flow_created\",\"flow_id\":id,\n235:                                     \"path\":p.path,\"steps\":s.len()\n236:                                 })),\n237:                                 Err(e) => err_json(&e.to_string()),\n238:                             }\n239:                         }\n240:                         Err(e) => err_json(&e.to_string()),\n241:                     }\n242:                 }\n243:                 \"flow_show\" => {\n244:                     let p: FlowShowParams = parse_args(&request)?;\n245:                     match engine.backend().get_flow(&p.path).await {\n246:                         Ok(Some(flow)) => ok_json(flow),\n247:                         Ok(None) => err_json(\"Flow not found\"),\n248:                         Err(e) => err_json(&e.to_string()),\n249:                     }\n250:                 }\n251:                 \"flow_list\" => {\n252:                     match engine.backend().list_flows().await {\n253:                         Ok(flows) => ok_json(serde_json::json!({\"flows\": flows})),\n254:                         Err(e) => err_json(&e.to_string()),\n255:                     }\n256:                 }\n257:                 \"flow_delete\" => {\n258:                     let p: FlowShowParams = parse_args(&request)?;\n259:                     match engine.backend().delete_flow(&p.path).await {\n260:                         Ok(_) => ok_json(serde_json::json!({\"status\":\"deleted\",\"path\":p.path})),\n261:                         Err(e) => err_json(&e.to_string()),\n262:                     }\n263:                 }\n264:                 \"flow_execute\" => {\n265:                     let p: FlowExecuteParams = parse_args(&request)?;\n266:                     // Try flow persistence path first\n267:                     let flow_result = engine.backend().get_flow(&p.path).await;\n268:                     match flow_result {\n269:                         Ok(Some(flow)) => {\n270:                             // Execute persisted flow via FlowEngine with Runtime\n271:                             let def_val = flow.get(\"definition\").cloned().unwrap_or_default();\n272:                             if let Ok(def) = serde_json::from_value::<FlowDefinition>(def_val) {\n273:                                 match FlowEngine::flatten(&def) {\n274:                                     Ok(steps) => {\n275:                                         let rt = Runtime::new(RuntimeConfig {\n276:                                             work_dir: self.data_dir.join(\"work\"),\n277:                                             temp_dir: self.data_dir.join(\"tmp\"),\n278:                                             ..Default::default()\n279:                                         });\n280:                                         let bc = engine.backend().build_cache_dir().to_path_buf();\n281:                                         match FlowEngine::execute(\n282:                                             &steps,\n283:                                             Some(engine.backend()),\n284:                                             &rt,\n285:                                             &bc,\n286:                                         ).await {\n287:                                             Ok(outputs) => {\n288:                                                 let results: serde_json::Map<_, _> = outputs.into_iter().collect();\n289:                                                 ok_json(serde_json::json!({\"status\":\"completed\",\"mode\":\"flow\",\"results\":results}))\n290:                                             }\n291:                                             Err(e) => err_json(&e.to_string())\n292:                                         }\n293:                                     }\n294:                                     Err(e) => err_json(&e.to_string())\n295:                                 }\n296:                             } else {\n297:                                 err_json(\"Invalid flow definition\")\n298:                             }\n299:                         }\n300:                         _ => {\n301:                             // Fall back to Engine DAG execution (module-based)\n302:                             let opts = PlanOptions { ..Default::default() };\n303:                             match engine.plan(&p.path, &opts).await {\n304:                                 Ok(rg) => {\n305:                                     match engine.materialize(&rg) {\n306:                                         Ok(dag) => {\n307:                                             let result = engine.execute(dag).await;\n308:                                             match result {\n309:                                                 Ok(output) => ok_json(serde_json::json!({\"status\":\"completed\",\"mode\":\"dag\",\"run_id\":output.run_graph_id,\"results\":output.results})),\n310:                                                 Err(e) => err_json(&e.to_string()),\n311:                                             }\n312:                                         }\n313:                                         Err(e) => err_json(&format!(\"Invalid DAG: {e}\")),\n314:                                     }\n315:                                 }\n316:                                 Err(e) => err_json(&e.to_string()),\n317:                             }\n318:                         }\n319:                     }\n320:                 }\n321: \n322:                 // ── Schedule Tools ──\n323:                 \"schedule_create\" => {\n324:                     let p: ScheduleCreateParams = parse_args(&request)?;\n325:                     match Scheduler::validate(&p.schedule) {\n326:                         Ok(_) => {\n327:                             let config = serde_json::json!({\"schedule\": p.schedule, \"args\": p.args});\n328:                             match engine.backend().create_trigger(&p.target_path, false, \"cron\", &config).await {\n329:                                 Ok(id) => ok_json(serde_json::json!({\"status\":\"schedule_created\",\"id\":id,\"target\":p.target_path,\"schedule\":p.schedule,\"valid_cron\":true})),\n330:                                 Err(e) => err_json(&e.to_string()),\n331:                             }\n332:                         }\n333:                         Err(e) => err_json(&e.to_string()),\n334:                     }\n335:                 }\n336:                 \"schedule_validate\" => {\n337:                     let p: ScheduleValidateParams = parse_args(&request)?;\n338:                     match Scheduler::validate(&p.schedule) {\n339:                         Ok(_) => ok_json(serde_json::json!({\"valid\":true,\"schedule\":p.schedule})),\n340:                         Err(e) => ok_json(serde_json::json!({\"valid\":false,\"error\":e})),\n341:                     }\n342:                 }\n343: \n344:                 // ── Secret Tools ──\n345:                 \"secret_set\" => {\n346:                     let p: SecretSetParams = parse_args(&request)?;\n347:                     match engine.backend().set_variable(&p.path, &p.value, true).await {\n348:                         Ok(_) => ok_json(serde_json::json!({\"status\":\"stored\",\"path\":p.path})),\n349:                         Err(e) => err_json(&e.to_string()),\n350:                     }\n351:                 }\n352:                 \"secret_get\" => {\n353:                     let p: SecretGetParams = parse_args(&request)?;\n354:                     match engine.backend().get_variable(&p.path).await {\n355:                         Ok(Some(val)) => ok_json(serde_json::json!({\"path\":p.path,\"value\":val,\"status\":\"found\"})),\n356:                         Ok(None) => err_json(\"Secret not found\"),\n357:                         Err(e) => err_json(&e.to_string()),\n358:                     }\n359:                 }\n360: \n361:                 // ── Resource Tools ──\n362:                 \"resource_bind\" => {\n363:                     let p: ResourceBindParams = parse_args(&request)?;\n364:                     match engine.backend().set_resource(&p.path, &p.resource_type, &p.value).await {\n365:                         Ok(_) => ok_json(serde_json::json!({\"status\":\"bound\",\"path\":p.path,\"type\":p.resource_type})),\n366:                         Err(e) => err_json(&e.to_string()),\n367:                     }\n368:                 }\n369:                 \"resource_list\" => {\n370:                     let resources = engine.backend().list_resources(None).await.unwrap_or_default();\n371:                     ok_json(serde_json::json!({\"types\":[\"postgresql\",\"slack\",\"github\",\"openai\",\"http\",\"aws\"],\"resources\":resources,}))\n372:                 }\n373: \n374:                 // ── Job Tools ──\n375:                 \"job_queue\" => {\n376:                     let p: JobQueueParams = parse_args(&request)?;\n377:                     let args = p.args.unwrap_or(serde_json::json!({}));\n378:                     match engine.backend().enqueue_job(p.kind.as_deref().unwrap_or(\"script\"), &p.target_path, &args).await {\n379:                         Ok(job_id) => ok_json(serde_json::json!({\"status\":\"queued\",\"target\":p.target_path,\"job_id\":job_id})),\n380:                         Err(e) => err_json(&e.to_string()),\n381:                     }\n382:                 }\n383:                 \"job_list\" => {\n384:                     let limit = 50i64;\n385:                     match engine.backend().list_jobs(limit).await {\n386:                         Ok(jobs) => ok_json(serde_json::json!({\"jobs\":jobs})),\n387:                         Err(e) => err_json(&e.to_string()),\n388:                     }\n389:                 }\n390: \n391:                 // ── Run Tools ──\n392:                 \"run_logs\" => {\n393:                     let p: RunLogsParams = parse_args(&request)?;\n394:                     let limit = p.limit.unwrap_or(20);\n395:                     let runs = match p.module_path { Some(ref m) => engine.backend().get_runs(m).await.unwrap_or_default(), None => vec![] };\n396:                     ok_json(serde_json::json!({\"count\":runs.len(),\"runs\":runs.into_iter().take(limit).collect::<Vec<_>>()}))\n397:                 }\n398:                 \"run_retry\" => {\n399:                     let p: RunRetryParams = parse_args(&request)?;\n400:                     ok_json(serde_json::json!({\"status\":\"retry_scheduled\",\"run_id\":p.run_id}))\n401:                 }\n402: \n403:                 // ── Registry Tools ──\n404:                 \"registry_search\" => {\n405:                     let p: RegistrySearchParams = parse_args(&request)?;\n406:                     let all = engine.backend().list_modules().await.unwrap_or_default();\n407:                     let filtered: Vec<_> = all.iter().filter(|(path,_,_,_)| path.contains(&p.query)).collect();\n408:                     ok_json(serde_json::json!({\"count\":filtered.len(),\"modules\":filtered}))\n409:                 }\n410: \n411:                 // ── Capability Tools ──\n412:                 \"capability_inventory\" => {\n413:                     let mc = engine.backend().list_modules().await.unwrap_or_default().len();\n414:                     let gn = engine.graph().all_nodes().unwrap_or_default().len();\n415:                     let ge = engine.graph().all_edges().unwrap_or_default().len();\n416:                     ok_json(serde_json::json!({\n417:                         \"modules\": mc, \"graph_nodes\": gn, \"graph_edges\": ge,\n418:                         \"resource_types\": [\"postgresql\",\"slack\",\"github\",\"openai\",\"http\",\"aws\"],\n419:                         \"tool_count\": 29,\n420:                     }))\n421:                 }\n422: \n423:                 // ── System Tools ──\n424:                 \"system_health\" => {\n425:                     let mc = engine.backend().list_modules().await.unwrap_or_default().len();\n426:                     let gn = engine.graph().all_nodes().unwrap_or_default().len();\n427:                     let ge = engine.graph().all_edges().unwrap_or_default().len();\n428:                     ok_json(serde_json::json!({\"status\":\"healthy\",\"version\":env!(\"CARGO_PKG_VERSION\"),\"registry_modules\":mc,\"graph_nodes\":gn,\"graph_edges\":ge}))\n429:                 }\n430: \n431:                 name => err_json(&format!(\"Unknown tool: {name}\")),\n432:             }\n433:         })\n434:     }\n435: \n436:     fn list_tools(\n437:         &self,\n438:         _request: Option<PaginatedRequestParams>,\n439:         _context: rmcp::service::RequestContext<rmcp::RoleServer>,\n440:     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<ListToolsResult, ErrorData>> + Send + '_>> {\n441:         let mut tools = Vec::new();\n442:         // Module tools with real JSON schemas\n443:         add_tool(&mut tools, \"module_create\",   \"Register a new automation module\",    schema_for::<ModuleCreateParams>());\n444:         add_tool(&mut tools, \"module_build\",    \"Build a registered module\",           schema_for::<ModuleBuildParams>());\n445:         add_tool(&mut tools, \"module_validate\", \"Validate module manifest\",            schema_for::<ModuleCreateParams>());\n446:         add_tool(&mut tools, \"module_run\",      \"Execute a module\",                    schema_for::<ModuleRunParams>());\n447:         add_tool(&mut tools, \"module_deprecate\",\"Remove a module\",                     schema_for::<ModuleDeprecateParams>());\n448:         add_tool(&mut tools, \"module_search\",   \"Search modules by query\",             schema_for::<ModuleSearchParams>());\n449:         add_tool(&mut tools, \"module_template\", \"Generate module from template\",       schema_for::<ModuleTemplateParams>());\n450:         add_tool(&mut tools, \"module_list_templates\", \"List available module templates\", Arc::new(serde_json::Map::new()));\n451:         // Workflow\n452:         add_tool(&mut tools, \"workflow_plan\",   \"Plan a workflow\",                    schema_for::<WorkflowPlanParams>());\n453:         add_tool(&mut tools, \"workflow_materialize\", \"Validate a DAG\",                schema_for::<WorkflowPlanParams>());\n454:         // Graph\n455:         add_tool(&mut tools, \"graph_query\",     \"Query design graph\",                 schema_for::<GraphQueryParams>());\n456:         add_tool(&mut tools, \"graph_pathfind\",  \"Find paths between nodes\",           schema_for::<GraphPathfindParams>());\n457:         add_tool(&mut tools, \"graph_add_edge\",  \"Wire edge between nodes\",            schema_for::<GraphAddEdgeParams>());\n458:         // Flow\n459:         add_tool(&mut tools, \"flow_create\",     \"Compose steps into a flow\",          schema_for::<FlowCreateParams>());\n460:         add_tool(&mut tools, \"flow_show\",       \"Show flow topology\",                 schema_for::<FlowShowParams>());\n461:         add_tool(&mut tools, \"flow_execute\",    \"Execute a composed flow DAG\",         schema_for::<FlowExecuteParams>());\n462:         add_tool(&mut tools, \"flow_list\",       \"List all stored flows\",             Arc::new(serde_json::Map::new()));\n463:         add_tool(&mut tools, \"flow_delete\",     \"Delete a stored flow\",              schema_for::<FlowShowParams>());\n464:         // Schedule\n465:         add_tool(&mut tools, \"schedule_create\", \"Create cron schedule\",               schema_for::<ScheduleCreateParams>());\n466:         add_tool(&mut tools, \"schedule_validate\",\"Validate cron expression\",          schema_for::<ScheduleValidateParams>());\n467:         // Secrets\n468:         add_tool(&mut tools, \"secret_set\",      \"Store encrypted secret\",             schema_for::<SecretSetParams>());\n469:         add_tool(&mut tools, \"secret_get\",      \"Retrieve secret value\",              schema_for::<SecretGetParams>());\n470:         // Resources\n471:         add_tool(&mut tools, \"resource_bind\",    \"Bind typed resource\",               schema_for::<ResourceBindParams>());\n472:         add_tool(&mut tools, \"resource_list\",    \"List resource types\",               Arc::new(serde_json::Map::new()));\n473:         // Jobs\n474:         add_tool(&mut tools, \"job_queue\",       \"Enqueue a job\",                      schema_for::<JobQueueParams>());\n475:         add_tool(&mut tools, \"job_list\",        \"List queued jobs\",                   Arc::new(serde_json::Map::new()));\n476:         // Runs\n477:         add_tool(&mut tools, \"run_logs\",        \"Get run history\",                    schema_for::<RunLogsParams>());\n478:         add_tool(&mut tools, \"run_retry\",       \"Retry a failed run\",                 schema_for::<RunRetryParams>());\n479:         // Registry\n480:         add_tool(&mut tools, \"registry_search\", \"Search registered modules\",          schema_for::<RegistrySearchParams>());\n481:         // Capability\n482:         add_tool(&mut tools, \"capability_inventory\", \"Discover available capabilities\", Arc::new(serde_json::Map::new()));\n483:         // System\n484:         add_tool(&mut tools, \"system_health\",   \"Check system health\",                Arc::new(serde_json::Map::new()));\n485: \n486:         Box::pin(std::future::ready(Ok(ListToolsResult { tools, meta: None, next_cursor: None })))\n487:     }\n488: \n489:     fn get_tool(&self, name: &str) -> Option<Tool> {\n490:         let names = [\"module_create\",\"module_build\",\"module_validate\",\"module_run\",\"module_deprecate\",\n491:             \"module_search\",\"module_template\",\"module_list_templates\",\"workflow_plan\",\"workflow_materialize\",\n492:             \"graph_query\",\"graph_pathfind\",\"graph_add_edge\",\n493:             \"flow_create\",\"flow_show\",\"flow_execute\",\"flow_list\",\"flow_delete\",\"schedule_create\",\"schedule_validate\",\n494:             \"secret_set\",\"secret_get\",\"resource_bind\",\"resource_list\",\n495:             \"job_queue\",\"job_list\",\"run_logs\",\"run_retry\",\"registry_search\",\"capability_inventory\",\"system_health\"];\n496:         if names.contains(&name) {\n497:             Some(Tool::new(name.to_string(), \"\", Arc::new(serde_json::Map::new())))\n498:         } else {\n499:             None\n500:         }\n501:     }\n502: }\n\n(End of file - total 502 lines)\n</content>\n\n[Project README: /home/ishanp/Documents/GitHub/automaton/README.md]\n# Automaton — AI-Native Rust Automation Substrate\n\n**Automaton** is a CLI-based, graph-native automation framework for AI agents to create, compose, and execute modular Rust workflows. It exposes its entire substrate through an MCP server built on the official [rmcp](https://github.com/modelcontextprotocol/rust-sdk) crate.\n\n## Architecture\n\n```\n┌─────────────────────────────────────────────────────────┐\n│                    AI Agent (LLM)                        │\n│  Uses MCP tools to create modules → plan → execute       │\n└──────────────────────┬──────────────────────────────────┘\n                       │ MCP (stdio/SSE)\n┌──────────────────────▼──────────────────────────────────┐\n│                automaton-mcp (MCP Server)                │\n│  module.* | workflow.* | graph.* | registry.* | run.*   │\n└──────────────────────┬──────────────────────────────────┘\n                       │\n┌──────────────────────▼──────────────────────────────────┐\n│                automaton-engine (Orchestrator)           │\n│  Planner → Materializer → Executor                      │\n│  Converts design graph → run DAG → execution            │\n└──────┬──────────────────────────┬───────────────────────┘\n       │                          │\n┌──────▼──────────┐    ┌──────────▼───────────────────┐\n│ automaton-graph │    │ automaton-runtime             │\n│ Property graph   │    │ Process sandbox, retry, I/O │\n│ (SQLite-backed)  │    │                              │\n└─────────────────┘    └──────────────────────────────┘\n       │                          │\n       └──────────┬───────────────┘\n                  │\n┌─────────────────▼───────────────────────────────────┐\n│                automaton-registry                    │\n│  SQLite-backed module catalog + content-addressed    │\n│  build cache + run history                          │\n└─────────────────────────────────────────────────────┘\n```\n\n## Quick Start\n\n```bash\n# Initialize workspace\nautomaton init\n\n# Scaffold a module\nautomaton new github.issue_triage\n\n# Build it\nautomaton build github.issue_triage\n\n# Run it\nautomaton run github.issue_triage --input '{\"repo\": \"user/repo\"}'\n\n# Plan a workflow from a module\nautomaton plan github.issue_triage --max-depth 5\n\n# List modules\nautomaton list\n\n# Show module details\nautomaton show github.issue_triage\n\n# Inspect the graph\nautomaton graph nodes\nautomaton graph path module_a module_b\n\n# Start MCP server (for AI agents)\nautomaton mcp\n\n# Diagnostics\nautomaton doctor\n```\n\n## Workspace Layout\n\n```\n~/.local/share/automaton/     # Data directory\n├── registry.db               # Module catalog (SQLite)\n├── graph.db                  # Property graph store (SQLite)\n├── builds/                   # Compiled binary cache\n├── modules/                  # Uncompiled module sources\n├── work/                     # Runtime working directory\n└── tmp/                      # Temp execution artifacts\n```\n\n## Project Structure\n\n```\ncrates/\n├── automaton-core/           # Shared types: manifests, graph nodes, errors\n├── automaton-sdk/            # #[automaton] proc macro + prelude\n├── automaton-sdk-derive/     # Proc macro implementation\n├── automaton-cli/            # CLI binary\n├── automaton-engine/         # Planner, DAG materializer, executor\n├── automaton-registry/       # SQLite-backed module + build + run DB\n├── automaton-graph/          # SQLite-backed property graph store\n├── automaton-mcp/            # MCP server (rmcp)\n└── automaton-runtime/        # Child process runner, retry, timeout\n```\n\n## Graph Model\n\nTwo-layer architecture:\n\n1. **Design Graph** (persistent property graph): Modules, Workflows, Triggers, Resources, Secrets, Capabilities — interconnected via labeled edges (`DEPENDS_ON`, `CALLS`, `TRIGGERS`, `USES_RESOURCE`, etc.)\n\n2. **Run Graph** (materialized DAG for one execution): Compiled from design graph + context, verified acyclic via `petgraph::toposort`.\n\n## MCP Surface (for AI agents)\n\n| Tool                   | Description                            |\n| ---------------------- | -------------------------------------- |\n| `module.create`        | Register a new automation module       |\n| `module.build`         | Compile module to binary               |\n| `module.validate`      | Validate manifest + source             |\n| `module.run`           | Execute a module                       |\n| `module.deprecate`     | Remove module                          |\n| `workflow.plan`        | Discover dependencies, build run graph |\n| `workflow.materialize` | Verify DAG validity (cycle check)      |\n| `graph.query`          | Query nodes by kind                    |\n| `graph.pathfind`       | Find paths between nodes               |\n| `graph.add_edge`       | Wire module dependencies               |\n| `registry.search`      | Search registered modules              |\n| `resource.bind`        | Bind typed resources                   |\n| `run.logs`             | Inspect run history                    |\n| `run.retry`            | Retry failed execution                 |\n| `system.health`        | Component health check                 |\n\n## Module Authoring\n\n```rust\nuse automaton_sdk::prelude::*;\nuse serde::{Deserialize, Serialize};\n\n#[derive(Deserialize, JsonSchema)]\nstruct Input {\n    repo: String,\n    issue_number: u32,\n}\n\n#[derive(Serialize, JsonSchema)]\nstruct Output {\n    summary: String,\n    priority: String,\n}\n\n#[automaton]\nasync fn main(ctx: Context, input: Input) -> anyhow::Result<Output> {\n    // Your automation logic\n    Ok(Output {\n        summary: format!(\"Triaged issue #{} from {}\", input.issue_number, input.repo),\n        priority: \"medium\".to_string(),\n    })\n}\n```\n\nManifest: `automation.yaml`\n\n```yaml\nname: github.issue_triage\nversion: 0.1.0\nentry: main\nsummary: \"Triage GitHub issues by priority\"\ntimeout_ms: 30000\nretry:\n  max_attempts: 3\n  delay_ms: 1000\n  backoff: exponential\npermissions:\n  - github.read\nresources:\n  - github.api\ndepends_on:\n  - llm.summarize\ntags:\n  - github\n  - issue\n  - triage\n```\n\n## Design Decisions\n\n- **Rust-first**: Smallest binary size (~2.7 MB compiled) and runtime memory (~4 MB RSS)\n- **SQLite-backed**: No Postgres dependency for local-first use\n- **petgraph DAG**: Topological scheduling with cycle detection\n- **Windmill-inspired packaging**: Code + YAML manifest, content-addressed builds\n- **MCP-native control**: AI agents interact through the MCP protocol, not raw shell\n- **Property graph**: Two-layer (design + run) enables recursive module composition\n- **Incremental compilation**: Shared build cache, debug/release mode split\n\n## License\n\nMIT\n",
+        "metadata": {
+          "preview": "use std::collections::HashMap;\nuse std::result::Result as StdResult;\nuse std::sync::Arc;\n\nuse automaton_core::*;\nuse automaton_engine::flow::FlowEngine;\nuse automaton_engine::{Engine, PlanOptions};\nuse automaton_runtime::{Runtime, RuntimeConfig};\nuse automaton_scheduler::Scheduler;\nuse rmcp::model::*;\nuse rmcp::{ServerHandler, ServiceExt, transport::stdio};\n\npub mod tools;\nuse tools::*;\n\npub struct McpServer {\n    engine: Arc<Engine>,\n    data_dir: std::path::PathBuf,\n}\n",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-mcp/src/lib.rs",
+        "time": {
+          "start": 1778146933340,
+          "end": 1778146933412
+        }
+      },
+      "id": "prt_e01d0f7b9001lMjuzLbIMwxAzv",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0e1e8001w1f0IhC1RB1EDB"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_01_H6pz7fzUvHMOr7XD6duO5902",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "struct GraphNode|struct GraphEdge|struct KnowledgeGraph",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146935011,
+          "end": 1778146935039
+        }
+      },
+      "id": "prt_e01d0fb27001B9NxBpkX7f2jDI",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0e1e8001w1f0IhC1RB1EDB"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_02_oRtYvR6XD1suxlUdqqoh4849",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "graph_query|query_graph|GraphQuery",
+          "path": "/home/ishanp/Documents/GitHub/automaton",
+          "output_mode": "content"
+        },
+        "output": "Found 5 match(es) in 2 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/lib.rs\n  180: \"graph_query\" => {\n  181: let p: GraphQueryParams = parse_args(&request)?;\n  455: add_tool(&mut tools, \"graph_query\",     \"Query design graph\",                 schema_for::<GraphQueryParams>());\n  492: \"graph_query\",\"graph_pathfind\",\"graph_add_edge\",\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n  66: pub struct GraphQueryParams {\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146936721,
+          "end": 1778146936759
+        }
+      },
+      "id": "prt_e01d101d3001MGsEsRqIq71cD0",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0e1e8001w1f0IhC1RB1EDB"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_03_GcUuVUTEQHb4Nf6vUfRQ1849",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "enum GraphQuery|struct.*Query",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates",
+          "output_mode": "content",
+          "head_limit": 40
+        },
+        "output": "Found 1 match(es) in 1 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n  66: pub struct GraphQueryParams {\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146938663,
+          "end": 1778146938727
+        }
+      },
+      "id": "prt_e01d1082a0015VANgpWvfZsdHg",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0e1e8001w1f0IhC1RB1EDB"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_04_4Mnq9H2lxQU0eXRWWsSp8398",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/sqlite.rs",
+          "offset": 50,
+          "limit": 30
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/sqlite.rs</path>\n<type>file</type>\n<content>\n50:                 id TEXT PRIMARY KEY, target_path TEXT NOT NULL, kind TEXT NOT NULL DEFAULT 'script',\n51:                 args TEXT NOT NULL DEFAULT '{}', result TEXT, error TEXT,\n52:                 state TEXT NOT NULL DEFAULT 'pending', attempt INTEGER NOT NULL DEFAULT 1,\n53:                 duration_ms INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')),\n54:                 completed_at TEXT\n55:             );\n56:             CREATE TABLE IF NOT EXISTS graph_nodes (\n57:                 id TEXT PRIMARY KEY, kind TEXT NOT NULL, name TEXT NOT NULL,\n58:                 properties TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL DEFAULT (datetime('now'))\n59:             );\n60:             CREATE TABLE IF NOT EXISTS graph_edges (\n61:                 id TEXT PRIMARY KEY, source TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n62:                 target TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n63:                 kind TEXT NOT NULL, properties TEXT NOT NULL DEFAULT '{}',\n64:                 created_at TEXT NOT NULL DEFAULT (datetime('now'))\n65:             );\n66:             CREATE TABLE IF NOT EXISTS variables (\n67:                 path TEXT PRIMARY KEY, value TEXT NOT NULL,\n68:                 is_secret INTEGER NOT NULL DEFAULT 1, description TEXT,\n69:                 created_at TEXT NOT NULL DEFAULT (datetime('now'))\n70:             );\n71:             CREATE TABLE IF NOT EXISTS resources (\n72:                 path TEXT PRIMARY KEY, resource_type TEXT NOT NULL,\n73:                 value TEXT NOT NULL DEFAULT '{}', description TEXT,\n74:                 created_at TEXT NOT NULL DEFAULT (datetime('now'))\n75:             );\n76:             CREATE TABLE IF NOT EXISTS triggers (\n77:                 id TEXT PRIMARY KEY, target_path TEXT NOT NULL,\n78:                 target_is_flow INTEGER NOT NULL DEFAULT 0, trigger_type TEXT NOT NULL DEFAULT 'cron',\n79:                 config TEXT NOT NULL DEFAULT '{}', enabled INTEGER NOT NULL DEFAULT 1,\n\n(Showing lines 50-79 of 454. Use offset=80 to continue.)\n</content>",
+        "metadata": {
+          "preview": "                id TEXT PRIMARY KEY, target_path TEXT NOT NULL, kind TEXT NOT NULL DEFAULT 'script',\n                args TEXT NOT NULL DEFAULT '{}', result TEXT, error TEXT,\n                state TEXT NOT NULL DEFAULT 'pending', attempt INTEGER NOT NULL DEFAULT 1,\n                duration_ms INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')),\n                completed_at TEXT\n            );\n            CREATE TABLE IF NOT EXISTS graph_nodes (\n                id TEXT PRIMARY KEY, kind TEXT NOT NULL, name TEXT NOT NULL,\n                properties TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL DEFAULT (datetime('now'))\n            );\n            CREATE TABLE IF NOT EXISTS graph_edges (\n                id TEXT PRIMARY KEY, source TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n                target TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n                kind TEXT NOT NULL, properties TEXT NOT NULL DEFAULT '{}',\n                created_at TEXT NOT NULL DEFAULT (datetime('now'))\n            );\n            CREATE TABLE IF NOT EXISTS variables (\n                path TEXT PRIMARY KEY, value TEXT NOT NULL,\n                is_secret INTEGER NOT NULL DEFAULT 1, description TEXT,\n                created_at TEXT NOT NULL DEFAULT (datetime('now'))",
+          "truncated": true,
+          "loaded": []
+        },
+        "title": "crates/automaton-db/src/sqlite.rs",
+        "time": {
+          "start": 1778146940117,
+          "end": 1778146940380
+        }
+      },
+      "id": "prt_e01d10fca001vetV9PS4l1pWRU",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d0e1e8001w1f0IhC1RB1EDB"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_wffRZ1aS78Wc7VfFQ96E4154",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs</path>\n<type>file</type>\n<content>\n1: use serde_json::Value;\n2: use std::sync::Arc;\n3: \n4: use schemars::JsonSchema;\n5: \n6: /// Generate a JSON Schema from a JsonSchema-derived type\n7: pub fn schema_for<T: JsonSchema>() -> Arc<serde_json::Map<String, serde_json::Value>> {\n8:     let schema = schemars::schema_for!(T);\n9:     let value = serde_json::to_value(&schema).unwrap_or_default();\n10:     match value {\n11:         Value::Object(map) => Arc::new(map),\n12:         _ => Arc::new(serde_json::Map::new()),\n13:     }\n14: }\n15: \n16: // ── Module Tools ──\n17: #[derive(serde::Deserialize, JsonSchema)]\n18: pub struct ModuleCreateParams {\n19:     pub path: String,\n20:     pub source: String,\n21:     pub version: Option<String>,\n22:     pub summary: Option<String>,\n23:     pub depends_on: Option<Vec<String>>,\n24:     pub timeout_ms: Option<u64>,\n25: }\n26: \n27: #[derive(serde::Deserialize, JsonSchema)]\n28: pub struct ModuleBuildParams {\n29:     pub path: String,\n30:     pub mode: Option<String>,\n31: }\n32: \n33: #[derive(serde::Deserialize, JsonSchema)]\n34: pub struct ModuleRunParams {\n35:     pub path: String,\n36:     pub input: Option<serde_json::Value>,\n37: }\n38: \n39: #[derive(serde::Deserialize, JsonSchema)]\n40: pub struct ModuleDeprecateParams {\n41:     pub path: String,\n42: }\n43: \n44: #[derive(serde::Deserialize, JsonSchema)]\n45: pub struct ModuleSearchParams {\n46:     pub query: String,\n47:     pub limit: Option<usize>,\n48: }\n49: \n50: #[derive(serde::Deserialize, JsonSchema)]\n51: pub struct ModuleTemplateParams {\n52:     pub path: String,\n53:     pub pattern: String,\n54:     pub description: Option<String>,\n55: }\n56: \n57: // ── Workflow Tools ──\n58: #[derive(serde::Deserialize, JsonSchema)]\n59: pub struct WorkflowPlanParams {\n60:     pub start: String,\n61:     pub max_depth: Option<usize>,\n62: }\n63: \n64: // ── Graph Tools ──\n65: #[derive(serde::Deserialize, JsonSchema)]\n66: pub struct GraphQueryParams {\n67:     pub kind: Option<String>,\n68: }\n69: \n70: #[derive(serde::Deserialize, JsonSchema)]\n71: pub struct GraphPathfindParams {\n72:     pub from: String,\n73:     pub to: String,\n74: }\n75: \n76: #[derive(serde::Deserialize, JsonSchema)]\n77: pub struct GraphAddEdgeParams {\n78:     pub source: String,\n79:     pub target: String,\n80:     pub kind: String,\n81: }\n82: \n83: // ── Flow Tools ──\n84: #[derive(serde::Deserialize, JsonSchema)]\n85: pub struct FlowCreateParams {\n86:     pub path: String,\n87:     pub steps: serde_json::Value,\n88:     pub summary: Option<String>,\n89:     pub on_failure: Option<String>,\n90: }\n91: \n92: #[derive(serde::Deserialize, JsonSchema)]\n93: pub struct FlowShowParams {\n94:     pub path: String,\n95: }\n96: \n97: // ── Schedule Tools ──\n98: #[derive(serde::Deserialize, JsonSchema)]\n99: pub struct ScheduleCreateParams {\n100:     pub target_path: String,\n101:     pub schedule: String,\n102:     pub args: Option<serde_json::Value>,\n103: }\n104: \n105: #[derive(serde::Deserialize, JsonSchema)]\n106: pub struct ScheduleValidateParams {\n107:     pub schedule: String,\n108: }\n109: \n110: // ── Secret Tools ──\n111: #[derive(serde::Deserialize, JsonSchema)]\n112: pub struct SecretSetParams {\n113:     pub path: String,\n114:     pub value: String,\n115:     pub description: Option<String>,\n116: }\n117: \n118: #[derive(serde::Deserialize, JsonSchema)]\n119: pub struct SecretGetParams {\n120:     pub path: String,\n121: }\n122: \n123: // ── Resource Tools ──\n124: #[derive(serde::Deserialize, JsonSchema)]\n125: pub struct ResourceBindParams {\n126:     pub path: String,\n127:     pub resource_type: String,\n128:     pub value: serde_json::Value,\n129: }\n130: \n131: // ── Job Tools ──\n132: #[derive(serde::Deserialize, JsonSchema)]\n133: pub struct JobQueueParams {\n134:     pub target_path: String,\n135:     pub args: Option<serde_json::Value>,\n136:     pub kind: Option<String>,\n137: }\n138: \n139: // ── Flow Tools (continued) ──\n140: #[derive(serde::Deserialize, JsonSchema)]\n141: pub struct FlowExecuteParams {\n142:     pub path: String,\n143:     pub input: Option<serde_json::Value>,\n144: }\n145: \n146: // ── Run Tools ──\n147: #[derive(serde::Deserialize, JsonSchema)]\n148: pub struct RunLogsParams {\n149:     pub module_path: Option<String>,\n150:     pub limit: Option<usize>,\n151: }\n152: \n153: #[derive(serde::Deserialize, JsonSchema)]\n154: pub struct RunRetryParams {\n155:     pub run_id: String,\n156: }\n157: \n158: // ── Registry Tools ──\n159: #[derive(serde::Deserialize, JsonSchema)]\n160: pub struct RegistrySearchParams {\n161:     pub query: String,\n162: }\n\n(End of file - total 162 lines)\n</content>",
+        "metadata": {
+          "preview": "use serde_json::Value;\nuse std::sync::Arc;\n\nuse schemars::JsonSchema;\n\n/// Generate a JSON Schema from a JsonSchema-derived type\npub fn schema_for<T: JsonSchema>() -> Arc<serde_json::Map<String, serde_json::Value>> {\n    let schema = schemars::schema_for!(T);\n    let value = serde_json::to_value(&schema).unwrap_or_default();\n    match value {\n        Value::Object(map) => Arc::new(map),\n        _ => Arc::new(serde_json::Map::new()),\n    }\n}\n\n// ── Module Tools ──\n#[derive(serde::Deserialize, JsonSchema)]\npub struct ModuleCreateParams {\n    pub path: String,\n    pub source: String,",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-mcp/src/tools.rs",
+        "time": {
+          "start": 1778146948447,
+          "end": 1778146948496
+        }
+      },
+      "id": "prt_e01d132ae001IxbnWAc3eWsNs5",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d11f3d001NutXbXJVJxcIxV"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_01_1mn33TGozStunsnqfSds6573",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src</path>\n<type>directory</type>\n<entries>\nlib.rs\n\n(1 entries)\n</entries>",
+        "metadata": {
+          "preview": "lib.rs",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-graph/src",
+        "time": {
+          "start": 1778146949338,
+          "end": 1778146949373
+        }
+      },
+      "id": "prt_e01d136390012DGwAbobOPBzOT",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d11f3d001NutXbXJVJxcIxV"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_02_bfOaZwmipHaNH48grY2i2875",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "GraphNode|GraphEdge|NodeKind|EdgeKind",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src",
+          "output_mode": "content"
+        },
+        "output": "Found 4 match(es) in 1 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/graph.rs\n  10: pub kind: NodeKind,\n  22: pub kind: EdgeKind,\n  29: pub enum NodeKind {\n  46: pub enum EdgeKind {\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146951212,
+          "end": 1778146951317
+        }
+      },
+      "id": "prt_e01d139ae002oBYYVGEXz45rxa",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d11f3d001NutXbXJVJxcIxV"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_03_upjZB1hHStalZ97zB2m77360",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "impl.*Display|impl.*fmt::Display|fn fmt.*f.*Formatter",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146953147,
+          "end": 1778146953233
+        }
+      },
+      "id": "prt_e01d140fd0015MkjFMRhWoSQew",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d11f3d001NutXbXJVJxcIxV"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_04_zcPPE080UOJOlibEP0Ah1665",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "impl.*Display|impl.*fmt::Display",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146954891,
+          "end": 1778146954971
+        }
+      },
+      "id": "prt_e01d14866001IFfhozIe6Twskz",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d11f3d001NutXbXJVJxcIxV"
+    },
+    {
+      "type": "tool",
+      "tool": "glob",
+      "callID": "call_05_w6DxZRLumEzKQfBnxhmF6495",
+      "state": {
+        "status": "completed",
+        "input": {
+          "pattern": "crates/automaton-graph/src/**/*.rs"
+        },
+        "output": "Found 1 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/lib.rs",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146955596,
+          "end": 1778146955689
+        }
+      },
+      "id": "prt_e01d14f5d001oTFSI5TfWjYs3j",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d11f3d001NutXbXJVJxcIxV"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_kkMFoEUsrnW0ghZZXU2h7705",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/lib.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src/lib.rs</path>\n<type>file</type>\n<content>\n1: use std::collections::{HashMap, HashSet};\n2: use std::path::Path;\n3: use std::sync::Mutex;\n4: \n5: use automaton_core::*;\n6: \n7: use rusqlite::Connection;\n8: \n9: /// Persistent property graph store backed by SQLite.\n10: pub struct GraphStore {\n11:     db: Mutex<Connection>,\n12: }\n13: \n14: fn with_db<T>(db: &Mutex<Connection>, f: impl FnOnce(&Connection) -> Result<T>) -> Result<T> {\n15:     let conn = db\n16:         .lock()\n17:         .map_err(|e| AutomatonError::Database(e.to_string()))?;\n18:     f(&conn)\n19: }\n20: \n21: impl GraphStore {\n22:     /// Open the graph store from the dedicated graph.db file.\n23:     /// Kept for backward compatibility. Prefer `open_merged` for new installations.\n24:     pub fn open(data_dir: &Path) -> Result<Self> {\n25:         let db_path = data_dir.join(\"graph.db\");\n26:         let db = Connection::open(&db_path)?;\n27:         let store = Self { db: Mutex::new(db) };\n28:         store.init_tables()?;\n29:         Ok(store)\n30:     }\n31: \n32:     /// Open the graph store using registry.db, which now contains merged\n33:     /// graph_nodes and graph_edges tables alongside all registry tables.\n34:     /// This eliminates the separate graph.db file.\n35:     pub fn open_merged(data_dir: &Path) -> Result<Self> {\n36:         let db_path = data_dir.join(\"registry.db\");\n37:         let db = Connection::open(&db_path)?;\n38:         Ok(Self { db: Mutex::new(db) })\n39:     }\n40: \n41:     fn init_tables(&self) -> Result<()> {\n42:         with_db(&self.db, |db| {\n43:             db.execute_batch(\n44:                 \"\n45:                 CREATE TABLE IF NOT EXISTS nodes (\n46:                     id TEXT PRIMARY KEY,\n47:                     kind TEXT NOT NULL,\n48:                     name TEXT NOT NULL,\n49:                     properties TEXT NOT NULL DEFAULT '{}',\n50:                     created_at TEXT NOT NULL DEFAULT (datetime('now'))\n51:                 );\n52:                 CREATE TABLE IF NOT EXISTS edges (\n53:                     id TEXT PRIMARY KEY,\n54:                     source TEXT NOT NULL,\n55:                     target TEXT NOT NULL,\n56:                     kind TEXT NOT NULL,\n57:                     properties TEXT NOT NULL DEFAULT '{}',\n58:                     created_at TEXT NOT NULL DEFAULT (datetime('now')),\n59:                     FOREIGN KEY (source) REFERENCES nodes(id),\n60:                     FOREIGN KEY (target) REFERENCES nodes(id)\n61:                 );\n62:                 CREATE INDEX IF NOT EXISTS idx_edges_source ON edges(source);\n63:                 CREATE INDEX IF NOT EXISTS idx_edges_target ON edges(target);\n64:                 CREATE INDEX IF NOT EXISTS idx_edges_kind ON edges(kind);\n65:                 CREATE INDEX IF NOT EXISTS idx_nodes_kind ON nodes(kind);\n66:                 \",\n67:             )?;\n68:             Ok(())\n69:         })\n70:     }\n71: \n72:     pub fn add_node(\n73:         &self,\n74:         kind: NodeKind,\n75:         name: &str,\n76:         properties: HashMap<String, serde_json::Value>,\n77:     ) -> Result<String> {\n78:         with_db(&self.db, |db| {\n79:             let id = uuid::Uuid::new_v4().to_string();\n80:             let kind_str = serde_json::to_string(&kind)?;\n81:             let props_str = serde_json::to_string(&properties)?;\n82:             db.execute(\n83:                 \"INSERT INTO nodes (id, kind, name, properties) VALUES (?1, ?2, ?3, ?4)\",\n84:                 rusqlite::params![id, kind_str, name, props_str],\n85:             )?;\n86:             Ok(id)\n87:         })\n88:     }\n89: \n90:     pub fn add_edge(\n91:         &self,\n92:         source: &str,\n93:         target: &str,\n94:         kind: EdgeKind,\n95:         properties: HashMap<String, serde_json::Value>,\n96:     ) -> Result<String> {\n97:         with_db(&self.db, |db| {\n98:             let id = uuid::Uuid::new_v4().to_string();\n99:             let kind_str = serde_json::to_string(&kind)?;\n100:             let props_str = serde_json::to_string(&properties)?;\n101:             db.execute(\n102:                 \"INSERT INTO edges (id, source, target, kind, properties) VALUES (?1, ?2, ?3, ?4, ?5)\",\n103:                 rusqlite::params![id, source, target, kind_str, props_str],\n104:             )?;\n105:             Ok(id)\n106:         })\n107:     }\n108: \n109:     pub fn get_node(&self, id: &str) -> Result<Option<Node>> {\n110:         with_db(&self.db, |db| {\n111:             let mut stmt = db.prepare(\n112:                 \"SELECT id, kind, name, properties, created_at FROM nodes WHERE id = ?1\",\n113:             )?;\n114:             let rows = stmt.query_map(rusqlite::params![id], row_to_node)?;\n115:             let mut result = vec![];\n116:             for row in rows {\n117:                 result.push(row?);\n118:             }\n119:             Ok(result.into_iter().next())\n120:         })\n121:     }\n122: \n123:     pub fn find_nodes_by_kind(&self, kind: NodeKind) -> Result<Vec<Node>> {\n124:         with_db(&self.db, |db| {\n125:             let kind_str = serde_json::to_string(&kind)?;\n126:             let mut stmt = db.prepare(\n127:                 \"SELECT id, kind, name, properties, created_at FROM nodes WHERE kind = ?1 ORDER BY created_at DESC\",\n128:             )?;\n129:             let rows = stmt.query_map(rusqlite::params![kind_str], row_to_node)?;\n130:             let mut result = vec![];\n131:             for row in rows {\n132:                 result.push(row?);\n133:             }\n134:             Ok(result)\n135:         })\n136:     }\n137: \n138:     pub fn get_outgoing_edges(&self, node_id: &str) -> Result<Vec<Edge>> {\n139:         with_db(&self.db, |db| {\n140:             let stmt = db.prepare(\n141:                 \"SELECT id, source, target, kind, properties, created_at FROM edges WHERE source = ?1 ORDER BY created_at\",\n142:             )?;\n143:             map_edges_query(stmt, rusqlite::params![node_id])\n144:         })\n145:     }\n146: \n147:     pub fn get_incoming_edges(&self, node_id: &str) -> Result<Vec<Edge>> {\n148:         with_db(&self.db, |db| {\n149:             let stmt = db.prepare(\n150:                 \"SELECT id, source, target, kind, properties, created_at FROM edges WHERE target = ?1 ORDER BY created_at\",\n151:             )?;\n152:             map_edges_query(stmt, rusqlite::params![node_id])\n153:         })\n154:     }\n155: \n156:     pub fn get_dependency_chain(&self, start_id: &str) -> Result<Vec<Node>> {\n157:         let mut visited: HashSet<String> = HashSet::new();\n158:         let mut queue = std::collections::VecDeque::new();\n159:         let mut result = vec![];\n160:         queue.push_back(start_id.to_string());\n161:         while let Some(current) = queue.pop_front() {\n162:             if !visited.insert(current.clone()) {\n163:                 continue;\n164:             }\n165:             if let Some(node) = self.get_node(&current)? {\n166:                 result.push(node);\n167:             }\n168:             let edges = self.get_outgoing_edges(&current)?;\n169:             for edge in edges {\n170:                 if matches!(edge.kind, EdgeKind::DependsOn) {\n171:                     queue.push_back(edge.target);\n172:                 }\n173:             }\n174:         }\n175:         Ok(result)\n176:     }\n177: \n178:     pub fn find_path(&self, from: &str, to: &str) -> Result<Vec<Vec<NodeAndEdge>>> {\n179:         let all_edges = self.all_edges()?;\n180:         let mut adj: HashMap<String, Vec<(String, EdgeKind)>> = HashMap::new();\n181:         for edge in &all_edges {\n182:             adj.entry(edge.source.clone())\n183:                 .or_default()\n184:                 .push((edge.target.clone(), edge.kind.clone()));\n185:         }\n186: \n187:         type StackEntry = (String, Vec<(String, EdgeKind)>, HashSet<String>);\n188:         let mut paths: Vec<Vec<(String, EdgeKind)>> = vec![];\n189:         let mut stack: Vec<StackEntry> = vec![(from.to_string(), vec![], HashSet::new())];\n190: \n191:         while let Some((node, path_so_far, visited)) = stack.pop() {\n192:             let mut visited = visited;\n193:             if node == to {\n194:                 paths.push(path_so_far.clone());\n195:                 continue;\n196:             }\n197:             if !visited.insert(node.clone()) {\n198:                 continue;\n199:             }\n200:             if path_so_far.len() > 10 {\n201:                 continue;\n202:             }\n203:             if let Some(neighbors) = adj.get(&node) {\n204:                 for (next, kind) in neighbors {\n205:                     let mut new_path = path_so_far.clone();\n206:                     new_path.push((next.clone(), kind.clone()));\n207:                     stack.push((next.clone(), new_path, visited.clone()));\n208:                 }\n209:             }\n210:         }\n211: \n212:         let mut result = vec![];\n213:         for raw_path in &paths {\n214:             let mut segment = vec![];\n215:             for (node_id, edge_kind) in raw_path {\n216:                 if let Some(node) = self.get_node(node_id)? {\n217:                     segment.push(NodeAndEdge {\n218:                         node,\n219:                         edge_kind: edge_kind.clone(),\n220:                     });\n221:                 }\n222:             }\n223:             result.push(segment);\n224:         }\n225:         Ok(result)\n226:     }\n227: \n228:     pub fn all_edges(&self) -> Result<Vec<Edge>> {\n229:         with_db(&self.db, |db| {\n230:             let stmt = db.prepare(\n231:                 \"SELECT id, source, target, kind, properties, created_at FROM edges ORDER BY created_at\",\n232:             )?;\n233:             map_edges_query(stmt, [])\n234:         })\n235:     }\n236: \n237:     pub fn all_nodes(&self) -> Result<Vec<Node>> {\n238:         with_db(&self.db, |db| {\n239:             let mut stmt = db.prepare(\n240:                 \"SELECT id, kind, name, properties, created_at FROM nodes ORDER BY created_at\",\n241:             )?;\n242:             let rows = stmt.query_map([], row_to_node)?;\n243:             let mut result = vec![];\n244:             for row in rows {\n245:                 result.push(row?);\n246:             }\n247:             Ok(result)\n248:         })\n249:     }\n250: \n251:     pub fn delete_node(&self, id: &str) -> Result<()> {\n252:         with_db(&self.db, |db| {\n253:             db.execute(\n254:                 \"DELETE FROM edges WHERE source = ?1 OR target = ?1\",\n255:                 rusqlite::params![id],\n256:             )?;\n257:             db.execute(\"DELETE FROM nodes WHERE id = ?1\", rusqlite::params![id])?;\n258:             Ok(())\n259:         })\n260:     }\n261: \n262:     pub fn delete_edge(&self, id: &str) -> Result<()> {\n263:         with_db(&self.db, |db| {\n264:             db.execute(\"DELETE FROM edges WHERE id = ?1\", rusqlite::params![id])?;\n265:             Ok(())\n266:         })\n267:     }\n268: }\n269: \n270: fn row_to_node(row: &rusqlite::Row) -> rusqlite::Result<Node> {\n271:     let props_str: String = row.get(3)?;\n272:     Ok(Node {\n273:         id: row.get(0)?,\n274:         kind: serde_json::from_str(&row.get::<_, String>(1)?).unwrap_or(NodeKind::Module),\n275:         name: row.get(2)?,\n276:         properties: serde_json::from_str(&props_str).unwrap_or_default(),\n277:         created_at: chrono::DateTime::parse_from_rfc3339(&row.get::<_, String>(4)?)\n278:             .map(|dt| dt.to_utc())\n279:             .unwrap_or_default(),\n280:     })\n281: }\n282: \n283: fn map_edges_query(\n284:     mut stmt: rusqlite::Statement,\n285:     params: impl rusqlite::Params,\n286: ) -> Result<Vec<Edge>> {\n287:     let rows = stmt.query_map(params, |row| {\n288:         let props_str: String = row.get(4)?;\n289:         Ok(Edge {\n290:             id: row.get(0)?,\n291:             source: row.get(1)?,\n292:             target: row.get(2)?,\n293:             kind: serde_json::from_str(&row.get::<_, String>(3)?).unwrap_or(EdgeKind::DependsOn),\n294:             properties: serde_json::from_str(&props_str).unwrap_or_default(),\n295:             created_at: chrono::DateTime::parse_from_rfc3339(&row.get::<_, String>(5)?)\n296:                 .map(|dt| dt.to_utc())\n297:                 .unwrap_or_default(),\n298:         })\n299:     })?;\n300:     let mut result = vec![];\n301:     for row in rows {\n302:         result.push(row?);\n303:     }\n304:     Ok(result)\n305: }\n306: \n307: #[derive(Debug, Clone)]\n308: pub struct NodeAndEdge {\n309:     pub node: Node,\n310:     pub edge_kind: EdgeKind,\n311: }\n312: \n313: #[cfg(test)]\n314: mod tests {\n315:     use super::*;\n316:     use std::collections::HashMap;\n317: \n318:     fn test_store() -> GraphStore {\n319:         let dir =\n320:             std::env::temp_dir().join(format!(\"automaton_graph_test_{}\", uuid::Uuid::new_v4()));\n321:         std::fs::create_dir_all(&dir).unwrap();\n322:         GraphStore::open(&dir).unwrap()\n323:     }\n324: \n325:     #[test]\n326:     fn test_add_and_get_node() {\n327:         let store = test_store();\n328:         let mut props = HashMap::new();\n329:         props.insert(\"key\".to_string(), serde_json::json!(\"value\"));\n330:         let id = store\n331:             .add_node(NodeKind::Module, \"test.module\", props)\n332:             .unwrap();\n333:         assert!(!id.is_empty());\n334: \n335:         let node = store.get_node(&id).unwrap().expect(\"Node should exist\");\n336:         assert_eq!(node.name, \"test.module\");\n337:         assert_eq!(node.kind, NodeKind::Module);\n338:     }\n339: \n340:     #[test]\n341:     fn test_add_and_get_edge() {\n342:         let store = test_store();\n343:         let a = store\n344:             .add_node(NodeKind::Module, \"mod.a\", HashMap::new())\n345:             .unwrap();\n346:         let b = store\n347:             .add_node(NodeKind::Module, \"mod.b\", HashMap::new())\n348:             .unwrap();\n349:         let eid = store\n350:             .add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new())\n351:             .unwrap();\n352:         assert!(!eid.is_empty());\n353: \n354:         let outgoing = store.get_outgoing_edges(&a).unwrap();\n355:         assert_eq!(outgoing.len(), 1);\n356:         assert_eq!(outgoing[0].target, b);\n357: \n358:         let incoming = store.get_incoming_edges(&b).unwrap();\n359:         assert_eq!(incoming.len(), 1);\n360:         assert_eq!(incoming[0].source, a);\n361:     }\n362: \n363:     #[test]\n364:     fn test_find_nodes_by_kind() {\n365:         let store = test_store();\n366:         store\n367:             .add_node(NodeKind::Module, \"mod.a\", HashMap::new())\n368:             .unwrap();\n369:         store\n370:             .add_node(NodeKind::Trigger, \"trig.x\", HashMap::new())\n371:             .unwrap();\n372:         store\n373:             .add_node(NodeKind::Workflow, \"flow.y\", HashMap::new())\n374:             .unwrap();\n375: \n376:         let modules = store.find_nodes_by_kind(NodeKind::Module).unwrap();\n377:         assert_eq!(modules.len(), 1);\n378:         assert_eq!(modules[0].name, \"mod.a\");\n379:     }\n380: \n381:     #[test]\n382:     fn test_delete_node() {\n383:         let store = test_store();\n384:         let id = store\n385:             .add_node(NodeKind::Module, \"to_delete\", HashMap::new())\n386:             .unwrap();\n387:         store.delete_node(&id).unwrap();\n388:         assert!(store.get_node(&id).unwrap().is_none());\n389:     }\n390: \n391:     #[test]\n392:     fn test_delete_edge() {\n393:         let store = test_store();\n394:         let a = store\n395:             .add_node(NodeKind::Module, \"a\", HashMap::new())\n396:             .unwrap();\n397:         let b = store\n398:             .add_node(NodeKind::Module, \"b\", HashMap::new())\n399:             .unwrap();\n400:         let eid = store\n401:             .add_edge(&a, &b, EdgeKind::Calls, HashMap::new())\n402:             .unwrap();\n403:         store.delete_edge(&eid).unwrap();\n404:         assert_eq!(store.get_outgoing_edges(&a).unwrap().len(), 0);\n405:     }\n406: \n407:     #[test]\n408:     fn test_dependency_chain() {\n409:         let store = test_store();\n410:         let a = store\n411:             .add_node(NodeKind::Module, \"root\", HashMap::new())\n412:             .unwrap();\n413:         let b = store\n414:             .add_node(NodeKind::Module, \"dep1\", HashMap::new())\n415:             .unwrap();\n416:         let c = store\n417:             .add_node(NodeKind::Module, \"dep2\", HashMap::new())\n418:             .unwrap();\n419:         store\n420:             .add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new())\n421:             .unwrap();\n422:         store\n423:             .add_edge(&b, &c, EdgeKind::DependsOn, HashMap::new())\n424:             .unwrap();\n425: \n426:         let chain = store.get_dependency_chain(&a).unwrap();\n427:         assert_eq!(chain.len(), 3);\n428:         // root, dep1, dep2 in traversal order\n429:         let names: Vec<&str> = chain.iter().map(|n| n.name.as_str()).collect();\n430:         assert!(names.contains(&\"root\"));\n431:         assert!(names.contains(&\"dep1\"));\n432:         assert!(names.contains(&\"dep2\"));\n433:     }\n434: \n435:     #[test]\n436:     fn test_pathfinding() {\n437:         let store = test_store();\n438:         let a = store\n439:             .add_node(NodeKind::Module, \"start\", HashMap::new())\n440:             .unwrap();\n441:         let b = store\n442:             .add_node(NodeKind::Module, \"mid\", HashMap::new())\n443:             .unwrap();\n444:         let c = store\n445:             .add_node(NodeKind::Module, \"end\", HashMap::new())\n446:             .unwrap();\n447:         store\n448:             .add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new())\n449:             .unwrap();\n450:         store\n451:             .add_edge(&b, &c, EdgeKind::DependsOn, HashMap::new())\n452:             .unwrap();\n453: \n454:         let paths = store.find_path(&a, &c).unwrap();\n455:         assert!(!paths.is_empty());\n456:     }\n457: }\n\n(End of file - total 457 lines)\n</content>",
+        "metadata": {
+          "preview": "use std::collections::{HashMap, HashSet};\nuse std::path::Path;\nuse std::sync::Mutex;\n\nuse automaton_core::*;\n\nuse rusqlite::Connection;\n\n/// Persistent property graph store backed by SQLite.\npub struct GraphStore {\n    db: Mutex<Connection>,\n}\n\nfn with_db<T>(db: &Mutex<Connection>, f: impl FnOnce(&Connection) -> Result<T>) -> Result<T> {\n    let conn = db\n        .lock()\n        .map_err(|e| AutomatonError::Database(e.to_string()))?;\n    f(&conn)\n}\n",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-graph/src/lib.rs",
+        "time": {
+          "start": 1778146961935,
+          "end": 1778146962325
+        }
+      },
+      "id": "prt_e01d16793001zD9esu00DthCww",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d15a2b001p5WBw81TNslF7i"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_01_x2vC95lpC9qv4jJxmjdu9057",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/graph.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/graph.rs</path>\n<type>file</type>\n<content>\n1: use serde::{Deserialize, Serialize};\n2: \n3: use crate::flow::FlowStep;\n4: use crate::module::{ModuleId, RetryConfig};\n5: \n6: /// A node in the property graph\n7: #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]\n8: pub struct Node {\n9:     pub id: String,\n10:     pub kind: NodeKind,\n11:     pub name: String,\n12:     pub properties: serde_json::Map<String, serde_json::Value>,\n13:     pub created_at: chrono::DateTime<chrono::Utc>,\n14: }\n15: \n16: /// An edge in the property graph\n17: #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]\n18: pub struct Edge {\n19:     pub id: String,\n20:     pub source: String,\n21:     pub target: String,\n22:     pub kind: EdgeKind,\n23:     pub properties: serde_json::Map<String, serde_json::Value>,\n24:     pub created_at: chrono::DateTime<chrono::Utc>,\n25: }\n26: \n27: /// Node types in the property graph\n28: #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]\n29: pub enum NodeKind {\n30:     Module,\n31:     Workflow,\n32:     Trigger,\n33:     Resource,\n34:     SecretRef,\n35:     Capability,\n36:     Artifact,\n37:     Run,\n38:     Observation,\n39:     Constraint,\n40:     AlternativePath,\n41:     Input,\n42: }\n43: \n44: /// Edge types in the property graph\n45: #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]\n46: pub enum EdgeKind {\n47:     DependsOn,\n48:     Calls,\n49:     Emits,\n50:     Consumes,\n51:     Triggers,\n52:     UsesResource,\n53:     BlockedBy,\n54:     AlternativeTo,\n55:     Upgrades,\n56:     DerivedFrom,\n57: }\n58: \n59: /// A module node in a materialized run graph\n60: #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]\n61: pub struct ModuleNode {\n62:     pub id: String,\n63:     pub module_id: ModuleId,\n64:     pub input: serde_json::Value,\n65:     pub retry: Option<RetryConfig>,\n66:     pub timeout_ms: u64,\n67:     pub depends_on: Vec<String>,\n68:     pub parallel_group: Option<String>,\n69:     pub condition: Option<String>,\n70:     pub error_handler: Option<Box<ModuleNode>>,\n71: }\n72: \n73: /// A materialized run graph for a flow execution\n74: #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]\n75: pub struct RunGraph {\n76:     pub id: String,\n77:     pub workflow_name: String,\n78:     pub modules: Vec<ModuleNode>,\n79:     pub steps: Vec<FlowStep>,\n80:     pub created_at: chrono::DateTime<chrono::Utc>,\n81: }\n\n(End of file - total 81 lines)\n</content>",
+        "metadata": {
+          "preview": "use serde::{Deserialize, Serialize};\n\nuse crate::flow::FlowStep;\nuse crate::module::{ModuleId, RetryConfig};\n\n/// A node in the property graph\n#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]\npub struct Node {\n    pub id: String,\n    pub kind: NodeKind,\n    pub name: String,\n    pub properties: serde_json::Map<String, serde_json::Value>,\n    pub created_at: chrono::DateTime<chrono::Utc>,\n}\n\n/// An edge in the property graph\n#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]\npub struct Edge {\n    pub id: String,\n    pub source: String,",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-core/src/graph.rs",
+        "time": {
+          "start": 1778146962821,
+          "end": 1778146963000
+        }
+      },
+      "id": "prt_e01d16ad80013RE3OYW1IIyCEQ",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d15a2b001p5WBw81TNslF7i"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_02_O2PjdsrB5NHizW7YtndE1944",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src</path>\n<type>directory</type>\n<entries>\nbackend.rs\nerror.rs\nflow.rs\ngraph.rs\njob.rs\nlib.rs\nmanifest.rs\nmodule.rs\nsecrets.rs\ntrigger.rs\n\n(10 entries)\n</entries>",
+        "metadata": {
+          "preview": "backend.rs\nerror.rs\nflow.rs\ngraph.rs\njob.rs\nlib.rs\nmanifest.rs\nmodule.rs\nsecrets.rs\ntrigger.rs",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-core/src",
+        "time": {
+          "start": 1778146963658,
+          "end": 1778146963716
+        }
+      },
+      "id": "prt_e01d16e3d001cDWmnyPsa8aGT2",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d15a2b001p5WBw81TNslF7i"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_HJdqbvQHvMAQ2Rp4qtcF9587",
+      "state": {
+        "status": "completed",
+        "input": {
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/lib.rs"
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-core/src/lib.rs</path>\n<type>file</type>\n<content>\n1: pub mod backend;\n2: pub mod error;\n3: pub mod flow;\n4: pub mod graph;\n5: pub mod job;\n6: pub mod manifest;\n7: pub mod module;\n8: pub mod secrets;\n9: pub mod trigger;\n10: \n11: pub use error::{AutomatonError, Result};\n12: pub use flow::*;\n13: pub use graph::*;\n14: pub use job::*;\n15: pub use manifest::*;\n16: pub use module::*;\n17: pub use secrets::*;\n18: pub use trigger::*;\n\n(End of file - total 18 lines)\n</content>",
+        "metadata": {
+          "preview": "pub mod backend;\npub mod error;\npub mod flow;\npub mod graph;\npub mod job;\npub mod manifest;\npub mod module;\npub mod secrets;\npub mod trigger;\n\npub use error::{AutomatonError, Result};\npub use flow::*;\npub use graph::*;\npub use job::*;\npub use manifest::*;\npub use module::*;\npub use secrets::*;\npub use trigger::*;",
+          "truncated": false,
+          "loaded": []
+        },
+        "title": "crates/automaton-core/src/lib.rs",
+        "time": {
+          "start": 1778146971599,
+          "end": 1778146971634
+        }
+      },
+      "id": "prt_e01d18ca2001Pp8X5S1RPMnDnF",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d17a6a001doBW0hqghrT57Z"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_01_Yw4pYRVlzB6fBuamSc1R4887",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "fn graph|self\\.graph|engine\\.graph|\\.graph\\(\\)",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-engine/src",
+          "output_mode": "content"
+        },
+        "output": "Found 2 match(es) in 1 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-engine/src/lib.rs\n  49: pub fn graph(&self) -> &GraphStore {\n  50: &self.graph\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146973200,
+          "end": 1778146973269
+        }
+      },
+      "id": "prt_e01d18fe4001D4CVyucQGghXDX",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d17a6a001doBW0hqghrT57Z"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_02_Z7LciYh4Z6BOvLeLrBr52246",
+      "state": {
+        "status": "completed",
+        "input": {
+          "offset": 74,
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-postgres/src/lib.rs",
+          "limit": 30
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-postgres/src/lib.rs</path>\n<type>file</type>\n<content>\n74:             CREATE TABLE IF NOT EXISTS graph_nodes (\n75:                 id TEXT PRIMARY KEY,\n76:                 kind TEXT NOT NULL,\n77:                 name TEXT NOT NULL,\n78:                 properties JSONB NOT NULL DEFAULT '{}',\n79:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n80:             );\n81:             CREATE TABLE IF NOT EXISTS graph_edges (\n82:                 id TEXT PRIMARY KEY,\n83:                 source TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n84:                 target TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n85:                 kind TEXT NOT NULL,\n86:                 properties JSONB NOT NULL DEFAULT '{}',\n87:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n88:             );\n89:             CREATE TABLE IF NOT EXISTS variables (\n90:                 path TEXT PRIMARY KEY,\n91:                 value TEXT NOT NULL,\n92:                 is_secret BOOLEAN NOT NULL DEFAULT true,\n93:                 description TEXT,\n94:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n95:             );\n96:             CREATE TABLE IF NOT EXISTS resources (\n97:                 path TEXT PRIMARY KEY,\n98:                 resource_type TEXT NOT NULL,\n99:                 value JSONB NOT NULL DEFAULT '{}',\n100:                 description TEXT,\n101:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n102:             );\n103:             CREATE TABLE IF NOT EXISTS triggers (\n\n(Showing lines 74-103 of 777. Use offset=104 to continue.)\n</content>",
+        "metadata": {
+          "preview": "            CREATE TABLE IF NOT EXISTS graph_nodes (\n                id TEXT PRIMARY KEY,\n                kind TEXT NOT NULL,\n                name TEXT NOT NULL,\n                properties JSONB NOT NULL DEFAULT '{}',\n                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n            );\n            CREATE TABLE IF NOT EXISTS graph_edges (\n                id TEXT PRIMARY KEY,\n                source TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n                target TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n                kind TEXT NOT NULL,\n                properties JSONB NOT NULL DEFAULT '{}',\n                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n            );\n            CREATE TABLE IF NOT EXISTS variables (\n                path TEXT PRIMARY KEY,\n                value TEXT NOT NULL,\n                is_secret BOOLEAN NOT NULL DEFAULT true,\n                description TEXT,",
+          "truncated": true,
+          "loaded": []
+        },
+        "title": "crates/automaton-postgres/src/lib.rs",
+        "time": {
+          "start": 1778146974495,
+          "end": 1778146974578
+        }
+      },
+      "id": "prt_e01d19725001qC4zH475Fj0Yg7",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d17a6a001doBW0hqghrT57Z"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_03_AxqQgraE5wpet4zwMiQ52475",
+      "state": {
+        "status": "completed",
+        "input": {
+          "offset": 105,
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/src/lib.rs",
+          "limit": 30
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-registry/src/lib.rs</path>\n<type>file</type>\n<content>\n105:                     trigger_type TEXT NOT NULL DEFAULT 'cron',\n106:                     config TEXT NOT NULL DEFAULT '{}',\n107:                     enabled INTEGER NOT NULL DEFAULT 1,\n108:                     created_at TEXT NOT NULL DEFAULT (datetime('now'))\n109:                 );\n110:                 CREATE TABLE IF NOT EXISTS graph_nodes (\n111:                     id TEXT PRIMARY KEY,\n112:                     kind TEXT NOT NULL,\n113:                     name TEXT NOT NULL,\n114:                     properties TEXT NOT NULL DEFAULT '{}',\n115:                     created_at TEXT NOT NULL DEFAULT (datetime('now'))\n116:                 );\n117:                 CREATE TABLE IF NOT EXISTS graph_edges (\n118:                     id TEXT PRIMARY KEY,\n119:                     source TEXT NOT NULL REFERENCES graph_nodes(id),\n120:                     target TEXT NOT NULL REFERENCES graph_nodes(id),\n121:                     kind TEXT NOT NULL,\n122:                     properties TEXT NOT NULL DEFAULT '{}',\n123:                     created_at TEXT NOT NULL DEFAULT (datetime('now'))\n124:                 );\n125:                 CREATE INDEX IF NOT EXISTS idx_graphedges_source ON graph_edges(source);\n126:                 CREATE INDEX IF NOT EXISTS idx_graphedges_target ON graph_edges(target);\n127:                 CREATE TABLE IF NOT EXISTS flows (\n128:                     id TEXT PRIMARY KEY,\n129:                     path TEXT NOT NULL,\n130:                     version TEXT NOT NULL DEFAULT '0.1.0',\n131:                     definition TEXT NOT NULL DEFAULT '{}',\n132:                     summary TEXT,\n133:                     on_failure TEXT,\n134:                     created_at TEXT NOT NULL DEFAULT (datetime('now'))\n\n(Showing lines 105-134 of 1016. Use offset=135 to continue.)\n</content>",
+        "metadata": {
+          "preview": "                    trigger_type TEXT NOT NULL DEFAULT 'cron',\n                    config TEXT NOT NULL DEFAULT '{}',\n                    enabled INTEGER NOT NULL DEFAULT 1,\n                    created_at TEXT NOT NULL DEFAULT (datetime('now'))\n                );\n                CREATE TABLE IF NOT EXISTS graph_nodes (\n                    id TEXT PRIMARY KEY,\n                    kind TEXT NOT NULL,\n                    name TEXT NOT NULL,\n                    properties TEXT NOT NULL DEFAULT '{}',\n                    created_at TEXT NOT NULL DEFAULT (datetime('now'))\n                );\n                CREATE TABLE IF NOT EXISTS graph_edges (\n                    id TEXT PRIMARY KEY,\n                    source TEXT NOT NULL REFERENCES graph_nodes(id),\n                    target TEXT NOT NULL REFERENCES graph_nodes(id),\n                    kind TEXT NOT NULL,\n                    properties TEXT NOT NULL DEFAULT '{}',\n                    created_at TEXT NOT NULL DEFAULT (datetime('now'))\n                );",
+          "truncated": true,
+          "loaded": []
+        },
+        "title": "crates/automaton-registry/src/lib.rs",
+        "time": {
+          "start": 1778146975817,
+          "end": 1778146975880
+        }
+      },
+      "id": "prt_e01d19bd200175DjemageP17x4",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d17a6a001doBW0hqghrT57Z"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_04_RsiQXi2QnaxLLUG4zwGn1453",
+      "state": {
+        "status": "completed",
+        "input": {
+          "offset": 73,
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/postgres.rs",
+          "limit": 30
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-db/src/postgres.rs</path>\n<type>file</type>\n<content>\n73:                 duration_ms BIGINT NOT NULL DEFAULT 0,\n74:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),\n75:                 started_at TIMESTAMPTZ, completed_at TIMESTAMPTZ\n76:             )\",\n77:             \"CREATE TABLE IF NOT EXISTS graph_nodes (\n78:                 id TEXT PRIMARY KEY, kind TEXT NOT NULL, name TEXT NOT NULL,\n79:                 properties JSONB NOT NULL DEFAULT '{}',\n80:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n81:             )\",\n82:             \"CREATE TABLE IF NOT EXISTS graph_edges (\n83:                 id TEXT PRIMARY KEY, source TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n84:                 target TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n85:                 kind TEXT NOT NULL, properties JSONB NOT NULL DEFAULT '{}',\n86:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n87:             )\",\n88:             \"CREATE TABLE IF NOT EXISTS variables (\n89:                 path TEXT PRIMARY KEY, value TEXT NOT NULL,\n90:                 is_secret BOOLEAN NOT NULL DEFAULT true, description TEXT,\n91:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n92:             )\",\n93:             \"CREATE TABLE IF NOT EXISTS resources (\n94:                 path TEXT PRIMARY KEY, resource_type TEXT NOT NULL,\n95:                 value JSONB NOT NULL DEFAULT '{}', description TEXT,\n96:                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n97:             )\",\n98:             \"CREATE TABLE IF NOT EXISTS triggers (\n99:                 id TEXT PRIMARY KEY, target_path TEXT NOT NULL,\n100:                 target_is_flow BOOLEAN NOT NULL DEFAULT false,\n101:                 trigger_type TEXT NOT NULL DEFAULT 'cron', config JSONB NOT NULL DEFAULT '{}',\n102:                 enabled BOOLEAN NOT NULL DEFAULT true, last_fired_at TIMESTAMPTZ,\n\n(Showing lines 73-102 of 493. Use offset=103 to continue.)\n</content>",
+        "metadata": {
+          "preview": "                duration_ms BIGINT NOT NULL DEFAULT 0,\n                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),\n                started_at TIMESTAMPTZ, completed_at TIMESTAMPTZ\n            )\",\n            \"CREATE TABLE IF NOT EXISTS graph_nodes (\n                id TEXT PRIMARY KEY, kind TEXT NOT NULL, name TEXT NOT NULL,\n                properties JSONB NOT NULL DEFAULT '{}',\n                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n            )\",\n            \"CREATE TABLE IF NOT EXISTS graph_edges (\n                id TEXT PRIMARY KEY, source TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n                target TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,\n                kind TEXT NOT NULL, properties JSONB NOT NULL DEFAULT '{}',\n                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n            )\",\n            \"CREATE TABLE IF NOT EXISTS variables (\n                path TEXT PRIMARY KEY, value TEXT NOT NULL,\n                is_secret BOOLEAN NOT NULL DEFAULT true, description TEXT,\n                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n            )\",",
+          "truncated": true,
+          "loaded": []
+        },
+        "title": "crates/automaton-db/src/postgres.rs",
+        "time": {
+          "start": 1778146977145,
+          "end": 1778146977186
+        }
+      },
+      "id": "prt_e01d1a0e20016YbTN2CSVX4Evn",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d17a6a001doBW0hqghrT57Z"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_05_By3G1lV2NZwuc9eS5LL83177",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "aggregate|list_domains|summarize|count_by|group_by|domain",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-graph/src",
+          "output_mode": "content"
+        },
+        "output": "No matches found",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146979032,
+          "end": 1778146979077
+        }
+      },
+      "id": "prt_e01d1a632001y1rVLiGQWGTeHt",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d17a6a001doBW0hqghrT57Z"
+    },
+    {
+      "type": "tool",
+      "tool": "read",
+      "callID": "call_00_qUPJCZbnAXICW3ac8nEY7117",
+      "state": {
+        "status": "completed",
+        "input": {
+          "offset": 30,
+          "filePath": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-engine/src/lib.rs",
+          "limit": 50
+        },
+        "output": "<path>/home/ishanp/Documents/GitHub/automaton/crates/automaton-engine/src/lib.rs</path>\n<type>file</type>\n<content>\n30: pub struct Engine {\n31:     backend: Arc<dyn RegistryBackend>,\n32:     graph: GraphStore,\n33:     runtime: Runtime,\n34: }\n35: \n36: impl Engine {\n37:     pub fn new(backend: Arc<dyn RegistryBackend>, graph: GraphStore, runtime: Runtime) -> Self {\n38:         Self { backend, graph, runtime }\n39:     }\n40: \n41:     pub fn backend(&self) -> &Arc<dyn RegistryBackend> {\n42:         &self.backend\n43:     }\n44: \n45:     pub fn registry_deprecated(&self) -> &Arc<dyn RegistryBackend> {\n46:         &self.backend\n47:     }\n48: \n49:     pub fn graph(&self) -> &GraphStore {\n50:         &self.graph\n51:     }\n52: \n53:     /// Plan a workflow: discover the dependency graph from the registry.\n54:     pub async fn plan(&self, start_module: &str, options: &PlanOptions) -> Result<RunGraph> {\n55:         let has_module = self.backend.get_module(start_module).await?\n56:             .ok_or_else(|| AutomatonError::ModuleNotFound(start_module.to_string()))?;\n57:         let _ = has_module;\n58: \n59:         let run_id = uuid::Uuid::new_v4().to_string();\n60:         let mut modules = vec![];\n61:         let mut visited = std::collections::HashSet::new();\n62:         let mut stack = vec![(start_module.to_string(), 0)];\n63: \n64:         while let Some((path, depth)) = stack.pop() {\n65:             if !visited.insert(path.clone()) || depth > options.max_depth {\n66:                 continue;\n67:             }\n68: \n69:             if let Some(mod_data) = self.backend.get_module(&path).await? {\n70:                 let deps: Vec<String> = mod_data.manifest.depends_on.iter().map(|d| d.name.clone()).collect();\n71: \n72:                 let node = ModuleNode {\n73:                     id: format!(\"{}-{}\", path.replace('.', \"-\"),\n74:                         uuid::Uuid::new_v4().to_string().split('-').next().unwrap_or(\"0\")),\n75:                     module_id: ModuleId {\n76:                         path: path.clone(),\n77:                         version: semver::Version::parse(&mod_data.manifest.version)\n78:                             .map_err(|e: semver::Error| AutomatonError::Other(e.to_string()))?,\n79:                         hash: mod_data.hash.clone(),\n\n(Showing lines 30-79 of 383. Use offset=80 to continue.)\n</content>",
+        "metadata": {
+          "preview": "pub struct Engine {\n    backend: Arc<dyn RegistryBackend>,\n    graph: GraphStore,\n    runtime: Runtime,\n}\n\nimpl Engine {\n    pub fn new(backend: Arc<dyn RegistryBackend>, graph: GraphStore, runtime: Runtime) -> Self {\n        Self { backend, graph, runtime }\n    }\n\n    pub fn backend(&self) -> &Arc<dyn RegistryBackend> {\n        &self.backend\n    }\n\n    pub fn registry_deprecated(&self) -> &Arc<dyn RegistryBackend> {\n        &self.backend\n    }\n\n    pub fn graph(&self) -> &GraphStore {",
+          "truncated": true,
+          "loaded": []
+        },
+        "title": "crates/automaton-engine/src/lib.rs",
+        "time": {
+          "start": 1778146985306,
+          "end": 1778146985334
+        }
+      },
+      "id": "prt_e01d1c0af001QlmOenebS77f1M",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d1b426001pMLVJp6rzr6tK2"
+    },
+    {
+      "type": "tool",
+      "tool": "grep",
+      "callID": "call_01_N82z2sVNvwmuljXxgOv86619",
+      "state": {
+        "status": "completed",
+        "input": {
+          "include": "*.rs",
+          "pattern": "graph_add_edge|graph_pathfind|Graph.*Params",
+          "path": "/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs",
+          "output_mode": "content"
+        },
+        "output": "Found 3 match(es) in 1 file(s)\n\n/home/ishanp/Documents/GitHub/automaton/crates/automaton-mcp/src/tools.rs\n  66: pub struct GraphQueryParams {\n  71: pub struct GraphPathfindParams {\n  77: pub struct GraphAddEdgeParams {\n",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1778146987287,
+          "end": 1778146987319
+        }
+      },
+      "id": "prt_e01d1c621001hnCTDXEKsSYug5",
+      "sessionID": "ses_1fe2f6ee4ffeVlKR1r6ixFlWMl",
+      "messageID": "msg_e01d1b426001pMLVJp6rzr6tK2"
+    }
+  ]
+}

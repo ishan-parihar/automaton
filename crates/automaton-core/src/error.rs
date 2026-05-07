@@ -2,6 +2,13 @@ use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, AutomatonError>;
 
+#[cfg(feature = "sqlite")]
+impl From<rusqlite::Error> for AutomatonError {
+    fn from(e: rusqlite::Error) -> Self {
+        AutomatonError::Database(e.to_string())
+    }
+}
+
 #[derive(Error, Debug)]
 pub enum AutomatonError {
     #[error("Module not found: {0}")]
@@ -51,10 +58,4 @@ pub enum AutomatonError {
 
     #[error("{0}")]
     Other(String),
-}
-
-impl From<rusqlite::Error> for AutomatonError {
-    fn from(e: rusqlite::Error) -> Self {
-        AutomatonError::Database(e.to_string())
-    }
 }

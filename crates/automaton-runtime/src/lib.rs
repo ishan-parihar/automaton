@@ -3,6 +3,7 @@ use automaton_core::*;
 /// Local execution runtime.
 /// Runs automation modules as child processes and manages their lifecycle.
 pub struct Runtime {
+    #[allow(dead_code)]
     config: RuntimeConfig,
 }
 
@@ -95,13 +96,16 @@ impl Runtime {
                     last_error = e.to_string();
                     tracing::warn!(attempt, error = %last_error, "Attempt failed");
                     if attempt < retry.max_attempts {
-                        // Calculate backoff
+                        // Sleep with current delay (first attempt uses retry.delay_ms)
+                        if delay > 0 {
+                            tokio::time::sleep(std::time::Duration::from_millis(delay)).await;
+                        }
+                        // Calculate next backoff after sleeping
                         delay = match retry.backoff {
                             BackoffKind::Fixed => retry.delay_ms,
-                            BackoffKind::Linear => retry.delay_ms * attempt as u64,
-                            BackoffKind::Exponential => retry.delay_ms * (1u64 << (attempt - 1)),
+                            BackoffKind::Linear => retry.delay_ms * (attempt as u64 + 1),
+                            BackoffKind::Exponential => retry.delay_ms * (1u64 << attempt),
                         };
-                        tokio::time::sleep(std::time::Duration::from_millis(delay)).await;
                     }
                 }
             }
@@ -111,5 +115,29 @@ impl Runtime {
             "All {} attempts failed. Last error: {last_error}",
             retry.max_attempts
         )))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_runtime_config_defaults() {
+        let config = RuntimeConfig::default();
+        assert_eq!(config.max_concurrency, 4);
+        assert_eq!(config.default_timeout_ms, 30_000);
+    }
+
+    #[test]
+    fn test_runtime_config_custom() {
+        let config = RuntimeConfig {
+            max_concurrency: 8,
+            default_timeout_ms: 60_000,
+            work_dir: "./custom_work".into(),
+            temp_dir: "./custom_tmp".into(),
+        };
+        assert_eq!(config.max_concurrency, 8);
+        assert_eq!(config.default_timeout_ms, 60_000);
     }
 }
