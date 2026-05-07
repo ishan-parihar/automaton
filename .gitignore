@@ -13,3 +13,9 @@ node_modules/
 *.log
 .oh-my-opencode-pi-debug/
 .oh-my-opencode-pi-workflow.json
+.oh-my-opencode-pi-stats.json
+.contexty/
+.hive/
+.memsearch/
+AUDIT_REPORT.md
+
