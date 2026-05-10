@@ -1,0 +1,2 @@
+FROM registry.ollama.ai/library/qwen3.5-4b:latest
+PARAMETER num_ctx 40960
