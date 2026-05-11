@@ -10,7 +10,6 @@
 [![MCP](https://img.shields.io/badge/MCP-39%20tools-red)](https://modelcontextprotocol.io)
 
 `automaton` is a CLI-based, graph-native automation framework built in Rust, designed specifically for AI agents to create, compose, and execute modular workflows. It transforms automation from a set of fragile scripts into a structured, version-controlled, and observable substrate.
->>>>>>> cbedaee (feat: complete AI-Agent UX roadmap implementation)
 
 By exposing its entire core through an MCP (Model Context Protocol) server with 39 precision tools, `automaton` allows LLMs to move beyond simple code generation and into the realm of **Autonomous Systems Engineering**.
 
@@ -89,15 +88,12 @@ automaton run github.issue_triage --input '{"repo": "user/repo"}'
 
 # 4. Connect to an AI Agent via MCP
 automaton mcp
-<<<<<<< HEAD
-=======
 
 # Diagnostics
 automaton doctor
 
 # Postgres Migration (Production)
 automaton postgres migrate --database-url "postgres://user:pass@host:5432/automaton"
->>>>>>> cbedaee (feat: complete AI-Agent UX roadmap implementation)
 ```
 
 ## 🛠 Tech Stack
@@ -108,11 +104,6 @@ automaton postgres migrate --database-url "postgres://user:pass@host:5432/automa
 - **Protocol**: MCP (Model Context Protocol)
 - **Build**: static musl binary
 
-<<<<<<< HEAD
----
-Developed by [Ishan Parihar](https://github.com/ishan-parihar) to bridge the gap between LLM reasoning and deterministic system execution.
-<<<<<<< HEAD
-=======
 ```
 ~/.local/share/automaton/     # Data directory
 ├── registry.db               # Module catalog (SQLite)
@@ -226,8 +217,7 @@ tags:
 ## License
 
 MIT
->>>>>>> cbedaee (feat: complete AI-Agent UX roadmap implementation)
-=======
 
-If you find this project useful, [consider supporting its development](https://rzp.io/rzp/ishan-parihar)
->>>>>>> 54279d1 (Chore: README audit, CI/CD setup, release workflows)
+---
+
+Developed by [Ishan Parihar](https://github.com/ishan-parihar) — If you find this useful, [consider supporting](https://rzp.io/rzp/ishan-parihar)
