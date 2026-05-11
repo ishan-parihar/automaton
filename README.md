@@ -9,40 +9,7 @@
 [![Static Binary](https://img.shields.io/badge/build-static--musl-purple)](https://github.com/ishanp/automaton/releases)
 [![MCP](https://img.shields.io/badge/MCP-39%20tools-red)](https://modelcontextprotocol.io)
 
-<<<<<<< HEAD
 `automaton` is a CLI-based, graph-native automation framework built in Rust, designed specifically for AI agents to create, compose, and execute modular workflows. It transforms automation from a set of fragile scripts into a structured, version-controlled, and observable substrate.
-=======
-```
-┌─────────────────────────────────────────────────────────┐
-│                    AI Agent (LLM)                        │
-│  Uses MCP tools to create modules → plan → execute       │
-└──────────────────────┬──────────────────────────────────┘
-                       │ MCP (stdio/SSE)
-┌──────────────────────▼──────────────────────────────────┐
-│                automaton-mcp (MCP Server)                │
-│  module.* | workflow.* | graph.* | registry.* | run.*   │
-└──────────────────────┬──────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────┐
-│                automaton-engine (Orchestrator)           │
-│  Planner → Materializer → Executor                      │
-│  Converts design graph → run DAG → execution            │
-└──────┬──────────────────────────┬───────────────────────┘
-       │                          │
-┌──────▼──────────┐    ┌──────────▼───────────────────┐
-│ automaton-graph │    │ automaton-runtime             │
-│ Property graph   │    │ Process sandbox, retry, I/O │
-│ (SQLite/PG-backed)│    │                              │
-└─────────────────┘    └──────────────────────────────┘
-       │                          │
-       └──────────┬───────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────┐
-│                automaton-registry                    │
-│  SQLite/Postgres-backed module catalog + content-addressed│
-│  build cache + run history + webhooks                │
-└─────────────────────────────────────────────────────┘
-```
 >>>>>>> cbedaee (feat: complete AI-Agent UX roadmap implementation)
 
 By exposing its entire core through an MCP (Model Context Protocol) server with 39 precision tools, `automaton` allows LLMs to move beyond simple code generation and into the realm of **Autonomous Systems Engineering**.
@@ -144,6 +111,7 @@ automaton postgres migrate --database-url "postgres://user:pass@host:5432/automa
 <<<<<<< HEAD
 ---
 Developed by [Ishan Parihar](https://github.com/ishan-parihar) to bridge the gap between LLM reasoning and deterministic system execution.
+<<<<<<< HEAD
 =======
 ```
 ~/.local/share/automaton/     # Data directory
@@ -259,3 +227,7 @@ tags:
 
 MIT
 >>>>>>> cbedaee (feat: complete AI-Agent UX roadmap implementation)
+=======
+
+If you find this project useful, [consider supporting its development](https://rzp.io/rzp/ishan-parihar)
+>>>>>>> 54279d1 (Chore: README audit, CI/CD setup, release workflows)
