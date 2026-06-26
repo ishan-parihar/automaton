@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::result::Result as StdResult;
-use std::sync::Arc;
+use std::sync::{Arc, OnceLock};
 
 use automaton_core::*;
 use automaton_core::execution::{WebhookEvent, WebhookRegistration};
@@ -67,6 +67,73 @@ async fn handle_module_create(engine: &Engine, path: &str, source: &str, version
 
 fn add_tool(tools: &mut Vec<Tool>, name: &'static str, desc: &'static str, schema: impl Into<Arc<JsonObject>>) {
     tools.push(Tool::new(name, desc, schema));
+}
+
+const SUPPORTED_INTEGRATIONS: &[&str] = &["postgresql", "slack", "github", "openai", "http", "aws"];
+
+/// Build the complete tool registry (called once, cached in OnceLock).
+fn build_tool_registry() -> Vec<Tool> {
+    let mut tools = Vec::new();
+    // Module tools with real JSON schemas
+    add_tool(&mut tools, "module_create",   "Register a new automation module",    schema_for::<ModuleCreateParams>());
+    add_tool(&mut tools, "module_build",    "Build a registered module",           schema_for::<ModuleBuildParams>());
+    add_tool(&mut tools, "module_validate", "Validate module manifest",            schema_for::<ModuleCreateParams>());
+    add_tool(&mut tools, "module_run",      "Execute a module",                    schema_for::<ModuleRunParams>());
+    add_tool(&mut tools, "module_deprecate","Remove a module",                     schema_for::<ModuleDeprecateParams>());
+    add_tool(&mut tools, "module_search",   "Search modules by query",             schema_for::<ModuleSearchParams>());
+    add_tool(&mut tools, "module_template", "Generate module from template",       schema_for::<ModuleTemplateParams>());
+    add_tool(&mut tools, "module_list_templates", "List available module templates", Arc::new(serde_json::Map::new()));
+    // Workflow
+    add_tool(&mut tools, "workflow_plan",   "Plan a workflow",                    schema_for::<WorkflowPlanParams>());
+    add_tool(&mut tools, "workflow_materialize", "Validate a DAG",                schema_for::<WorkflowPlanParams>());
+    // Graph
+    add_tool(&mut tools, "graph_query",     "Query design graph",                 schema_for::<GraphQueryParams>());
+    add_tool(&mut tools, "graph_pathfind",  "Find paths between nodes",           schema_for::<GraphPathfindParams>());
+    add_tool(&mut tools, "graph_add_edge",  "Wire edge between nodes",            schema_for::<GraphAddEdgeParams>());
+    // Flow
+    add_tool(&mut tools, "flow_create",     "Compose steps into a flow",          schema_for::<FlowCreateParams>());
+    add_tool(&mut tools, "flow_show",       "Show flow topology",                 schema_for::<FlowShowParams>());
+    add_tool(&mut tools, "flow_execute",    "Execute a composed flow DAG",         schema_for::<FlowExecuteParams>());
+    add_tool(&mut tools, "flow_list",       "List all stored flows",             Arc::new(serde_json::Map::new()));
+    add_tool(&mut tools, "flow_delete",     "Delete a stored flow",              schema_for::<FlowShowParams>());
+    // Schedule
+    add_tool(&mut tools, "schedule_create", "Create cron schedule",               schema_for::<ScheduleCreateParams>());
+    add_tool(&mut tools, "schedule_validate","Validate cron expression",          schema_for::<ScheduleValidateParams>());
+    // Secrets
+    add_tool(&mut tools, "secret_set",      "Store encrypted secret",             schema_for::<SecretSetParams>());
+    add_tool(&mut tools, "secret_get",      "Retrieve secret value",              schema_for::<SecretGetParams>());
+    // Resources
+    add_tool(&mut tools, "resource_bind",    "Bind typed resource",               schema_for::<ResourceBindParams>());
+    add_tool(&mut tools, "resource_list",    "List resource types",               Arc::new(serde_json::Map::new()));
+    // Jobs
+    add_tool(&mut tools, "job_queue",       "Enqueue a job",                      schema_for::<JobQueueParams>());
+    add_tool(&mut tools, "job_list",        "List queued jobs",                   Arc::new(serde_json::Map::new()));
+    // Runs
+    add_tool(&mut tools, "run_logs",        "Get run history",                    schema_for::<RunLogsParams>());
+    add_tool(&mut tools, "run_retry",       "Retry a failed run",                 schema_for::<RunRetryParams>());
+    // Registry
+    add_tool(&mut tools, "registry_search", "Search registered modules",          schema_for::<RegistrySearchParams>());
+    // Graph Search
+    add_tool(&mut tools, "graph_search",     "Search graph nodes by name/text query",  schema_for::<SearchParams>());
+    add_tool(&mut tools, "graph_time_range", "Query nodes and edges within a time range", schema_for::<TimeRangeParams>());
+    // Webhook
+    add_tool(&mut tools, "webhook_register", "Register an outbound webhook",         schema_for::<WebhookRegisterParams>());
+    add_tool(&mut tools, "webhook_list",     "List all registered webhooks",         schema_for::<WebhookListParams>());
+    add_tool(&mut tools, "webhook_delete",   "Delete a webhook by ID",              schema_for::<WebhookDeleteParams>());
+    // Flow Telemetry
+    add_tool(&mut tools, "flow_execute_telemetry", "Execute flow and return telemetry data", schema_for::<FlowExecuteTelemetryParams>());
+    // Graph
+    add_tool(&mut tools, "graph_summarize", "Get aggregated statistics about the knowledge graph including counts by node kind and edge relationship type", Arc::new(serde_json::Map::new()));
+    // Capability
+    add_tool(&mut tools, "capability_inventory", "Discover available capabilities", Arc::new(serde_json::Map::new()));
+    // System
+    add_tool(&mut tools, "system_health",   "Check system health",                Arc::new(serde_json::Map::new()));
+    tools
+}
+
+fn cached_tools() -> &'static Vec<Tool> {
+    static TOOLS: OnceLock<Vec<Tool>> = OnceLock::new();
+    TOOLS.get_or_init(build_tool_registry)
 }
 
 impl ServerHandler for McpServer {
@@ -460,7 +527,7 @@ impl ServerHandler for McpServer {
                 }
                 "resource_list" => {
                     let resources = engine.backend().list_resources(None).await.unwrap_or_default();
-                    ok_json(serde_json::json!({"types":["postgresql","slack","github","openai","http","aws"],"resources":resources,}))
+                    ok_json(serde_json::json!({"types": SUPPORTED_INTEGRATIONS,"resources":resources,}))
                 }
 
                 // ── Job Tools ──
@@ -615,8 +682,8 @@ impl ServerHandler for McpServer {
                     let ge = engine.graph().all_edges().unwrap_or_default().len();
                     ok_json(serde_json::json!({
                         "modules": mc, "graph_nodes": gn, "graph_edges": ge,
-                        "resource_types": ["postgresql","slack","github","openai","http","aws"],
-                        "tool_count": 39,
+                        "resource_types": SUPPORTED_INTEGRATIONS,
+                        "tool_count": cached_tools().len(),
                     }))
                 }
 
@@ -638,77 +705,11 @@ impl ServerHandler for McpServer {
         _request: Option<PaginatedRequestParams>,
         _context: rmcp::service::RequestContext<rmcp::RoleServer>,
     ) -> std::pin::Pin<Box<dyn std::future::Future<Output = StdResult<ListToolsResult, ErrorData>> + Send + '_>> {
-        let mut tools = Vec::new();
-        // Module tools with real JSON schemas
-        add_tool(&mut tools, "module_create",   "Register a new automation module",    schema_for::<ModuleCreateParams>());
-        add_tool(&mut tools, "module_build",    "Build a registered module",           schema_for::<ModuleBuildParams>());
-        add_tool(&mut tools, "module_validate", "Validate module manifest",            schema_for::<ModuleCreateParams>());
-        add_tool(&mut tools, "module_run",      "Execute a module",                    schema_for::<ModuleRunParams>());
-        add_tool(&mut tools, "module_deprecate","Remove a module",                     schema_for::<ModuleDeprecateParams>());
-        add_tool(&mut tools, "module_search",   "Search modules by query",             schema_for::<ModuleSearchParams>());
-        add_tool(&mut tools, "module_template", "Generate module from template",       schema_for::<ModuleTemplateParams>());
-        add_tool(&mut tools, "module_list_templates", "List available module templates", Arc::new(serde_json::Map::new()));
-        // Workflow
-        add_tool(&mut tools, "workflow_plan",   "Plan a workflow",                    schema_for::<WorkflowPlanParams>());
-        add_tool(&mut tools, "workflow_materialize", "Validate a DAG",                schema_for::<WorkflowPlanParams>());
-        // Graph
-        add_tool(&mut tools, "graph_query",     "Query design graph",                 schema_for::<GraphQueryParams>());
-        add_tool(&mut tools, "graph_pathfind",  "Find paths between nodes",           schema_for::<GraphPathfindParams>());
-        add_tool(&mut tools, "graph_add_edge",  "Wire edge between nodes",            schema_for::<GraphAddEdgeParams>());
-        // Flow
-        add_tool(&mut tools, "flow_create",     "Compose steps into a flow",          schema_for::<FlowCreateParams>());
-        add_tool(&mut tools, "flow_show",       "Show flow topology",                 schema_for::<FlowShowParams>());
-        add_tool(&mut tools, "flow_execute",    "Execute a composed flow DAG",         schema_for::<FlowExecuteParams>());
-        add_tool(&mut tools, "flow_list",       "List all stored flows",             Arc::new(serde_json::Map::new()));
-        add_tool(&mut tools, "flow_delete",     "Delete a stored flow",              schema_for::<FlowShowParams>());
-        // Schedule
-        add_tool(&mut tools, "schedule_create", "Create cron schedule",               schema_for::<ScheduleCreateParams>());
-        add_tool(&mut tools, "schedule_validate","Validate cron expression",          schema_for::<ScheduleValidateParams>());
-        // Secrets
-        add_tool(&mut tools, "secret_set",      "Store encrypted secret",             schema_for::<SecretSetParams>());
-        add_tool(&mut tools, "secret_get",      "Retrieve secret value",              schema_for::<SecretGetParams>());
-        // Resources
-        add_tool(&mut tools, "resource_bind",    "Bind typed resource",               schema_for::<ResourceBindParams>());
-        add_tool(&mut tools, "resource_list",    "List resource types",               Arc::new(serde_json::Map::new()));
-        // Jobs
-        add_tool(&mut tools, "job_queue",       "Enqueue a job",                      schema_for::<JobQueueParams>());
-        add_tool(&mut tools, "job_list",        "List queued jobs",                   Arc::new(serde_json::Map::new()));
-        // Runs
-        add_tool(&mut tools, "run_logs",        "Get run history",                    schema_for::<RunLogsParams>());
-        add_tool(&mut tools, "run_retry",       "Retry a failed run",                 schema_for::<RunRetryParams>());
-        // Registry
-        add_tool(&mut tools, "registry_search", "Search registered modules",          schema_for::<RegistrySearchParams>());
-        // Graph Search
-        add_tool(&mut tools, "graph_search",     "Search graph nodes by name/text query",  schema_for::<SearchParams>());
-        add_tool(&mut tools, "graph_time_range", "Query nodes and edges within a time range", schema_for::<TimeRangeParams>());
-        // Webhook
-        add_tool(&mut tools, "webhook_register", "Register an outbound webhook",         schema_for::<WebhookRegisterParams>());
-        add_tool(&mut tools, "webhook_list",     "List all registered webhooks",         schema_for::<WebhookListParams>());
-        add_tool(&mut tools, "webhook_delete",   "Delete a webhook by ID",              schema_for::<WebhookDeleteParams>());
-        // Flow Telemetry
-        add_tool(&mut tools, "flow_execute_telemetry", "Execute flow and return telemetry data", schema_for::<FlowExecuteTelemetryParams>());
-        // Graph
-        add_tool(&mut tools, "graph_summarize", "Get aggregated statistics about the knowledge graph including counts by node kind and edge relationship type", Arc::new(serde_json::Map::new()));
-        // Capability
-        add_tool(&mut tools, "capability_inventory", "Discover available capabilities", Arc::new(serde_json::Map::new()));
-        // System
-        add_tool(&mut tools, "system_health",   "Check system health",                Arc::new(serde_json::Map::new()));
-
+        let tools = cached_tools().clone();
         Box::pin(std::future::ready(Ok(ListToolsResult { tools, meta: None, next_cursor: None })))
     }
 
     fn get_tool(&self, name: &str) -> Option<Tool> {
-        let names = ["module_create","module_build","module_validate","module_run","module_deprecate",
-            "module_search","module_template","module_list_templates","workflow_plan","workflow_materialize",
-            "graph_query","graph_pathfind","graph_add_edge","graph_search","graph_time_range","graph_summarize",
-            "flow_create","flow_show","flow_execute","flow_execute_telemetry","flow_list","flow_delete","schedule_create","schedule_validate",
-            "webhook_register","webhook_list","webhook_delete",
-            "secret_set","secret_get","resource_bind","resource_list",
-            "job_queue","job_list","run_logs","run_retry","registry_search","capability_inventory","system_health"];
-        if names.contains(&name) {
-            Some(Tool::new(name.to_string(), "", Arc::new(serde_json::Map::new())))
-        } else {
-            None
-        }
+        cached_tools().iter().find(|t| t.name.as_ref() == name).cloned()
     }
 }
