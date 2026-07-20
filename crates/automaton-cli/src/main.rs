@@ -23,7 +23,7 @@ use automaton_postgres::AutomatonDb;
 #[command(name = "automaton", version, about, long_about = None)]
 struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    command: Option<Commands>,
 }
 
 #[derive(Subcommand)]
@@ -223,6 +223,17 @@ fn axi_error(msg: &str, hint: Option<&str>) -> ! {
     std::process::exit(2);
 }
 
+fn truncate_str(s: &str, max: usize) -> String {
+    let char_count = s.chars().count();
+    if char_count <= max {
+        s.to_string()
+    } else {
+        let truncated: String = s.chars().take(max).collect();
+        format!("{}...
+  ... (truncated, {} chars total)", truncated, char_count)
+    }
+}
+
 
 fn init_engine(data_dir: &PathBuf) -> Result<Engine> {
     std::fs::create_dir_all(data_dir)?;
@@ -249,10 +260,62 @@ async fn main() -> anyhow::Result<()> {
     let data_dir = default_data_dir();
 
     match cli.command {
-        // ── AXI §8 + §10: no-args home view ──
-        // (Clap requires a subcommand, so no-args is handled by clap's default help)
-        // We override the about text to include AXI metadata.
-        Commands::Init => {
+        // ── AXI §8 + §10: no-args home view shows live state + tool identity ──
+        None => {
+            let bin_path = std::env::current_exe()
+                .map(|p| {
+                    let s = p.display().to_string();
+                    if let Ok(home) = std::env::var("HOME") {
+                        s.replace(&home, "~")
+                    } else {
+                        s
+                    }
+                })
+                .unwrap_or_else(|_| "automaton".to_string());
+            println!("bin: {}", bin_path);
+            println!("description: AI-native Rust automation substrate for creating, composing, and executing modular workflows");
+            println!();
+
+            // Show live state: modules count, graph stats
+            let engine_result = init_engine(&data_dir);
+            match engine_result {
+                Ok(engine) => {
+                    let modules = engine.backend().list_modules().await.unwrap_or_default();
+                    let nodes = engine.graph().all_nodes().unwrap_or_default();
+                    let edges = engine.graph().all_edges().unwrap_or_default();
+                    println!("state:");
+                    println!("  modules: {}", modules.len());
+                    println!("  graph_nodes: {}", nodes.len());
+                    println!("  graph_edges: {}", edges.len());
+                    println!();
+
+                    // Show modules if any
+                    if !modules.is_empty() {
+                        println!("modules[{}]{{path,version,built}}:", modules.len());
+                        for (path, ver, _hash, built) in modules.iter().take(10) {
+                            println!("  {},{}  {}", truncate_str(path, 40), ver, if *built { "built" } else { "pending" });
+                        }
+                        if modules.len() > 10 {
+                            println!("  ... ({} more, run 'automaton list' for all)", modules.len() - 10);
+                        }
+                        println!();
+                    }
+                }
+                Err(_) => {
+                    println!("state: not initialized (run 'automaton init' to get started)");
+                    println!();
+                }
+            }
+
+            println!("help[6]:");
+            println!("  Run `automaton init` to initialize the workspace");
+            println!("  Run `automaton new <path>` to create a new module");
+            println!("  Run `automaton list` to see all registered modules");
+            println!("  Run `automaton doctor` to run system diagnostics");
+            println!("  Run `automaton mcp` to start the MCP server for AI agents");
+            println!("  Run `automaton --help` for full command reference");
+        }
+        Some(Commands::Init) => {
             std::fs::create_dir_all(&data_dir)?;
             std::fs::create_dir_all(data_dir.join("modules"))?;
             std::fs::create_dir_all(data_dir.join("builds"))?;
@@ -266,7 +329,7 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::New { path, pattern } => {
+        Some(Commands::New { path, pattern }) => {
             if path.is_empty() || path.trim().is_empty() {
                 axi_error("Module path cannot be empty", Some("Usage: automaton new <path> [--pattern <template>]") );
             }
@@ -331,7 +394,7 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::Build { path, mode } => {
+        Some(Commands::Build { path, mode }) => {
             let engine = init_engine(&data_dir)?;
             let module = engine.backend().get_module(&path).await?
                 .ok_or_else(|| anyhow::anyhow!("Module not found: {path}"))?;
@@ -355,7 +418,7 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::Run { path, input } => {
+        Some(Commands::Run { path, input }) => {
             let engine = init_engine(&data_dir)?;
             let module = engine.backend().get_module(&path).await?
                 .ok_or_else(|| anyhow::anyhow!("Module not found: {path}"))?;
@@ -395,7 +458,7 @@ async fn main() -> anyhow::Result<()> {
             }
         }
 
-        Commands::Graph { action } => {
+        Some(Commands::Graph { action }) => {
             let engine = init_engine(&data_dir)?;
 
             match action {
@@ -449,7 +512,7 @@ async fn main() -> anyhow::Result<()> {
             }
         }
 
-        Commands::Plan { start, max_depth } => {
+        Some(Commands::Plan { start, max_depth }) => {
             let engine = init_engine(&data_dir)?;
             let options = PlanOptions { max_depth, ..Default::default() };
             let run_graph = engine.plan(&start, &options).await?;
@@ -468,7 +531,7 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::Execute { module, max_depth, input: _ } => {
+        Some(Commands::Execute { module, max_depth, input: _ }) => {
             let engine = init_engine(&data_dir)?;
 
             // Plan from the module path
@@ -484,14 +547,14 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::Mcp => {
+        Some(Commands::Mcp) => {
             let engine = init_engine(&data_dir)?;
             let server = McpServer::new(engine, data_dir);
             tracing::info!("Starting Automaton MCP server on stdio");
             server.serve_stdio().await?;
         }
 
-        Commands::List { query } => {
+        Some(Commands::List { query }) => {
             let engine = init_engine(&data_dir)?;
             let all = engine.backend().list_modules().await?;
             let has_query = query.is_some();
@@ -511,7 +574,7 @@ async fn main() -> anyhow::Result<()> {
             println!("help[1]: Run `automaton show <path>` for module details");
         }
 
-        Commands::Show { path } => {
+        Some(Commands::Show { path }) => {
             let engine = init_engine(&data_dir)?;
             match engine.backend().get_module(&path).await? {
                 Some(module) => {
@@ -540,7 +603,7 @@ async fn main() -> anyhow::Result<()> {
             }
         }
 
-        Commands::Logs { module, limit } => {
+        Some(Commands::Logs { module, limit }) => {
             let engine = init_engine(&data_dir)?;
             let runs = if let Some(ref module_path) = module {
                 engine.backend().get_runs(module_path).await?
@@ -555,14 +618,14 @@ async fn main() -> anyhow::Result<()> {
             }))?);
         }
 
-        Commands::Retry { run_id } => {
+        Some(Commands::Retry { run_id }) => {
             println!("{}", serde_json::to_string_pretty(&serde_json::json!({
                 "status": "retry_scheduled",
                 "run_id": run_id,
             }))?);
         }
 
-        Commands::Worker { name, concurrency, poll_interval_ms, daemon } => {
+        Some(Commands::Worker { name, concurrency, poll_interval_ms, daemon }) => {
             // Open separate registry instances (SQLite handles concurrent access)
             let worker_registry = Registry::open(&data_dir)?;
             let scheduler_registry = Registry::open(&data_dir)?;
@@ -610,7 +673,7 @@ async fn main() -> anyhow::Result<()> {
             worker.start(&worker_registry, poll_interval_ms).await;
         }
 
-        Commands::Postgres { action } => {
+        Some(Commands::Postgres { action }) => {
             match action {
                 PostgresCommand::Migrate { database_url } => {
                     let url = database_url
@@ -641,7 +704,7 @@ async fn main() -> anyhow::Result<()> {
             }
         }
 
-        Commands::Doctor => {
+        Some(Commands::Doctor) => {
             let engine = init_engine(&data_dir)?;
             let module_count = engine.backend().list_modules().await.unwrap_or_default().len();
             let graph_nodes = engine.graph().all_nodes().unwrap_or_default().len();
