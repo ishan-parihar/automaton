@@ -212,6 +212,18 @@ fn default_data_dir() -> PathBuf {
         .join("automaton")
 }
 
+// ── AXI helpers ─────────────────────────────────────────────────────────────
+
+fn axi_error(msg: &str, hint: Option<&str>) -> ! {
+    let mut out = serde_json::json!({ "error": msg });
+    if let Some(h) = hint {
+        out["help"] = serde_json::json!(h);
+    }
+    println!("{}", serde_json::to_string_pretty(&out).unwrap_or_default());
+    std::process::exit(2);
+}
+
+
 fn init_engine(data_dir: &PathBuf) -> Result<Engine> {
     std::fs::create_dir_all(data_dir)?;
     let registry = Registry::open(data_dir)?;
@@ -237,6 +249,9 @@ async fn main() -> anyhow::Result<()> {
     let data_dir = default_data_dir();
 
     match cli.command {
+        // ── AXI §8 + §10: no-args home view ──
+        // (Clap requires a subcommand, so no-args is handled by clap's default help)
+        // We override the about text to include AXI metadata.
         Commands::Init => {
             std::fs::create_dir_all(&data_dir)?;
             std::fs::create_dir_all(data_dir.join("modules"))?;
@@ -253,10 +268,13 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::New { path, pattern } => {
             if path.is_empty() || path.trim().is_empty() {
-                anyhow::bail!("Module path cannot be empty");
+                axi_error("Module path cannot be empty", Some("Usage: automaton new <path> [--pattern <template>]") );
             }
             if path.contains("..") || path.contains("//") {
-                anyhow::bail!("Invalid module path: {path}");
+                axi_error(
+                    &format!("Invalid module path: '{}'", path),
+                    Some("Module paths must not contain '..' or '//'"),
+                );
             }
             let module_dir = data_dir.join("modules").join(path.replace('.', "/"));
             std::fs::create_dir_all(&module_dir)?;
@@ -293,10 +311,16 @@ async fn main() -> anyhow::Result<()> {
                             props.insert("path".into(), serde_json::json!(path));
                             let _ = engine.graph().add_node(NodeKind::Module, &path, props);
                         }
-                        Err(e) => eprintln!("Warning: Failed to register module: {e}"),
+                        Err(e) => {
+                        let out = serde_json::json!({"warning": format!("Failed to register module: {}", e)});
+                        println!("{}", serde_json::to_string_pretty(&out).unwrap_or_default());
+                    }
                     }
                 }
-                Err(e) => eprintln!("Warning: Failed to init engine: {e}"),
+                Err(e) => {
+                    let out = serde_json::json!({"warning": format!("Failed to init engine: {}", e)});
+                    println!("{}", serde_json::to_string_pretty(&out).unwrap_or_default());
+                }
             }
 
             println!("{}", serde_json::to_string_pretty(&serde_json::json!({
@@ -470,21 +494,21 @@ async fn main() -> anyhow::Result<()> {
         Commands::List { query } => {
             let engine = init_engine(&data_dir)?;
             let all = engine.backend().list_modules().await?;
-            let filtered: Vec<_> = if let Some(q) = query {
-                all.into_iter().filter(|(p, _, _, _)| p.contains(&q)).collect()
-            } else {
-                all
+            let has_query = query.is_some();
+            let filtered: Vec<_> = match query {
+                Some(q) => all.into_iter().filter(|(p, _, _, _)| p.contains(&q)).collect(),
+                None => all,
             };
 
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
-                "count": filtered.len(),
-                "modules": filtered.iter().map(|(path, ver, hash, built)| serde_json::json!({
-                    "path": path,
-                    "version": ver,
-                    "hash": hash,
-                    "built": built,
-                })).collect::<Vec<_>>(),
-            }))?);
+            if filtered.is_empty() {
+                println!("modules: 0 modules registered{}", if has_query { " matching query" } else { "" });
+            } else {
+                println!("modules[{}]{{path,version,built}}:", filtered.len());
+                for (path, ver, _hash, built) in &filtered {
+                    println!("  {},{}  {}", path, ver, if *built { "built" } else { "pending" });
+                }
+            }
+            println!("help[1]: Run `automaton show <path>` for module details");
         }
 
         Commands::Show { path } => {
@@ -508,8 +532,10 @@ async fn main() -> anyhow::Result<()> {
                     }))?);
                 }
                 None => {
-                    eprintln!("Module not found: {path}");
-                    std::process::exit(1);
+                    axi_error(
+                        &format!("Module not found: '{}'", path),
+                        Some("Run `automaton list` to see registered modules."),
+                    );
                 }
             }
         }
