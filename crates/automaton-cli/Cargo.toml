@@ -30,3 +30,5 @@ anyhow.workspace = true
 serde_yaml.workspace = true
 dirs.workspace = true
 uuid.workspace = true
+
+toon-helper.workspace = true

@@ -14,6 +14,8 @@ use automaton_mcp::McpServer;
 use automaton_scheduler::{SchedulerDaemon, ScheduledTrigger, TriggerProvider};
 use automaton_worker::Worker;
 use automaton_postgres::AutomatonDb;
+use toon_helper;
+use toon_helper::truncate_str;
 
 /// Automaton — AI-native Rust automation substrate.
 ///
@@ -219,19 +221,8 @@ fn axi_error(msg: &str, hint: Option<&str>) -> ! {
     if let Some(h) = hint {
         out["help"] = serde_json::json!(h);
     }
-    println!("{}", serde_json::to_string_pretty(&out).unwrap_or_default());
+    println!("{}", toon_helper::format_text(&out, "toon"));
     std::process::exit(2);
-}
-
-fn truncate_str(s: &str, max: usize) -> String {
-    let char_count = s.chars().count();
-    if char_count <= max {
-        s.to_string()
-    } else {
-        let truncated: String = s.chars().take(max).collect();
-        format!("{}...
-  ... (truncated, {} chars total)", truncated, char_count)
-    }
 }
 
 
@@ -376,13 +367,13 @@ async fn main() -> anyhow::Result<()> {
                         }
                         Err(e) => {
                         let out = serde_json::json!({"warning": format!("Failed to register module: {}", e)});
-                        println!("{}", serde_json::to_string_pretty(&out).unwrap_or_default());
+                        println!("{}", toon_helper::format_text(&out, "toon"));
                     }
                     }
                 }
                 Err(e) => {
                     let out = serde_json::json!({"warning": format!("Failed to init engine: {}", e)});
-                    println!("{}", serde_json::to_string_pretty(&out).unwrap_or_default());
+                    println!("{}", toon_helper::format_text(&out, "toon"));
                 }
             }
 
