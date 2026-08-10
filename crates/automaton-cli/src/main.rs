@@ -313,11 +313,11 @@ async fn main() -> anyhow::Result<()> {
             std::fs::create_dir_all(data_dir.join("work"))?;
             std::fs::create_dir_all(data_dir.join("tmp"))?;
 
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "status": "initialized",
                 "data_dir": data_dir.to_string_lossy(),
                 "version": env!("CARGO_PKG_VERSION"),
-            }))?);
+            }), "toon"));
         }
 
         Some(Commands::New { path, pattern }) => {
@@ -377,12 +377,12 @@ async fn main() -> anyhow::Result<()> {
                 }
             }
 
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "status": "created",
                 "path": path,
                 "source": source_path.to_string_lossy(),
                 "manifest": yaml_path.to_string_lossy(),
-            }))?);
+            }), "toon"));
         }
 
         Some(Commands::Build { path, mode }) => {
@@ -400,13 +400,13 @@ async fn main() -> anyhow::Result<()> {
             engine.backend().mark_built(&path).await?;
             engine.backend().record_build(&hash, &binary_path.to_string_lossy(), &mode).await?;
 
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "status": "built",
                 "path": path,
                 "mode": mode,
                 "binary": binary_path.to_string_lossy(),
                 "hash": hash,
-            }))?);
+            }), "toon"));
         }
 
         Some(Commands::Run { path, input }) => {
@@ -415,10 +415,10 @@ async fn main() -> anyhow::Result<()> {
                 .ok_or_else(|| anyhow::anyhow!("Module not found: {path}"))?;
 
             if !module.built {
-                println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                println!("{}", toon_helper::format_text(&serde_json::json!({
                     "status": "skipped",
                     "reason": "Module not built yet. Run `automaton build {path}` first.",
-                }))?);
+                }), "toon"));
                 return Ok(());
             }
 
@@ -435,16 +435,16 @@ async fn main() -> anyhow::Result<()> {
 
             match result {
                 Ok(output) => {
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "status": "completed",
                         "output": output,
-                    }))?);
+                    }), "toon"));
                 }
                 Err(e) => {
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "status": "failed",
                         "error": e.to_string(),
-                    }))?);
+                    }), "toon"));
                 }
             }
         }
@@ -455,7 +455,7 @@ async fn main() -> anyhow::Result<()> {
             match action {
                 GraphCommand::Nodes => {
                     let nodes = engine.graph().all_nodes()?;
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "count": nodes.len(),
                         "nodes": nodes.iter().map(|n| serde_json::json!({
                             "id": n.id,
@@ -463,11 +463,11 @@ async fn main() -> anyhow::Result<()> {
                             "kind": format!("{:?}", n.kind),
                             "properties": n.properties,
                         })).collect::<Vec<_>>(),
-                    }))?);
+                    }), "toon"));
                 }
                 GraphCommand::Edges => {
                     let edges = engine.graph().all_edges()?;
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "count": edges.len(),
                         "edges": edges.iter().map(|e| serde_json::json!({
                             "id": e.id,
@@ -475,11 +475,11 @@ async fn main() -> anyhow::Result<()> {
                             "target": e.target,
                             "kind": format!("{:?}", e.kind),
                         })).collect::<Vec<_>>(),
-                    }))?);
+                    }), "toon"));
                 }
                 GraphCommand::Path { from, to } => {
                     let paths = engine.graph().find_path(&from, &to)?;
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "paths_found": paths.len(),
                         "paths": paths.iter().map(|path| {
                             path.iter().map(|na| serde_json::json!({
@@ -487,18 +487,18 @@ async fn main() -> anyhow::Result<()> {
                                 "edge": format!("{:?}", na.edge_kind),
                             })).collect::<Vec<_>>()
                         }).collect::<Vec<_>>(),
-                    }))?);
+                    }), "toon"));
                 }
                 GraphCommand::Deps { node_id } => {
                     let chain = engine.graph().get_dependency_chain(&node_id)?;
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "count": chain.len(),
                         "chain": chain.iter().map(|n| serde_json::json!({
                             "id": n.id,
                             "name": n.name,
                             "kind": format!("{:?}", n.kind),
                         })).collect::<Vec<_>>(),
-                    }))?);
+                    }), "toon"));
                 }
             }
         }
@@ -508,7 +508,7 @@ async fn main() -> anyhow::Result<()> {
             let options = PlanOptions { max_depth, ..Default::default() };
             let run_graph = engine.plan(&start, &options).await?;
 
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "run_graph_id": run_graph.id,
                 "workflow": run_graph.workflow_name,
                 "modules": run_graph.modules.iter().map(|m| serde_json::json!({
@@ -519,7 +519,7 @@ async fn main() -> anyhow::Result<()> {
                     "timeout_ms": m.timeout_ms,
                 })).collect::<Vec<_>>(),
                 "total_modules": run_graph.modules.len(),
-            }))?);
+            }), "toon"));
         }
 
         Some(Commands::Execute { module, max_depth, input: _ }) => {
@@ -531,11 +531,11 @@ async fn main() -> anyhow::Result<()> {
             let dag = engine.materialize(&run_graph)?;
 
             let result = engine.execute(dag).await?;
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "status": "executed",
                 "run_id": result.run_graph_id,
                 "results": result.results,
-            }))?);
+            }), "toon"));
         }
 
         Some(Commands::Mcp) => {
@@ -569,7 +569,7 @@ async fn main() -> anyhow::Result<()> {
             let engine = init_engine(&data_dir)?;
             match engine.backend().get_module(&path).await? {
                 Some(module) => {
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "path": module.manifest.name,
                         "version": module.manifest.version,
                         "hash": module.hash.as_str(),
@@ -583,7 +583,7 @@ async fn main() -> anyhow::Result<()> {
                         "timeout_ms": module.manifest.timeout_ms,
                         "retry": serde_json::to_value(&module.manifest.retry).ok(),
                         "tags": module.manifest.tags,
-                    }))?);
+                    }), "toon"));
                 }
                 None => {
                     axi_error(
@@ -603,17 +603,17 @@ async fn main() -> anyhow::Result<()> {
             };
 
             let truncated: Vec<_> = runs.into_iter().take(limit).collect();
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "count": truncated.len(),
                 "runs": truncated,
-            }))?);
+            }), "toon"));
         }
 
         Some(Commands::Retry { run_id }) => {
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "status": "retry_scheduled",
                 "run_id": run_id,
-            }))?);
+            }), "toon"));
         }
 
         Some(Commands::Worker { name, concurrency, poll_interval_ms, daemon }) => {
@@ -643,22 +643,22 @@ async fn main() -> anyhow::Result<()> {
                     .stdin(std::process::Stdio::null())
                     .spawn()?;
                 std::fs::write(&pid_path, child.id().to_string())?;
-                println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                println!("{}", toon_helper::format_text(&serde_json::json!({
                     "status": "worker_detached",
                     "name": name,
                     "pid": child.id(),
                     "pid_file": pid_path.to_string_lossy(),
-                }))?);
+                }), "toon"));
                 std::process::exit(0);
             }
 
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "status": "worker_started",
                 "name": name,
                 "concurrency": concurrency,
                 "poll_interval_ms": poll_interval_ms,
                 "scheduler": "active",
-            }))?);
+            }), "toon"));
 
             // Worker runs in the foreground, processing jobs from the queue
             worker.start(&worker_registry, poll_interval_ms).await;
@@ -671,23 +671,23 @@ async fn main() -> anyhow::Result<()> {
                         .or_else(|| std::env::var("DATABASE_URL").ok())
                         .unwrap_or_else(|| "postgres://localhost:5432/automaton".to_string());
 
-                    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    println!("{}", toon_helper::format_text(&serde_json::json!({
                         "status": "connecting",
                         "database_url": url,
-                    }))?);
+                    }), "toon"));
 
                     match AutomatonDb::connect(&url).await {
                         Ok(_db) => {
-                            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                            println!("{}", toon_helper::format_text(&serde_json::json!({
                                 "status": "migrated",
                                 "database_url": url,
-                            }))?);
+                            }), "toon"));
                         }
                         Err(e) => {
-                            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                            println!("{}", toon_helper::format_text(&serde_json::json!({
                                 "status": "error",
                                 "error": e.to_string(),
-                            }))?);
+                            }), "toon"));
                             std::process::exit(1);
                         }
                     }
@@ -701,7 +701,7 @@ async fn main() -> anyhow::Result<()> {
             let graph_nodes = engine.graph().all_nodes().unwrap_or_default().len();
             let graph_edges = engine.graph().all_edges().unwrap_or_default().len();
 
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            println!("{}", toon_helper::format_text(&serde_json::json!({
                 "status": "healthy",
                 "version": env!("CARGO_PKG_VERSION"),
                 "data_dir": data_dir.to_string_lossy(),
@@ -723,7 +723,7 @@ async fn main() -> anyhow::Result<()> {
                         "status": "ready",
                     },
                 },
-            }))?);
+            }), "toon"));
         }
     }
 

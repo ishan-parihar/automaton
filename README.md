@@ -13,7 +13,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.2.0-orange)](https://github.com/ishan-parihar/automaton/releases)
 [![Static Binary](https://img.shields.io/badge/build-static--musl-purple)](https://github.com/ishan-parihar/automaton/releases)
-[![MCP](https://img.shields.io/badge/MCP-39%20tools-red)](https://modelcontextprotocol.io)
+[![MCP](https://img.shields.io/badge/MCP-38%20tools-red)](https://modelcontextprotocol.io)
 
 `automaton` is a CLI-based, graph-native automation framework built in Rust, designed specifically for AI agents to create, compose, and execute modular workflows. It transforms automation from a set of fragile scripts into a structured, version-controlled, and observable substrate.
 
