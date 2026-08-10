@@ -13,11 +13,11 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.2.0-orange)](https://github.com/ishan-parihar/automaton/releases)
 [![Static Binary](https://img.shields.io/badge/build-static--musl-purple)](https://github.com/ishan-parihar/automaton/releases)
-[![MCP](https://img.shields.io/badge/MCP-38%20tools-red)](https://modelcontextprotocol.io)
+[![MCP](https://img.shields.io/badge/MCP-39%20tools-red)](https://modelcontextprotocol.io)
 
 `automaton` is a CLI-based, graph-native automation framework built in Rust, designed specifically for AI agents to create, compose, and execute modular workflows. It transforms automation from a set of fragile scripts into a structured, version-controlled, and observable substrate.
 
-By exposing its entire core through an MCP (Model Context Protocol) server with 38 precision tools, `automaton` allows LLMs to move beyond simple code generation and into the realm of **Autonomous Systems Engineering** — the same graph-level orchestration that Windmill gives human developers, delivered to Claude, Cursor, Codex, and every other agent **as a first-class tool**.
+By exposing its entire core through an MCP (Model Context Protocol) server with 39 precision tools, `automaton` allows LLMs to move beyond simple code generation and into the realm of **Autonomous Systems Engineering** — the same graph-level orchestration that Windmill gives human developers, delivered to Claude, Cursor, Codex, and every other agent **as a first-class tool**.
 
 ---
 
@@ -68,7 +68,7 @@ Traditional automation tools suffer from a critical limitation: they are designe
 ## ✨ Engineering Highlights
 
 ### 🛠 Technical Sophistication
-- **38-Tool MCP Surface**: A comprehensive API allowing agents to handle the entire lifecycle: `module_create` → `module_build` → `workflow_plan` → `flow_execute`.
+- **39-Tool MCP Surface**: A comprehensive API allowing agents to handle the entire lifecycle: `module_create` → `module_build` → `workflow_plan` → `flow_execute`.
 - **Dual-Backend Storage**: Seamlessly switches between SQLite (local-first development) and PostgreSQL (production scalability) using a unified SQL layer.
 - **High-Concurrency Engine**: Built on `Tokio` and `Futures`, the engine executes independent DAG nodes concurrently, maximizing resource utilization.
 - **Hardened Process Management**: Implements `kill_on_drop` and process group isolation to ensure that timeouts or agent crashes never leave orphan shell processes.
@@ -158,7 +158,7 @@ crates/
 ├── automaton-engine/         # Planner, DAG materializer, executor (with Parallelism)
 ├── automaton-registry/       # SQL-backed module + build + run DB (SQLite/Postgres)
 ├── automaton-graph/          # SQL-backed property graph store
-├── automaton-mcp/            # MCP server (rmcp) — 38 tools
+├── automaton-mcp/            # MCP server (rmcp) — 39 tools
 ├── automaton-runtime/        # Child process runner, retry, timeout, orphan cleanup
 ├── automaton-scheduler/      # Cron daemon (croner) — validate, create, trigger
 ├── automaton-db/             # Unified SQL layer (SQLite/Postgres)
@@ -177,7 +177,7 @@ Two-layer architecture:
 
 ## MCP Surface (for AI agents)
 
-The MCP server exposes **38 tools** across 9 categories, enabling deep substrate control:
+The MCP server exposes **39 tools** across 9 categories, enabling deep substrate control:
 
 | Category | Key Tools | Description |
 |---|---|---|
@@ -192,6 +192,46 @@ The MCP server exposes **38 tools** across 9 categories, enabling deep substrate
 | **System** | `system_health`, `capability_inventory` | System health and tool capability audit |
 | **Webhooks** | `webhook_register`, `webhook_list`, `webhook_delete` | Configuring outbound execution notifications |
 | **Secrets** | `secret_set`, `secret_get` | Managing sensitive credentials |
+
+## Why Graph-Native Architecture
+
+Most automation tools treat workflows as linear scripts. automaton treats them as **graphs**. Here is why that matters:
+
+### The Script Problem
+
+A script is a filepath. It has no structure, no dependencies, no discovery. When an AI agent needs to accomplish a task, it must:
+1. Guess which script to run
+2. Hope the script's inputs match what it has
+3. Manually chain outputs to inputs across scripts
+4. Have no way to discover alternative paths when a script fails
+
+### The Graph Solution
+
+In automaton, every module is a **node** in a property graph. Edges encode relationships: `DEPENDS_ON`, `CALLS`, `TRIGGERS`, `USES_RESOURCE`. When an agent encounters a problem:
+
+1. It queries the graph: `graph_search("github issue triage")` to discover modules
+2. It checks dependencies: `graph_pathfind(from=github.fetch, to=slack.notify)` to find a path
+3. If a step fails, it queries for alternatives: `graph_query(node=llm.summarize, edge=ALTERNATIVE)`
+4. It composes a new workflow: `workflow_plan(steps=[...])` to create a DAG
+5. It executes with telemetry: `flow_execute(id, telemetry=true)` to monitor progress
+
+The graph is persistent. The agent's knowledge accumulates. Each workflow execution adds edges to the capability graph. This is how automation evolves from fragile scripts to a **self-improving capability network**.
+
+### The DAG Execution Model
+
+```
+Design Graph (persistent)          Run Graph (materialized)
+  Module A --DEPENDS_ON--> Module B     [A] --> [B] --> [D]
+  Module B --CALLS--> Module C          [C] --------^
+  Module C --TRIGGERS--> Module D
+                    |
+            Planner + Materializer
+            (topological sort, cycle detection)
+```
+
+The Planner resolves dependencies. The Materializer flattens branching and loops into a DAG. The Executor runs independent nodes in parallel via `futures::join_all`. This is Windmill-grade orchestration, delivered as a single static binary.
+
+---
 
 ## Module Authoring
 
