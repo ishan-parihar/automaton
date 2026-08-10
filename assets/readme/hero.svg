@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+  <title id="title">automaton — AI-Native Graph Orchestration</title>
+  <desc id="desc">An AI agent assembles a workflow DAG — modules, edges and cron triggers — through a 38-tool MCP surface into a Windmill-class execution engine.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F1115"/>
+      <stop offset="1" stop-color="#171F33"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#6366F1"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="400" fill="url(#bg)"/>
+
+  <!-- left: AI agent assembling DAG -->
+  <g opacity="0.95">
+    <circle cx="210" cy="200" r="46" fill="#1B2440" stroke="#22D3EE" stroke-width="2"/>
+    <circle cx="210" cy="188" r="14" fill="#22D3EE"/>
+    <path d="M168 244 Q180 210 210 210 Q240 210 252 244 Z" fill="#22D3EE" opacity="0.85"/>
+    <!-- agent hand reaching to graph -->
+    <path d="M252 220 Q290 210 320 200" fill="none" stroke="#22D3EE" stroke-width="2" stroke-dasharray="3 3"/>
+    <text x="210" y="286" text-anchor="middle" fill="#67E8F9" font-family="monospace" font-size="11">AI agent</text>
+    <text x="210" y="302" text-anchor="middle" fill="#475569" font-family="monospace" font-size="10">claude · cursor · codex</text>
+  </g>
+
+  <!-- center: DAG graph -->
+  <g font-family="monospace" font-size="10">
+    <g filter="url(#glow)">
+      <circle cx="430" cy="150" r="24" fill="#111C33" stroke="#F59E0B" stroke-width="2"/>
+      <text x="430" y="154" text-anchor="middle" fill="#FBBF24">M1</text>
+      <circle cx="560" cy="110" r="24" fill="#111C33" stroke="#6366F1" stroke-width="2"/>
+      <text x="560" y="114" text-anchor="middle" fill="#A5B4FC">M2</text>
+      <circle cx="690" cy="150" r="24" fill="#111C33" stroke="#14B8A6" stroke-width="2"/>
+      <text x="690" y="154" text-anchor="middle" fill="#5EEAD4">M3</text>
+      <circle cx="560" cy="230" r="24" fill="#111C33" stroke="#14B8A6" stroke-width="2"/>
+      <text x="560" y="234" text-anchor="middle" fill="#5EEAD4">M4</text>
+    </g>
+    <!-- edges -->
+    <line x1="454" y1="150" x2="536" y2="118" stroke="url(#edge)" stroke-width="2"/>
+    <line x1="584" y1="118" x2="666" y2="146" stroke="url(#edge)" stroke-width="2"/>
+    <line x1="584" y1="134" x2="584" y2="206" stroke="url(#edge)" stroke-width="2"/>
+    <line x1="454" y1="170" x2="536" y2="218" stroke="url(#edge)" stroke-width="2"/>
+    <line x1="536" y1="110" x2="430" y2="140" stroke="url(#edge)" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+    <text x="492" y="126" fill="#818CF8" font-size="9">DEPENDS_ON</text>
+    <text x="628" y="140" fill="#818CF8" font-size="9">CALLS</text>
+  </g>
+
+  <!-- right: Windmill-class engine core -->
+  <g>
+    <circle cx="900" cy="190" r="70" fill="none" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="3 5" opacity="0.7"/>
+    <circle cx="900" cy="190" r="48" fill="#111C33" stroke="#6366F1" stroke-width="2"/>
+    <!-- gear teeth -->
+    <g fill="#818CF8">
+      <rect x="893" y="138" width="14" height="10" rx="2"/>
+      <rect x="893" y="232" width="14" height="10" rx="2"/>
+      <rect x="846" y="183" width="10" height="14" rx="2"/>
+      <rect x="944" y="183" width="10" height="14" rx="2"/>
+    </g>
+    <text x="900" y="196" text-anchor="middle" fill="#A5B4FC" font-family="monospace" font-size="11">DAG</text>
+    <text x="900" y="300" text-anchor="middle" fill="#67E8F9" font-family="monospace" font-size="11">38-tool MCP surface</text>
+    <text x="900" y="318" text-anchor="middle" fill="#475569" font-family="monospace" font-size="10">graph-native · cron · sqlite→pg</text>
+  </g>
+
+  <!-- bottom bar -->
+  <g font-family="monospace" fill="#94A3B8" font-size="13">
+    <text x="80" y="380">graph-native orchestration</text>
+    <text x="460" y="380">self-healing · parallel dispatch</text>
+    <text x="860" y="380">13.5 MB static binary</text>
+  </g>
+  <text x="1180" y="390" text-anchor="end" fill="#475569" font-family="monospace" font-size="10" opacity="0.6">automaton</text>
+</svg>
