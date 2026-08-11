@@ -9,6 +9,7 @@
 **The Windmill-class, graph-native automation substrate built for AI agents — not for humans.**
 
 [![Rust 1.75+](https://img.shields.io/badge/rust-1.75%2B-blue)](https://www.rust-lang.org)
+![LOC](https://img.shields.io/badge/LOC-11.7K-informational?style=flat-square)
 [![CI](https://github.com/ishan-parihar/automaton/actions/workflows/ci.yml/badge.svg)](https://github.com/ishan-parihar/automaton/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.2.0-orange)](https://github.com/ishan-parihar/automaton/releases)
