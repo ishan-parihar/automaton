@@ -377,7 +377,7 @@ export default {
 
 ## 📜 License
 
-MIT © [Ishan Parihar](https://github.com/ishan-parihar) — If you find this useful, [consider supporting](https://rzp.io/rzp/ishan-parihar)
+MIT © [Ishan Parihar](https://github.com/ishan-parihar)
 
 ---
 
