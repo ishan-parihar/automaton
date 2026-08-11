@@ -9,7 +9,8 @@
 **The Windmill-class, graph-native automation substrate built for AI agents — not for humans.**
 
 [![Rust 1.75+](https://img.shields.io/badge/rust-1.75%2B-blue)](https://www.rust-lang.org)
-![LOC](https://img.shields.io/badge/LOC-11.7K-informational?style=flat-square)
+![LOC](https://img.shields.io/badge/LOC-13.6K-informational?style=flat-square)
+<img src="https://img.shields.io/badge/Status-Active-brightgreen" alt="Status">
 [![CI](https://github.com/ishan-parihar/automaton/actions/workflows/ci.yml/badge.svg)](https://github.com/ishan-parihar/automaton/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.2.0-orange)](https://github.com/ishan-parihar/automaton/releases)
@@ -22,7 +23,7 @@ By exposing its entire core through an MCP (Model Context Protocol) server with 
 
 ---
 
-## 🆚 Why automaton instead of Windmill, cron, or agent loops?
+## Why automaton instead of Windmill, cron, or agent loops?
 
 Tools like **OpenClaw** and **hermes-agent** treat automation as an afterthought (a cron tick firing a prompt). Windmill gives developers graph orchestration — but it's a heavyweight cloud service built for human UIs. `automaton` is the missing layer: **Windmill-grade graph orchestration, agent-native.**
 
@@ -42,7 +43,7 @@ Tools like **OpenClaw** and **hermes-agent** treat automation as an afterthought
 
 ---
 
-## 🚩 The Problem: The "Scripting Ceiling"
+## The Problem: The "Scripting Ceiling"
 
 Traditional automation tools suffer from a critical limitation: they are designed for human developers to write scripts. When AI agents attempt to manage these systems, they hit a "Scripting Ceiling":
 
@@ -51,7 +52,7 @@ Traditional automation tools suffer from a critical limitation: they are designe
 - **Lack of Structural Awareness**: Agents cannot "see" the dependency graph of their automation; they can only guess based on the code.
 - **Deployment Friction**: Python/Node scripts require heavy runtimes, making deployment to edge devices or restricted VPS environments cumbersome.
 
-## 💡 The Solution: A Graph-Native Substrate
+## The Solution: A Graph-Native Substrate
 
 `automaton` replaces the "script" with a **Graph-Based Module**.
 
@@ -66,16 +67,16 @@ Traditional automation tools suffer from a critical limitation: they are designe
 
 ---
 
-## ✨ Engineering Highlights
+## Engineering Highlights
 
-### 🛠 Technical Sophistication
+### Technical Sophistication
 - **39-Tool MCP Surface**: A comprehensive API allowing agents to handle the entire lifecycle: `module_create` → `module_build` → `workflow_plan` → `flow_execute`.
 - **Dual-Backend Storage**: Seamlessly switches between SQLite (local-first development) and PostgreSQL (production scalability) using a unified SQL layer.
 - **High-Concurrency Engine**: Built on `Tokio` and `Futures`, the engine executes independent DAG nodes concurrently, maximizing resource utilization.
 - **Hardened Process Management**: Implements `kill_on_drop` and process group isolation to ensure that timeouts or agent crashes never leave orphan shell processes.
 - **Cron Scheduler**: Production-grade daemon using `croner` expressions for reliable, scheduled automation — validated and managed through the MCP surface.
 
-### 🏗 Architectural Components
+### Architectural Components
 - **The Planner**: Performs dependency discovery and topological sorting to ensure correct execution order.
 - **The Materializer**: Converts high-level flow definitions (Branching, ForLoops) into a flat, executable DAG.
 - **The Registry**: A content-addressed build cache that ensures modules are only recompiled when their source changes.
@@ -83,7 +84,7 @@ Traditional automation tools suffer from a critical limitation: they are designe
 
 ---
 
-## 🌌 Potentialities & Future Scope
+## Potentialities & Future Scope
 
 `automaton` is designed to be the "Kernel" for an Autonomous Enterprise:
 
@@ -94,7 +95,7 @@ Traditional automation tools suffer from a critical limitation: they are designe
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 ```bash
@@ -128,7 +129,7 @@ automaton postgres migrate --database-url "postgres://user:pass@host:5432/automa
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 - **Language**: Rust (Edition 2021)
 - **Async Runtime**: Tokio
 - **Graph Engine**: Petgraph
@@ -298,7 +299,7 @@ tags:
 
 ---
 
-## 🤖 Agent Integration (AXI §7)
+## Agent Integration (AXI §7)
 
 Automaton ships an installable AI agent skill that provides ambient context at session start — showing module counts, graph stats, and contextual help hints.
 
@@ -375,7 +376,7 @@ export default {
 
 ---
 
-## 📜 License
+## License
 
 MIT © [Ishan Parihar](https://github.com/ishan-parihar)
 
