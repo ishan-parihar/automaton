@@ -1,20 +1,18 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{
-    parse_macro_input, FnArg, GenericArgument, ItemFn, PathArguments, ReturnType,
-    Type,
-};
+use syn::{FnArg, GenericArgument, ItemFn, PathArguments, ReturnType, Type, parse_macro_input};
 
 /// Extract the inner type from `Result<T, E>` or anyhow::Result<T>
 /// e.g., `Result<MyOutput, anyhow::Error>` → `MyOutput`
 fn extract_result_inner(ty: &Type) -> Option<&Type> {
     if let Type::Path(type_path) = ty
         && let Some(last_seg) = type_path.path.segments.last()
-            && last_seg.ident == "Result"
-                && let PathArguments::AngleBracketed(args) = &last_seg.arguments
-                    && let Some(GenericArgument::Type(inner_ty)) = args.args.first() {
-                        return Some(inner_ty);
-                    }
+        && last_seg.ident == "Result"
+        && let PathArguments::AngleBracketed(args) = &last_seg.arguments
+        && let Some(GenericArgument::Type(inner_ty)) = args.args.first()
+    {
+        return Some(inner_ty);
+    }
     None
 }
 
@@ -31,19 +29,22 @@ pub fn automation(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     // ── Extract input type from second parameter ──
     // Signature: fn(automaton_sdk::Context, InputType) -> Result<OutputType>
-    let input_type = inputs.iter().nth(1).and_then(|arg| {
-        if let FnArg::Typed(pat_type) = arg {
-            Some(pat_type.ty.as_ref())
-        } else {
-            None
-        }
-    })
-    .unwrap_or_else(|| {
-        panic!(
-            "#[automaton] requires a second parameter for typed input, \
+    let input_type = inputs
+        .iter()
+        .nth(1)
+        .and_then(|arg| {
+            if let FnArg::Typed(pat_type) = arg {
+                Some(pat_type.ty.as_ref())
+            } else {
+                None
+            }
+        })
+        .unwrap_or_else(|| {
+            panic!(
+                "#[automaton] requires a second parameter for typed input, \
              e.g. `fn main(ctx: Context, input: MyInput)`"
-        )
-    });
+            )
+        });
 
     // ── Extract output type from `Result<T, E>` or fallback to full return type ──
     let output_type = match &input_fn.sig.output {

@@ -2,8 +2,8 @@
 //! All SQL operations go through this crate — modules, flows, jobs, secrets, triggers, graph.
 
 use automaton_core::FlowExecution;
-use sqlx::postgres::{PgPool, PgPoolOptions};
 use sqlx::Row;
+use sqlx::postgres::{PgPool, PgPoolOptions};
 
 pub struct AutomatonDb {
     pool: PgPool,
@@ -214,14 +214,17 @@ impl AutomatonDb {
         )
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r| {
-            serde_json::json!({
-                "hash": r.get::<String, _>("hash"),
-                "path": r.get::<String, _>("path"),
-                "version": r.get::<String, _>("version"),
-                "built": r.get::<bool, _>("built"),
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "hash": r.get::<String, _>("hash"),
+                    "path": r.get::<String, _>("path"),
+                    "version": r.get::<String, _>("version"),
+                    "built": r.get::<bool, _>("built"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     pub async fn mark_built(&self, path: &str) -> Result<(), sqlx::Error> {
@@ -234,7 +237,12 @@ impl AutomatonDb {
 
     // ── Job queue operations ──
 
-    pub async fn enqueue(&self, kind: &str, target: &str, args: &serde_json::Value) -> Result<i64, sqlx::Error> {
+    pub async fn enqueue(
+        &self,
+        kind: &str,
+        target: &str,
+        args: &serde_json::Value,
+    ) -> Result<i64, sqlx::Error> {
         let row = sqlx::query(
             "INSERT INTO jobs (kind, target_path, args) VALUES ($1, $2, $3) RETURNING id",
         )
@@ -282,39 +290,55 @@ impl AutomatonDb {
     pub async fn list_jobs(&self, limit: i64) -> Result<Vec<serde_json::Value>, sqlx::Error> {
         let rows = sqlx::query(
             "SELECT id, kind, target_path, args, scheduled_for, priority, running, worker_id
-             FROM jobs ORDER BY priority DESC, scheduled_for ASC LIMIT $1")
-            .bind(limit)
-            .fetch_all(&self.pool)
-            .await?;
-        Ok(rows.iter().map(|r| {
-            serde_json::json!({
-                "id": r.get::<i64, _>("id"),
-                "kind": r.get::<String, _>("kind"),
-                "target_path": r.get::<String, _>("target_path"),
-                "scheduled_for": r.get::<chrono::DateTime<chrono::Utc>, _>("scheduled_for"),
-                "priority": r.get::<i32, _>("priority"),
-                "running": r.get::<bool, _>("running"),
-                "worker_id": r.get::<Option<String>, _>("worker_id"),
+             FROM jobs ORDER BY priority DESC, scheduled_for ASC LIMIT $1",
+        )
+        .bind(limit)
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows
+            .iter()
+            .map(|r| {
+                serde_json::json!({
+                    "id": r.get::<i64, _>("id"),
+                    "kind": r.get::<String, _>("kind"),
+                    "target_path": r.get::<String, _>("target_path"),
+                    "scheduled_for": r.get::<chrono::DateTime<chrono::Utc>, _>("scheduled_for"),
+                    "priority": r.get::<i32, _>("priority"),
+                    "running": r.get::<bool, _>("running"),
+                    "worker_id": r.get::<Option<String>, _>("worker_id"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     // ── Run operations ──
 
-    pub async fn record_run(&self, id: &str, target: &str, kind: &str, args: &serde_json::Value) -> Result<(), sqlx::Error> {
-        sqlx::query(
-            "INSERT INTO runs (id, target_path, kind, args) VALUES ($1, $2, $3, $4)",
-        )
-        .bind(id)
-        .bind(target)
-        .bind(kind)
-        .bind(args)
-        .execute(&self.pool)
-        .await?;
+    pub async fn record_run(
+        &self,
+        id: &str,
+        target: &str,
+        kind: &str,
+        args: &serde_json::Value,
+    ) -> Result<(), sqlx::Error> {
+        sqlx::query("INSERT INTO runs (id, target_path, kind, args) VALUES ($1, $2, $3, $4)")
+            .bind(id)
+            .bind(target)
+            .bind(kind)
+            .bind(args)
+            .execute(&self.pool)
+            .await?;
         Ok(())
     }
 
-    pub async fn update_run(&self, id: &str, state: &str, result: Option<&serde_json::Value>, error: Option<&str>, attempt: u32, duration_ms: i64) -> Result<(), sqlx::Error> {
+    pub async fn update_run(
+        &self,
+        id: &str,
+        state: &str,
+        result: Option<&serde_json::Value>,
+        error: Option<&str>,
+        attempt: u32,
+        duration_ms: i64,
+    ) -> Result<(), sqlx::Error> {
         sqlx::query(
             "UPDATE runs SET state = $1, result = $2, error = $3, attempt = $4, duration_ms = $5, completed_at = NOW() WHERE id = $6",
         )
@@ -329,7 +353,11 @@ impl AutomatonDb {
         Ok(())
     }
 
-    pub async fn get_runs(&self, target: &str, limit: i64) -> Result<Vec<serde_json::Value>, sqlx::Error> {
+    pub async fn get_runs(
+        &self,
+        target: &str,
+        limit: i64,
+    ) -> Result<Vec<serde_json::Value>, sqlx::Error> {
         let rows = sqlx::query(
             "SELECT id, target_path, kind, state, attempt, error, duration_ms, created_at, completed_at
              FROM runs WHERE target_path = $1 ORDER BY created_at DESC LIMIT $2",
@@ -338,23 +366,31 @@ impl AutomatonDb {
         .bind(limit)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r| {
-            serde_json::json!({
-                "id": r.get::<String, _>("id"),
-                "target": r.get::<String, _>("target_path"),
-                "kind": r.get::<String, _>("kind"),
-                "state": r.get::<String, _>("state"),
-                "attempt": r.get::<i32, _>("attempt"),
-                "error": r.get::<Option<String>, _>("error"),
-                "duration_ms": r.get::<i64, _>("duration_ms"),
-                "created_at": r.get::<chrono::DateTime<chrono::Utc>, _>("created_at"),
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "id": r.get::<String, _>("id"),
+                    "target": r.get::<String, _>("target_path"),
+                    "kind": r.get::<String, _>("kind"),
+                    "state": r.get::<String, _>("state"),
+                    "attempt": r.get::<i32, _>("attempt"),
+                    "error": r.get::<Option<String>, _>("error"),
+                    "duration_ms": r.get::<i64, _>("duration_ms"),
+                    "created_at": r.get::<chrono::DateTime<chrono::Utc>, _>("created_at"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     // ── Graph operations ──
 
-    pub async fn add_node(&self, kind: &str, name: &str, props: &serde_json::Value) -> Result<String, sqlx::Error> {
+    pub async fn add_node(
+        &self,
+        kind: &str,
+        name: &str,
+        props: &serde_json::Value,
+    ) -> Result<String, sqlx::Error> {
         let id = uuid::Uuid::new_v4().to_string();
         sqlx::query("INSERT INTO graph_nodes (id, kind, name, properties) VALUES ($1, $2, $3, $4)")
             .bind(&id)
@@ -366,7 +402,12 @@ impl AutomatonDb {
         Ok(id)
     }
 
-    pub async fn add_edge(&self, source: &str, target: &str, kind: &str) -> Result<String, sqlx::Error> {
+    pub async fn add_edge(
+        &self,
+        source: &str,
+        target: &str,
+        kind: &str,
+    ) -> Result<String, sqlx::Error> {
         let id = uuid::Uuid::new_v4().to_string();
         sqlx::query("INSERT INTO graph_edges (id, source, target, kind) VALUES ($1, $2, $3, $4)")
             .bind(&id)
@@ -378,7 +419,10 @@ impl AutomatonDb {
         Ok(id)
     }
 
-    pub async fn get_nodes(&self, kind: Option<&str>) -> Result<Vec<serde_json::Value>, sqlx::Error> {
+    pub async fn get_nodes(
+        &self,
+        kind: Option<&str>,
+    ) -> Result<Vec<serde_json::Value>, sqlx::Error> {
         let rows = if let Some(k) = kind {
             sqlx::query("SELECT id, kind, name, properties, created_at FROM graph_nodes WHERE kind = $1 ORDER BY created_at")
                 .bind(k)
@@ -387,32 +431,46 @@ impl AutomatonDb {
             sqlx::query("SELECT id, kind, name, properties, created_at FROM graph_nodes ORDER BY created_at")
                 .fetch_all(&self.pool).await?
         };
-        Ok(rows.into_iter().map(|r| {
-            serde_json::json!({
-                "id": r.get::<String, _>("id"),
-                "kind": r.get::<String, _>("kind"),
-                "name": r.get::<String, _>("name"),
-                "properties": r.get::<serde_json::Value, _>("properties"),
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "id": r.get::<String, _>("id"),
+                    "kind": r.get::<String, _>("kind"),
+                    "name": r.get::<String, _>("name"),
+                    "properties": r.get::<serde_json::Value, _>("properties"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     pub async fn get_edges(&self) -> Result<Vec<serde_json::Value>, sqlx::Error> {
-        let rows = sqlx::query("SELECT id, source, target, kind, properties FROM graph_edges ORDER BY created_at")
-            .fetch_all(&self.pool).await?;
-        Ok(rows.into_iter().map(|r| {
-            serde_json::json!({
-                "id": r.get::<String, _>("id"),
-                "source": r.get::<String, _>("source"),
-                "target": r.get::<String, _>("target"),
-                "kind": r.get::<String, _>("kind"),
+        let rows = sqlx::query(
+            "SELECT id, source, target, kind, properties FROM graph_edges ORDER BY created_at",
+        )
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "id": r.get::<String, _>("id"),
+                    "source": r.get::<String, _>("source"),
+                    "target": r.get::<String, _>("target"),
+                    "kind": r.get::<String, _>("kind"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     // ── Variable / Secret operations ──
 
-    pub async fn set_variable(&self, path: &str, value: &str, is_secret: bool) -> Result<(), sqlx::Error> {
+    pub async fn set_variable(
+        &self,
+        path: &str,
+        value: &str,
+        is_secret: bool,
+    ) -> Result<(), sqlx::Error> {
         sqlx::query(
             "INSERT INTO variables (path, value, is_secret) VALUES ($1, $2, $3)
              ON CONFLICT (path) DO UPDATE SET value = EXCLUDED.value, is_secret = EXCLUDED.is_secret",
@@ -439,18 +497,26 @@ impl AutomatonDb {
         )
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r| {
-            serde_json::json!({
-                "path": r.get::<String, _>("path"),
-                "is_secret": r.get::<bool, _>("is_secret"),
-                "description": r.get::<Option<String>, _>("description"),
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "path": r.get::<String, _>("path"),
+                    "is_secret": r.get::<bool, _>("is_secret"),
+                    "description": r.get::<Option<String>, _>("description"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     // ── Resource operations ──
 
-    pub async fn set_resource(&self, path: &str, rtype: &str, value: &serde_json::Value) -> Result<(), sqlx::Error> {
+    pub async fn set_resource(
+        &self,
+        path: &str,
+        rtype: &str,
+        value: &serde_json::Value,
+    ) -> Result<(), sqlx::Error> {
         sqlx::query(
             "INSERT INTO resources (path, resource_type, value) VALUES ($1, $2, $3)
              ON CONFLICT (path) DO UPDATE SET resource_type = EXCLUDED.resource_type, value = EXCLUDED.value",
@@ -464,28 +530,40 @@ impl AutomatonDb {
     }
 
     pub async fn get_resource(&self, path: &str) -> Result<Option<serde_json::Value>, sqlx::Error> {
-        let row = sqlx::query("SELECT resource_type, value, description FROM resources WHERE path = $1")
-            .bind(path)
-            .fetch_optional(&self.pool)
-            .await?;
-        Ok(row.map(|r| serde_json::json!({
-            "type": r.get::<String, _>("resource_type"),
-            "value": r.get::<serde_json::Value, _>("value"),
-        })))
+        let row =
+            sqlx::query("SELECT resource_type, value, description FROM resources WHERE path = $1")
+                .bind(path)
+                .fetch_optional(&self.pool)
+                .await?;
+        Ok(row.map(|r| {
+            serde_json::json!({
+                "type": r.get::<String, _>("resource_type"),
+                "value": r.get::<serde_json::Value, _>("value"),
+            })
+        }))
     }
 
-    pub async fn list_resources(&self, rtype: Option<&str>) -> Result<Vec<serde_json::Value>, sqlx::Error> {
+    pub async fn list_resources(
+        &self,
+        rtype: Option<&str>,
+    ) -> Result<Vec<serde_json::Value>, sqlx::Error> {
         let rows = if let Some(t) = rtype {
             sqlx::query("SELECT path, resource_type, description FROM resources WHERE resource_type = $1 ORDER BY path")
                 .bind(t).fetch_all(&self.pool).await?
         } else {
             sqlx::query("SELECT path, resource_type, description FROM resources ORDER BY path")
-                .fetch_all(&self.pool).await?
+                .fetch_all(&self.pool)
+                .await?
         };
-        Ok(rows.into_iter().map(|r| serde_json::json!({
-            "path": r.get::<String, _>("path"),
-            "type": r.get::<String, _>("resource_type"),
-        })).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "path": r.get::<String, _>("path"),
+                    "type": r.get::<String, _>("resource_type"),
+                })
+            })
+            .collect())
     }
 
     // ── Flow operations ──
@@ -515,7 +593,7 @@ impl AutomatonDb {
 
     pub async fn get_flow(&self, path: &str) -> Result<Option<serde_json::Value>, sqlx::Error> {
         let rows = sqlx::query(
-            "SELECT hash, path, version, flow_definition, created_at FROM flows WHERE path = $1"
+            "SELECT hash, path, version, flow_definition, created_at FROM flows WHERE path = $1",
         )
         .bind(path)
         .fetch_all(&self.pool)
@@ -531,18 +609,19 @@ impl AutomatonDb {
     }
 
     pub async fn list_flows(&self) -> Result<Vec<serde_json::Value>, sqlx::Error> {
-        let rows = sqlx::query(
-            "SELECT hash, path, version, created_at FROM flows ORDER BY path"
-        )
-        .fetch_all(&self.pool)
-        .await?;
-        Ok(rows.iter().map(|r| {
-            serde_json::json!({
-                "id": r.get::<String, _>("hash"),
-                "path": r.get::<String, _>("path"),
-                "version": r.get::<String, _>("version"),
+        let rows = sqlx::query("SELECT hash, path, version, created_at FROM flows ORDER BY path")
+            .fetch_all(&self.pool)
+            .await?;
+        Ok(rows
+            .iter()
+            .map(|r| {
+                serde_json::json!({
+                    "id": r.get::<String, _>("hash"),
+                    "path": r.get::<String, _>("path"),
+                    "version": r.get::<String, _>("version"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     pub async fn delete_flow(&self, path: &str) -> Result<(), sqlx::Error> {
@@ -555,7 +634,13 @@ impl AutomatonDb {
 
     // ── Trigger operations ──
 
-    pub async fn create_trigger(&self, target: &str, is_flow: bool, ttype: &str, config: &serde_json::Value) -> Result<String, sqlx::Error> {
+    pub async fn create_trigger(
+        &self,
+        target: &str,
+        is_flow: bool,
+        ttype: &str,
+        config: &serde_json::Value,
+    ) -> Result<String, sqlx::Error> {
         let id = uuid::Uuid::new_v4().to_string();
         sqlx::query(
             "INSERT INTO triggers (id, target_path, target_is_flow, trigger_type, config) VALUES ($1, $2, $3, $4, $5)",
@@ -570,24 +655,37 @@ impl AutomatonDb {
         Ok(id)
     }
 
-    pub async fn get_enabled_triggers(&self, ttype: &str) -> Result<Vec<serde_json::Value>, sqlx::Error> {
+    pub async fn get_enabled_triggers(
+        &self,
+        ttype: &str,
+    ) -> Result<Vec<serde_json::Value>, sqlx::Error> {
         let rows = sqlx::query(
             "SELECT id, target_path, target_is_flow, config, created_at FROM triggers WHERE enabled AND trigger_type = $1",
         )
         .bind(ttype)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r| serde_json::json!({
-            "id": r.get::<String, _>("id"),
-            "target_path": r.get::<String, _>("target_path"),
-            "target_is_flow": r.get::<bool, _>("target_is_flow"),
-            "config": r.get::<serde_json::Value, _>("config"),
-        })).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "id": r.get::<String, _>("id"),
+                    "target_path": r.get::<String, _>("target_path"),
+                    "target_is_flow": r.get::<bool, _>("target_is_flow"),
+                    "config": r.get::<serde_json::Value, _>("config"),
+                })
+            })
+            .collect())
     }
 
     // ── Build recording ──
 
-    pub async fn record_build(&self, hash: &str, artifact_path: &str, mode: &str) -> Result<(), sqlx::Error> {
+    pub async fn record_build(
+        &self,
+        hash: &str,
+        artifact_path: &str,
+        mode: &str,
+    ) -> Result<(), sqlx::Error> {
         sqlx::query(
             "INSERT INTO builds (hash, artifact_path, build_mode, success) VALUES ($1, $2, $3, true)
              ON CONFLICT (hash) DO UPDATE SET artifact_path = $2, build_mode = $3"
@@ -602,21 +700,27 @@ impl AutomatonDb {
 
     // ── Webhook management ──
 
-    pub async fn register_webhook(&self, target_url: &str, event: &str, secret: Option<&str>) -> Result<String, sqlx::Error> {
+    pub async fn register_webhook(
+        &self,
+        target_url: &str,
+        event: &str,
+        secret: Option<&str>,
+    ) -> Result<String, sqlx::Error> {
         let id = uuid::Uuid::new_v4().to_string();
-        sqlx::query(
-            "INSERT INTO webhooks (id, target_url, event, secret) VALUES ($1, $2, $3, $4)",
-        )
-        .bind(&id)
-        .bind(target_url)
-        .bind(event)
-        .bind(secret)
-        .execute(&self.pool)
-        .await?;
+        sqlx::query("INSERT INTO webhooks (id, target_url, event, secret) VALUES ($1, $2, $3, $4)")
+            .bind(&id)
+            .bind(target_url)
+            .bind(event)
+            .bind(secret)
+            .execute(&self.pool)
+            .await?;
         Ok(id)
     }
 
-    pub async fn list_webhooks(&self, event: Option<&str>) -> Result<Vec<serde_json::Value>, sqlx::Error> {
+    pub async fn list_webhooks(
+        &self,
+        event: Option<&str>,
+    ) -> Result<Vec<serde_json::Value>, sqlx::Error> {
         let rows = if let Some(ev) = event {
             sqlx::query(
                 "SELECT id, target_url, event, secret, enabled, created_at FROM webhooks WHERE event = $1 ORDER BY created_at",
@@ -631,16 +735,19 @@ impl AutomatonDb {
             .fetch_all(&self.pool)
             .await?
         };
-        Ok(rows.into_iter().map(|r| {
-            serde_json::json!({
-                "id": r.get::<String, _>("id"),
-                "target_url": r.get::<String, _>("target_url"),
-                "event": r.get::<String, _>("event"),
-                "secret": r.get::<Option<String>, _>("secret"),
-                "enabled": r.get::<bool, _>("enabled"),
-                "created_at": r.get::<chrono::DateTime<chrono::Utc>, _>("created_at"),
+        Ok(rows
+            .into_iter()
+            .map(|r| {
+                serde_json::json!({
+                    "id": r.get::<String, _>("id"),
+                    "target_url": r.get::<String, _>("target_url"),
+                    "event": r.get::<String, _>("event"),
+                    "secret": r.get::<Option<String>, _>("secret"),
+                    "enabled": r.get::<bool, _>("enabled"),
+                    "created_at": r.get::<chrono::DateTime<chrono::Utc>, _>("created_at"),
+                })
             })
-        }).collect())
+            .collect())
     }
 
     pub async fn delete_webhook(&self, id: &str) -> Result<(), sqlx::Error> {
@@ -672,7 +779,11 @@ impl AutomatonDb {
         Ok(())
     }
 
-    pub async fn list_executions(&self, limit: i64, offset: i64) -> Result<Vec<serde_json::Value>, sqlx::Error> {
+    pub async fn list_executions(
+        &self,
+        limit: i64,
+        offset: i64,
+    ) -> Result<Vec<serde_json::Value>, sqlx::Error> {
         let rows = sqlx::query(
             "SELECT id, flow_path, dag_label, status, steps, started_at, completed_at, total_duration_ms FROM executions ORDER BY started_at DESC LIMIT $1 OFFSET $2",
         )
@@ -694,30 +805,41 @@ impl AutomatonDb {
         }).collect())
     }
 
-    pub async fn get_trigger_by_id(&self, id: &str) -> Result<Option<serde_json::Value>, sqlx::Error> {
+    pub async fn get_trigger_by_id(
+        &self,
+        id: &str,
+    ) -> Result<Option<serde_json::Value>, sqlx::Error> {
         let rows = sqlx::query(
             "SELECT id, target_path, target_is_flow, trigger_type, config, enabled, created_at FROM triggers WHERE id = $1",
         )
         .bind(id)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().next().map(|r| serde_json::json!({
-            "id": r.get::<String, _>("id"),
-            "target_path": r.get::<String, _>("target_path"),
-            "target_is_flow": r.get::<bool, _>("target_is_flow"),
-            "trigger_type": r.get::<String, _>("trigger_type"),
-            "config": r.get::<serde_json::Value, _>("config"),
-            "enabled": r.get::<bool, _>("enabled"),
-        })))
+        Ok(rows.into_iter().next().map(|r| {
+            serde_json::json!({
+                "id": r.get::<String, _>("id"),
+                "target_path": r.get::<String, _>("target_path"),
+                "target_is_flow": r.get::<bool, _>("target_is_flow"),
+                "trigger_type": r.get::<String, _>("trigger_type"),
+                "config": r.get::<serde_json::Value, _>("config"),
+                "enabled": r.get::<bool, _>("enabled"),
+            })
+        }))
     }
 }
 
 #[async_trait::async_trait]
 impl automaton_core::backend::RegistryBackend for AutomatonDb {
-    async fn register_module(&self, path: &str, source: &str, manifest: &automaton_core::AutomationManifest) -> automaton_core::Result<automaton_core::ModuleId> {
+    async fn register_module(
+        &self,
+        path: &str,
+        source: &str,
+        manifest: &automaton_core::AutomationManifest,
+    ) -> automaton_core::Result<automaton_core::ModuleId> {
         let manifest_val = serde_json::to_value(manifest).unwrap_or_default();
         let deps: Vec<automaton_core::DepRef> = manifest.depends_on.clone();
-        self.register_script(path, source, &manifest.version, &manifest_val, &deps).await
+        self.register_script(path, source, &manifest.version, &manifest_val, &deps)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         let hash = automaton_core::ContentHash::compute(source.as_bytes());
         let version = semver::Version::parse(&manifest.version)
@@ -730,30 +852,41 @@ impl automaton_core::backend::RegistryBackend for AutomatonDb {
         })
     }
 
-    async fn get_module(&self, path: &str) -> automaton_core::Result<Option<automaton_core::AutomationModule>> {
-        let script = self.get_script(path).await
+    async fn get_module(
+        &self,
+        path: &str,
+    ) -> automaton_core::Result<Option<automaton_core::AutomationModule>> {
+        let script = self
+            .get_script(path)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         match script {
             Some(v) => {
-                let source = v.get("source").and_then(|s| s.as_str()).unwrap_or("").to_string();
+                let source = v
+                    .get("source")
+                    .and_then(|s| s.as_str())
+                    .unwrap_or("")
+                    .to_string();
                 let hash_str = v.get("hash").and_then(|h| h.as_str()).unwrap_or("");
                 let manifest_val = v.get("manifest").cloned().unwrap_or_default();
-                let manifest: automaton_core::AutomationManifest = serde_json::from_value(manifest_val)
-                    .unwrap_or_else(|_| automaton_core::AutomationManifest {
-                        name: path.to_string(),
-                        version: "0.1.0".to_string(),
-                        entry: "main".to_string(),
-                        summary: None,
-                        description: None,
-                        timeout_ms: 30_000,
-                        retry: None,
-                        permissions: vec![],
-                        depends_on: vec![],
-                        resources: vec![],
-                        tags: vec![],
-                        require_approval: false,
-                        inputs_schema: automaton_core::SchemaMode::Auto,
-                        outputs_schema: automaton_core::SchemaMode::Auto,
+                let manifest: automaton_core::AutomationManifest =
+                    serde_json::from_value(manifest_val).unwrap_or_else(|_| {
+                        automaton_core::AutomationManifest {
+                            name: path.to_string(),
+                            version: "0.1.0".to_string(),
+                            entry: "main".to_string(),
+                            summary: None,
+                            description: None,
+                            timeout_ms: 30_000,
+                            retry: None,
+                            permissions: vec![],
+                            depends_on: vec![],
+                            resources: vec![],
+                            tags: vec![],
+                            require_approval: false,
+                            inputs_schema: automaton_core::SchemaMode::Auto,
+                            outputs_schema: automaton_core::SchemaMode::Auto,
+                        }
                     });
                 let built = v.get("built").and_then(|b| b.as_bool()).unwrap_or(false);
                 Ok(Some(automaton_core::AutomationModule {
@@ -767,8 +900,14 @@ impl automaton_core::backend::RegistryBackend for AutomatonDb {
         }
     }
 
-    async fn record_run(&self, run_id: &str, module_path: &str, input: &serde_json::Value) -> automaton_core::Result<()> {
-        self.record_run(run_id, module_path, "backend", input).await
+    async fn record_run(
+        &self,
+        run_id: &str,
+        module_path: &str,
+        input: &serde_json::Value,
+    ) -> automaton_core::Result<()> {
+        self.record_run(run_id, module_path, "backend", input)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
@@ -781,7 +920,8 @@ impl automaton_core::backend::RegistryBackend for AutomatonDb {
         error_msg: Option<&str>,
         attempt: u32,
     ) -> automaton_core::Result<()> {
-        self.update_run(run_id, status, output, error_msg, attempt, 0).await
+        self.update_run(run_id, status, output, error_msg, attempt, 0)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
@@ -792,90 +932,146 @@ impl automaton_core::backend::RegistryBackend for AutomatonDb {
         std::path::PathBuf::from("./data/builds")
     }
 
-    async fn resolve_references(&self, val: &serde_json::Value) -> automaton_core::Result<serde_json::Value> {
+    async fn resolve_references(
+        &self,
+        val: &serde_json::Value,
+    ) -> automaton_core::Result<serde_json::Value> {
         Ok(val.clone())
     }
 
-    async fn enqueue_job(&self, kind: &str, target: &str, args: &serde_json::Value) -> automaton_core::Result<i64> {
-        self.enqueue(kind, target, args).await
+    async fn enqueue_job(
+        &self,
+        kind: &str,
+        target: &str,
+        args: &serde_json::Value,
+    ) -> automaton_core::Result<i64> {
+        self.enqueue(kind, target, args)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn dequeue_job(&self, worker_id: &str) -> automaton_core::Result<Option<serde_json::Value>> {
-        self.dequeue(worker_id).await
+    async fn dequeue_job(
+        &self,
+        worker_id: &str,
+    ) -> automaton_core::Result<Option<serde_json::Value>> {
+        self.dequeue(worker_id)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
     async fn complete_job(&self, job_id: i64) -> automaton_core::Result<()> {
-        self.complete_job(job_id, "").await
+        self.complete_job(job_id, "")
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
 
     async fn list_jobs(&self, limit: i64) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.list_jobs(limit).await
+        self.list_jobs(limit)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn create_trigger(&self, target: &str, is_flow: bool, ttype: &str, config: &serde_json::Value) -> automaton_core::Result<String> {
-        self.create_trigger(target, is_flow, ttype, config).await
+    async fn create_trigger(
+        &self,
+        target: &str,
+        is_flow: bool,
+        ttype: &str,
+        config: &serde_json::Value,
+    ) -> automaton_core::Result<String> {
+        self.create_trigger(target, is_flow, ttype, config)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn get_enabled_triggers(&self, ttype: &str) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.get_enabled_triggers(ttype).await
+    async fn get_enabled_triggers(
+        &self,
+        ttype: &str,
+    ) -> automaton_core::Result<Vec<serde_json::Value>> {
+        self.get_enabled_triggers(ttype)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
     async fn get_variable(&self, path: &str) -> automaton_core::Result<Option<String>> {
-        self.get_variable(path).await
+        self.get_variable(path)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn set_variable(&self, path: &str, value: &str, is_secret: bool) -> automaton_core::Result<()> {
-        self.set_variable(path, value, is_secret).await
+    async fn set_variable(
+        &self,
+        path: &str,
+        value: &str,
+        is_secret: bool,
+    ) -> automaton_core::Result<()> {
+        self.set_variable(path, value, is_secret)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
 
     async fn list_variables(&self) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.list_variables().await
+        self.list_variables()
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
     async fn get_resource(&self, path: &str) -> automaton_core::Result<Option<serde_json::Value>> {
-        self.get_resource(path).await
+        self.get_resource(path)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn set_resource(&self, path: &str, resource_type: &str, value: &serde_json::Value) -> automaton_core::Result<()> {
-        self.set_resource(path, resource_type, value).await
+    async fn set_resource(
+        &self,
+        path: &str,
+        resource_type: &str,
+        value: &serde_json::Value,
+    ) -> automaton_core::Result<()> {
+        self.set_resource(path, resource_type, value)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
 
-    async fn list_resources(&self, resource_type: Option<&str>) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.list_resources(resource_type).await
+    async fn list_resources(
+        &self,
+        resource_type: Option<&str>,
+    ) -> automaton_core::Result<Vec<serde_json::Value>> {
+        self.list_resources(resource_type)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn store_flow(&self, path: &str, version: &str, definition: &serde_json::Value, summary: Option<&str>, on_failure: Option<&str>) -> automaton_core::Result<String> {
-        self.store_flow(path, version, definition, summary, on_failure).await
+    async fn store_flow(
+        &self,
+        path: &str,
+        version: &str,
+        definition: &serde_json::Value,
+        summary: Option<&str>,
+        on_failure: Option<&str>,
+    ) -> automaton_core::Result<String> {
+        self.store_flow(path, version, definition, summary, on_failure)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
     async fn get_flow(&self, path: &str) -> automaton_core::Result<Option<serde_json::Value>> {
-        self.get_flow(path).await
+        self.get_flow(path)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
     async fn list_flows(&self) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.list_flows().await
+        self.list_flows()
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
     async fn delete_flow(&self, path: &str) -> automaton_core::Result<()> {
-        self.delete_flow(path).await
+        self.delete_flow(path)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
@@ -883,58 +1079,100 @@ impl automaton_core::backend::RegistryBackend for AutomatonDb {
     // ── Extra trait methods that delegate to existing self methods ──
 
     async fn list_modules(&self) -> automaton_core::Result<Vec<(String, String, String, bool)>> {
-        let scripts = self.list_scripts().await
+        let scripts = self
+            .list_scripts()
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
-        Ok(scripts.into_iter().map(|v| {
-            let path = v.get("path").and_then(|s| s.as_str()).unwrap_or("").to_string();
-            let version = v.get("version").and_then(|s| s.as_str()).unwrap_or("0.1.0").to_string();
-            let hash = v.get("hash").and_then(|s| s.as_str()).unwrap_or("").to_string();
-            let built = v.get("built").and_then(|b| b.as_bool()).unwrap_or(false);
-            (path, version, hash, built)
-        }).collect())
+        Ok(scripts
+            .into_iter()
+            .map(|v| {
+                let path = v
+                    .get("path")
+                    .and_then(|s| s.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let version = v
+                    .get("version")
+                    .and_then(|s| s.as_str())
+                    .unwrap_or("0.1.0")
+                    .to_string();
+                let hash = v
+                    .get("hash")
+                    .and_then(|s| s.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let built = v.get("built").and_then(|b| b.as_bool()).unwrap_or(false);
+                (path, version, hash, built)
+            })
+            .collect())
     }
 
     async fn mark_built(&self, path: &str) -> automaton_core::Result<()> {
-        self.mark_built(path).await
+        self.mark_built(path)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
 
-    async fn record_build(&self, hash: &str, artifact_path: &str, mode: &str) -> automaton_core::Result<()> {
-        self.record_build(hash, artifact_path, mode).await
+    async fn record_build(
+        &self,
+        hash: &str,
+        artifact_path: &str,
+        mode: &str,
+    ) -> automaton_core::Result<()> {
+        self.record_build(hash, artifact_path, mode)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
 
     async fn get_runs(&self, module_path: &str) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.get_runs(module_path, 50).await
+        self.get_runs(module_path, 50)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn register_webhook(&self, target_url: &str, event: &str, secret: Option<&str>) -> automaton_core::Result<String> {
-        self.register_webhook(target_url, event, secret).await
+    async fn register_webhook(
+        &self,
+        target_url: &str,
+        event: &str,
+        secret: Option<&str>,
+    ) -> automaton_core::Result<String> {
+        self.register_webhook(target_url, event, secret)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
-    async fn list_webhooks(&self, event: Option<&str>) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.list_webhooks(event).await
+    async fn list_webhooks(
+        &self,
+        event: Option<&str>,
+    ) -> automaton_core::Result<Vec<serde_json::Value>> {
+        self.list_webhooks(event)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 
     async fn delete_webhook(&self, id: &str) -> automaton_core::Result<()> {
-        self.delete_webhook(id).await
+        self.delete_webhook(id)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
 
     async fn store_execution(&self, execution: &FlowExecution) -> automaton_core::Result<()> {
-        self.store_execution(execution).await
+        self.store_execution(execution)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))?;
         Ok(())
     }
 
-    async fn list_executions(&self, limit: i64, offset: i64) -> automaton_core::Result<Vec<serde_json::Value>> {
-        self.list_executions(limit, offset).await
+    async fn list_executions(
+        &self,
+        limit: i64,
+        offset: i64,
+    ) -> automaton_core::Result<Vec<serde_json::Value>> {
+        self.list_executions(limit, offset)
+            .await
             .map_err(|e| automaton_core::AutomatonError::Database(e.to_string()))
     }
 }

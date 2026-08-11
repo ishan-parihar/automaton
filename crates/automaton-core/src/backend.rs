@@ -9,7 +9,12 @@ use crate::*;
 pub trait RegistryBackend: Send + Sync {
     // ── Module management ──
 
-    async fn register_module(&self, path: &str, source: &str, manifest: &AutomationManifest) -> Result<ModuleId>;
+    async fn register_module(
+        &self,
+        path: &str,
+        source: &str,
+        manifest: &AutomationManifest,
+    ) -> Result<ModuleId>;
 
     async fn get_module(&self, path: &str) -> Result<Option<AutomationModule>>;
 
@@ -20,7 +25,12 @@ pub trait RegistryBackend: Send + Sync {
     async fn record_build(&self, hash: &str, artifact_path: &str, mode: &str) -> Result<()>;
 
     /// Record a module execution run
-    async fn record_run(&self, run_id: &str, module_path: &str, input: &serde_json::Value) -> Result<()>;
+    async fn record_run(
+        &self,
+        run_id: &str,
+        module_path: &str,
+        input: &serde_json::Value,
+    ) -> Result<()>;
 
     /// Update run status after execution
     async fn update_run(
@@ -54,7 +64,13 @@ pub trait RegistryBackend: Send + Sync {
 
     // ── Triggers ──
 
-    async fn create_trigger(&self, target: &str, is_flow: bool, ttype: &str, config: &serde_json::Value) -> Result<String>;
+    async fn create_trigger(
+        &self,
+        target: &str,
+        is_flow: bool,
+        ttype: &str,
+        config: &serde_json::Value,
+    ) -> Result<String>;
 
     async fn get_enabled_triggers(&self, ttype: &str) -> Result<Vec<serde_json::Value>>;
 
@@ -70,13 +86,25 @@ pub trait RegistryBackend: Send + Sync {
 
     async fn get_resource(&self, path: &str) -> Result<Option<serde_json::Value>>;
 
-    async fn set_resource(&self, path: &str, resource_type: &str, value: &serde_json::Value) -> Result<()>;
+    async fn set_resource(
+        &self,
+        path: &str,
+        resource_type: &str,
+        value: &serde_json::Value,
+    ) -> Result<()>;
 
     async fn list_resources(&self, resource_type: Option<&str>) -> Result<Vec<serde_json::Value>>;
 
     // ── Flows ──
 
-    async fn store_flow(&self, path: &str, version: &str, definition: &serde_json::Value, summary: Option<&str>, on_failure: Option<&str>) -> Result<String>;
+    async fn store_flow(
+        &self,
+        path: &str,
+        version: &str,
+        definition: &serde_json::Value,
+        summary: Option<&str>,
+        on_failure: Option<&str>,
+    ) -> Result<String>;
 
     async fn get_flow(&self, path: &str) -> Result<Option<serde_json::Value>>;
 
@@ -86,7 +114,12 @@ pub trait RegistryBackend: Send + Sync {
 
     // ── Webhook management ──
 
-    async fn register_webhook(&self, target_url: &str, event: &str, secret: Option<&str>) -> Result<String>;
+    async fn register_webhook(
+        &self,
+        target_url: &str,
+        event: &str,
+        secret: Option<&str>,
+    ) -> Result<String>;
 
     async fn list_webhooks(&self, event: Option<&str>) -> Result<Vec<serde_json::Value>>;
 

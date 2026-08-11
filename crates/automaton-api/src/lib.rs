@@ -5,13 +5,13 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use axum::{
+    Json, Router,
     body::Body,
     extract::{Path, Query, State},
     http::StatusCode,
     middleware,
     response::{IntoResponse, Response},
     routing::{get, post},
-    Json, Router,
 };
 use serde_json::Value;
 use tokio::sync::Semaphore;
@@ -38,12 +38,11 @@ async fn auth_middleware(
         .map(|s| s.to_string());
     let token = auth_header.ok_or(StatusCode::UNAUTHORIZED)?;
 
-    use jsonwebtoken::{decode, DecodingKey, Validation, Algorithm};
+    use jsonwebtoken::{Algorithm, DecodingKey, Validation, decode};
     let key = DecodingKey::from_secret(jwt_secret.as_bytes());
     let mut validation = Validation::new(Algorithm::HS256);
     validation.validate_exp = true;
-    decode::<serde_json::Value>(&token, &key, &validation)
-        .map_err(|_| StatusCode::UNAUTHORIZED)?;
+    decode::<serde_json::Value>(&token, &key, &validation).map_err(|_| StatusCode::UNAUTHORIZED)?;
 
     Ok(next.run(request).await)
 }
@@ -72,12 +71,13 @@ async fn rate_limit_middleware(
 }
 
 /// Create a router with all API endpoints, backed by the given DB and build cache dir.
-pub fn create_router(
-    db: Arc<automaton_postgres::AutomatonDb>,
-    data_dir: PathBuf,
-) -> Router {
+pub fn create_router(db: Arc<automaton_postgres::AutomatonDb>, data_dir: PathBuf) -> Router {
     let build_cache_dir = data_dir.join("builds");
-    let app_state = AppState { db, build_cache_dir, data_dir };
+    let app_state = AppState {
+        db,
+        build_cache_dir,
+        data_dir,
+    };
 
     let max_concurrent = std::env::var("MAX_CONCURRENT_REQUESTS")
         .ok()
@@ -154,10 +154,7 @@ async fn health_handler() -> Response {
 
 // ── Scripts ──
 
-async fn create_script(
-    State(state): State<Arc<AppState>>,
-    Json(body): Json<Value>,
-) -> Response {
+async fn create_script(State(state): State<Arc<AppState>>, Json(body): Json<Value>) -> Response {
     let path = body["path"].as_str().unwrap_or_default().to_string();
     let source = body["source"].as_str().unwrap_or_default().to_string();
     if path.is_empty() || source.is_empty() {
@@ -169,12 +166,22 @@ async fn create_script(
         "summary": body.get("summary"),
         "timeout_ms": body.get("timeout_ms").and_then(|v| v.as_u64()).unwrap_or(30000),
     });
-    let deps: Vec<DepRef> = body.get("depends_on")
+    let deps: Vec<DepRef> = body
+        .get("depends_on")
         .and_then(|d| d.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str()).map(DepRef::new).collect())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str())
+                .map(DepRef::new)
+                .collect()
+        })
         .unwrap_or_default();
 
-    match state.db.register_script(&path, &source, "0.1.0", &manifest, &deps).await {
+    match state
+        .db
+        .register_script(&path, &source, "0.1.0", &manifest, &deps)
+        .await
+    {
         Ok(hash) => ok_json(serde_json::json!({"hash": hash, "path": path})),
         Err(e) => err_msg(StatusCode::INTERNAL_SERVER_ERROR, &e.to_string()),
     }
@@ -187,10 +194,7 @@ async fn list_scripts(State(state): State<Arc<AppState>>) -> Response {
     }
 }
 
-async fn get_script(
-    State(state): State<Arc<AppState>>,
-    Path(path): Path<String>,
-) -> Response {
+async fn get_script(State(state): State<Arc<AppState>>, Path(path): Path<String>) -> Response {
     match state.db.get_script(&path).await {
         Ok(Some(script)) => ok_json(script),
         Ok(None) => err_msg(StatusCode::NOT_FOUND, "Script not found"),
@@ -198,10 +202,7 @@ async fn get_script(
     }
 }
 
-async fn build_script(
-    State(state): State<Arc<AppState>>,
-    Path(path): Path<String>,
-) -> Response {
+async fn build_script(State(state): State<Arc<AppState>>, Path(path): Path<String>) -> Response {
     // Look up the script source
     let script = match state.db.get_script(&path).await {
         Ok(Some(s)) => s,
@@ -217,7 +218,11 @@ async fn build_script(
     // Build manifest from script metadata
     let manifest = automaton_core::AutomationManifest {
         name: path.clone(),
-        version: script.get("version").and_then(|v| v.as_str()).unwrap_or("0.1.0").to_string(),
+        version: script
+            .get("version")
+            .and_then(|v| v.as_str())
+            .unwrap_or("0.1.0")
+            .to_string(),
         entry: "main".to_string(),
         summary: None,
         description: None,
@@ -235,13 +240,11 @@ async fn build_script(
     // Build using cache
     let build_cache = automaton_build::BuildCache::new(&state.data_dir);
     match build_cache.build_rust(&path, source, &manifest) {
-        Ok((hash, binary_path)) => {
-            ok_json(serde_json::json!({
-                "status": "built",
-                "hash": hash,
-                "binary": binary_path.to_string_lossy(),
-            }))
-        }
+        Ok((hash, binary_path)) => ok_json(serde_json::json!({
+            "status": "built",
+            "hash": hash,
+            "binary": binary_path.to_string_lossy(),
+        })),
         Err(e) => {
             // Parse diagnostics for structured error feedback
             let diagnostics = automaton_build::BuildCache::diagnose(&e);
@@ -259,7 +262,11 @@ async fn run_script(
     Path(path): Path<String>,
     Json(args): Json<Value>,
 ) -> Response {
-    let args = if args.is_null() { serde_json::json!({}) } else { args };
+    let args = if args.is_null() {
+        serde_json::json!({})
+    } else {
+        args
+    };
     match state.db.enqueue("script", &path, &args).await {
         Ok(job_id) => ok_json(serde_json::json!({"status": "queued", "job_id": job_id})),
         Err(e) => err_msg(StatusCode::INTERNAL_SERVER_ERROR, &e.to_string()),
@@ -268,12 +275,12 @@ async fn run_script(
 
 // ── Jobs ──
 
-async fn enqueue_job(
-    State(state): State<Arc<AppState>>,
-    Json(body): Json<Value>,
-) -> Response {
+async fn enqueue_job(State(state): State<Arc<AppState>>, Json(body): Json<Value>) -> Response {
     let target = body["target_path"].as_str().unwrap_or_default();
-    let kind = body.get("kind").and_then(|v| v.as_str()).unwrap_or("script");
+    let kind = body
+        .get("kind")
+        .and_then(|v| v.as_str())
+        .unwrap_or("script");
     let args = body.get("args").cloned().unwrap_or(serde_json::json!({}));
     if target.is_empty() {
         return err_msg(StatusCode::BAD_REQUEST, "target_path is required");
@@ -284,10 +291,7 @@ async fn enqueue_job(
     }
 }
 
-async fn list_jobs(
-    State(state): State<Arc<AppState>>,
-    Query(params): Query<Value>,
-) -> Response {
+async fn list_jobs(State(state): State<Arc<AppState>>, Query(params): Query<Value>) -> Response {
     let limit = params.get("limit").and_then(|v| v.as_i64()).unwrap_or(50);
     match state.db.list_jobs(limit).await {
         Ok(jobs) => ok_json(serde_json::json!({"jobs": jobs})),
@@ -297,10 +301,7 @@ async fn list_jobs(
 
 // ── Runs ──
 
-async fn list_runs(
-    State(state): State<Arc<AppState>>,
-    Query(params): Query<Value>,
-) -> Response {
+async fn list_runs(State(state): State<Arc<AppState>>, Query(params): Query<Value>) -> Response {
     let path = params.get("path").and_then(|v| v.as_str()).unwrap_or("");
     let limit = params.get("limit").and_then(|v| v.as_i64()).unwrap_or(50);
     match state.db.get_runs(path, limit).await {
@@ -311,13 +312,13 @@ async fn list_runs(
 
 // ── Variables ──
 
-async fn set_variable(
-    State(state): State<Arc<AppState>>,
-    Json(body): Json<Value>,
-) -> Response {
+async fn set_variable(State(state): State<Arc<AppState>>, Json(body): Json<Value>) -> Response {
     let path = body["path"].as_str().unwrap_or_default();
     let value = body["value"].as_str().unwrap_or_default();
-    let is_secret = body.get("is_secret").and_then(|v| v.as_bool()).unwrap_or(true);
+    let is_secret = body
+        .get("is_secret")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(true);
     if path.is_empty() {
         return err_msg(StatusCode::BAD_REQUEST, "path is required");
     }
@@ -327,10 +328,7 @@ async fn set_variable(
     }
 }
 
-async fn get_variable(
-    State(state): State<Arc<AppState>>,
-    Path(path): Path<String>,
-) -> Response {
+async fn get_variable(State(state): State<Arc<AppState>>, Path(path): Path<String>) -> Response {
     match state.db.get_variable(&path).await {
         Ok(Some(val)) => ok_json(serde_json::json!({"path": path, "value": val})),
         Ok(None) => err_msg(StatusCode::NOT_FOUND, "Variable not found"),
@@ -347,15 +345,15 @@ async fn list_variables(State(state): State<Arc<AppState>>) -> Response {
 
 // ── Resources ──
 
-async fn set_resource(
-    State(state): State<Arc<AppState>>,
-    Json(body): Json<Value>,
-) -> Response {
+async fn set_resource(State(state): State<Arc<AppState>>, Json(body): Json<Value>) -> Response {
     let path = body["path"].as_str().unwrap_or_default();
     let rtype = body["resource_type"].as_str().unwrap_or_default();
     let value = body.get("value").cloned().unwrap_or(serde_json::json!({}));
     if path.is_empty() || rtype.is_empty() {
-        return err_msg(StatusCode::BAD_REQUEST, "path and resource_type are required");
+        return err_msg(
+            StatusCode::BAD_REQUEST,
+            "path and resource_type are required",
+        );
     }
     match state.db.set_resource(path, rtype, &value).await {
         Ok(_) => ok_json(serde_json::json!({"status": "stored", "path": path})),
@@ -363,10 +361,7 @@ async fn set_resource(
     }
 }
 
-async fn get_resource(
-    State(state): State<Arc<AppState>>,
-    Path(path): Path<String>,
-) -> Response {
+async fn get_resource(State(state): State<Arc<AppState>>, Path(path): Path<String>) -> Response {
     match state.db.get_resource(&path).await {
         Ok(Some(res)) => ok_json(res),
         Ok(None) => err_msg(StatusCode::NOT_FOUND, "Resource not found"),
@@ -383,12 +378,12 @@ async fn list_resources(State(state): State<Arc<AppState>>) -> Response {
 
 // ── Triggers ──
 
-async fn create_trigger(
-    State(state): State<Arc<AppState>>,
-    Json(body): Json<Value>,
-) -> Response {
+async fn create_trigger(State(state): State<Arc<AppState>>, Json(body): Json<Value>) -> Response {
     let target = body["target_path"].as_str().unwrap_or_default();
-    let ttype = body.get("trigger_type").and_then(|v| v.as_str()).unwrap_or("cron");
+    let ttype = body
+        .get("trigger_type")
+        .and_then(|v| v.as_str())
+        .unwrap_or("cron");
     let config = body.get("config").cloned().unwrap_or(serde_json::json!({}));
     if target.is_empty() {
         return err_msg(StatusCode::BAD_REQUEST, "target_path is required");
@@ -420,18 +415,28 @@ async fn event_handler(
     }
 
     // Verify event_source match if configured on the trigger
-    let expected_source = trigger.get("config")
+    let expected_source = trigger
+        .get("config")
         .and_then(|c| c.get("event_source"))
         .and_then(|v| v.as_str());
     if let Some(expected) = expected_source {
-        let received = args.get("event_source").and_then(|v| v.as_str()).unwrap_or("");
+        let received = args
+            .get("event_source")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
         if received != expected {
             return err_msg(StatusCode::BAD_REQUEST, "Event source mismatch");
         }
     }
 
-    let target_path = trigger.get("target_path").and_then(|v| v.as_str()).unwrap_or("");
-    let target_is_flow = trigger.get("target_is_flow").and_then(|v| v.as_bool()).unwrap_or(false);
+    let target_path = trigger
+        .get("target_path")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    let target_is_flow = trigger
+        .get("target_is_flow")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
     let kind = if target_is_flow { "flow" } else { "script" };
 
     match state.db.enqueue(kind, target_path, &args).await {
@@ -464,18 +469,28 @@ async fn webhook_handler(
     }
 
     // Verify webhook secret if configured
-    let expected_secret = trigger.get("config")
+    let expected_secret = trigger
+        .get("config")
         .and_then(|c| c.get("webhook_secret"))
         .and_then(|v| v.as_str());
     if let Some(expected) = expected_secret {
-        let received = args.get("webhook_secret").and_then(|v| v.as_str()).unwrap_or("");
+        let received = args
+            .get("webhook_secret")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
         if received != expected {
             return err_msg(StatusCode::UNAUTHORIZED, "Invalid webhook secret");
         }
     }
 
-    let target_path = trigger.get("target_path").and_then(|v| v.as_str()).unwrap_or("");
-    let target_is_flow = trigger.get("target_is_flow").and_then(|v| v.as_bool()).unwrap_or(false);
+    let target_path = trigger
+        .get("target_path")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    let target_is_flow = trigger
+        .get("target_is_flow")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
     let kind = if target_is_flow { "flow" } else { "script" };
 
     match state.db.enqueue(kind, target_path, &args).await {
@@ -490,9 +505,21 @@ async fn webhook_handler(
 
 async fn list_triggers(State(state): State<Arc<AppState>>) -> Response {
     // Return all triggers regardless of type
-    let cron = state.db.get_enabled_triggers("cron").await.unwrap_or_default();
-    let webhook = state.db.get_enabled_triggers("webhook").await.unwrap_or_default();
-    let event = state.db.get_enabled_triggers("event").await.unwrap_or_default();
+    let cron = state
+        .db
+        .get_enabled_triggers("cron")
+        .await
+        .unwrap_or_default();
+    let webhook = state
+        .db
+        .get_enabled_triggers("webhook")
+        .await
+        .unwrap_or_default();
+    let event = state
+        .db
+        .get_enabled_triggers("event")
+        .await
+        .unwrap_or_default();
 
     let mut all = cron;
     all.extend(webhook);
@@ -509,13 +536,13 @@ async fn list_triggers(State(state): State<Arc<AppState>>) -> Response {
 
 // ── Graph ──
 
-async fn add_node(
-    State(state): State<Arc<AppState>>,
-    Json(body): Json<Value>,
-) -> Response {
+async fn add_node(State(state): State<Arc<AppState>>, Json(body): Json<Value>) -> Response {
     let kind = body["kind"].as_str().unwrap_or_default();
     let name = body["name"].as_str().unwrap_or_default();
-    let props = body.get("properties").cloned().unwrap_or(serde_json::json!({}));
+    let props = body
+        .get("properties")
+        .cloned()
+        .unwrap_or(serde_json::json!({}));
     if kind.is_empty() || name.is_empty() {
         return err_msg(StatusCode::BAD_REQUEST, "kind and name are required");
     }
@@ -525,15 +552,15 @@ async fn add_node(
     }
 }
 
-async fn add_edge(
-    State(state): State<Arc<AppState>>,
-    Json(body): Json<Value>,
-) -> Response {
+async fn add_edge(State(state): State<Arc<AppState>>, Json(body): Json<Value>) -> Response {
     let source = body["source"].as_str().unwrap_or_default();
     let target = body["target"].as_str().unwrap_or_default();
     let kind = body["kind"].as_str().unwrap_or_default();
     if source.is_empty() || target.is_empty() || kind.is_empty() {
-        return err_msg(StatusCode::BAD_REQUEST, "source, target, and kind are required");
+        return err_msg(
+            StatusCode::BAD_REQUEST,
+            "source, target, and kind are required",
+        );
     }
     match state.db.add_edge(source, target, kind).await {
         Ok(id) => ok_json(serde_json::json!({"id": id})),

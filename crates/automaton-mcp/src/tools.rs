@@ -18,17 +18,32 @@ pub fn schema_for<T: JsonSchema>() -> Arc<serde_json::Map<String, serde_json::Va
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct ModuleCreateParams {
-    #[schemars(title = "Path", description = "Dot-separated module path, e.g. github.issue_triage")]
+    #[schemars(
+        title = "Path",
+        description = "Dot-separated module path, e.g. github.issue_triage"
+    )]
     pub path: String,
     #[schemars(title = "Source", description = "Rust source code for the module")]
     pub source: String,
-    #[schemars(title = "Version", description = "Semver version string (default: 0.1.0)")]
+    #[schemars(
+        title = "Version",
+        description = "Semver version string (default: 0.1.0)"
+    )]
     pub version: Option<String>,
-    #[schemars(title = "Summary", description = "One-line description of what the module does")]
+    #[schemars(
+        title = "Summary",
+        description = "One-line description of what the module does"
+    )]
     pub summary: Option<String>,
-    #[schemars(title = "Dependencies", description = "List of module paths this module depends on")]
+    #[schemars(
+        title = "Dependencies",
+        description = "List of module paths this module depends on"
+    )]
     pub depends_on: Option<Vec<String>>,
-    #[schemars(title = "Timeout", description = "Execution timeout in milliseconds (default: 30000)")]
+    #[schemars(
+        title = "Timeout",
+        description = "Execution timeout in milliseconds (default: 30000)"
+    )]
     pub timeout_ms: Option<u64>,
 }
 
@@ -37,7 +52,10 @@ pub struct ModuleCreateParams {
 pub struct ModuleBuildParams {
     #[schemars(title = "Path", description = "Dot-separated module path to build")]
     pub path: String,
-    #[schemars(title = "Mode", description = "Build mode: \"release\" or \"debug\" (default: release)")]
+    #[schemars(
+        title = "Mode",
+        description = "Build mode: \"release\" or \"debug\" (default: release)"
+    )]
     pub mode: Option<String>,
 }
 
@@ -60,20 +78,35 @@ pub struct ModuleDeprecateParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct ModuleSearchParams {
-    #[schemars(title = "Query", description = "Substring to match against module paths")]
+    #[schemars(
+        title = "Query",
+        description = "Substring to match against module paths"
+    )]
     pub query: String,
-    #[schemars(title = "Limit", description = "Maximum results to return (default: 20)")]
+    #[schemars(
+        title = "Limit",
+        description = "Maximum results to return (default: 20)"
+    )]
     pub limit: Option<usize>,
 }
 
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct ModuleTemplateParams {
-    #[schemars(title = "Path", description = "Dot-separated module path for the new module")]
+    #[schemars(
+        title = "Path",
+        description = "Dot-separated module path for the new module"
+    )]
     pub path: String,
-    #[schemars(title = "Pattern", description = "Template pattern name (e.g. \"echo\", \"http\", \"cron\")")]
+    #[schemars(
+        title = "Pattern",
+        description = "Template pattern name (e.g. \"echo\", \"http\", \"cron\")"
+    )]
     pub pattern: String,
-    #[schemars(title = "Description", description = "One-line description of the module")]
+    #[schemars(
+        title = "Description",
+        description = "One-line description of the module"
+    )]
     pub description: Option<String>,
 }
 
@@ -81,9 +114,15 @@ pub struct ModuleTemplateParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct WorkflowPlanParams {
-    #[schemars(title = "Start", description = "Starting module path for workflow planning")]
+    #[schemars(
+        title = "Start",
+        description = "Starting module path for workflow planning"
+    )]
     pub start: String,
-    #[schemars(title = "Max Depth", description = "Maximum dependency traversal depth (default: 10)")]
+    #[schemars(
+        title = "Max Depth",
+        description = "Maximum dependency traversal depth (default: 10)"
+    )]
     pub max_depth: Option<usize>,
 }
 
@@ -91,13 +130,19 @@ pub struct WorkflowPlanParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct GraphQueryParams {
-    #[schemars(title = "Kind", description = "Filter by node kind: module, workflow, trigger, resource, run")]
+    #[schemars(
+        title = "Kind",
+        description = "Filter by node kind: module, workflow, trigger, resource, run"
+    )]
     pub kind: Option<String>,
     #[schemars(title = "Limit", description = "Maximum nodes to return")]
     pub limit: Option<u32>,
     #[schemars(title = "Offset", description = "Pagination offset")]
     pub offset: Option<u32>,
-    #[schemars(title = "Properties", description = "Filter by JSON property key-value pairs")]
+    #[schemars(
+        title = "Properties",
+        description = "Filter by JSON property key-value pairs"
+    )]
     pub properties: Option<HashMap<String, Value>>,
 }
 
@@ -117,7 +162,10 @@ pub struct GraphAddEdgeParams {
     pub source: String,
     #[schemars(title = "Target", description = "Target node ID")]
     pub target: String,
-    #[schemars(title = "Kind", description = "Edge kind: DEPENDS_ON, CALLS, TRIGGERS, USES_RESOURCE, EMITS, CONSUMES, BLOCKED_BY, ALTERNATIVE_TO, UPGRADES, DERIVED_FROM")]
+    #[schemars(
+        title = "Kind",
+        description = "Edge kind: DEPENDS_ON, CALLS, TRIGGERS, USES_RESOURCE, EMITS, CONSUMES, BLOCKED_BY, ALTERNATIVE_TO, UPGRADES, DERIVED_FROM"
+    )]
     pub kind: String,
 }
 
@@ -125,13 +173,19 @@ pub struct GraphAddEdgeParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct FlowCreateParams {
-    #[schemars(title = "Path", description = "Dot-separated flow path, e.g. deploy.pipeline")]
+    #[schemars(
+        title = "Path",
+        description = "Dot-separated flow path, e.g. deploy.pipeline"
+    )]
     pub path: String,
     #[schemars(title = "Steps", description = "JSON array of flow step definitions")]
     pub steps: serde_json::Value,
     #[schemars(title = "Summary", description = "One-line description of the flow")]
     pub summary: Option<String>,
-    #[schemars(title = "On Failure", description = "Failure strategy: \"abort\", \"skip\", or \"retry\"")]
+    #[schemars(
+        title = "On Failure",
+        description = "Failure strategy: \"abort\", \"skip\", or \"retry\""
+    )]
     pub on_failure: Option<String>,
 }
 
@@ -148,9 +202,15 @@ pub struct FlowShowParams {
 pub struct ScheduleCreateParams {
     #[schemars(title = "Target Path", description = "Module or flow path to schedule")]
     pub target_path: String,
-    #[schemars(title = "Schedule", description = "Cron expression, e.g. \"0 */6 * * *\"")]
+    #[schemars(
+        title = "Schedule",
+        description = "Cron expression, e.g. \"0 */6 * * *\""
+    )]
     pub schedule: String,
-    #[schemars(title = "Args", description = "Optional JSON arguments passed to the target on each run")]
+    #[schemars(
+        title = "Args",
+        description = "Optional JSON arguments passed to the target on each run"
+    )]
     pub args: Option<serde_json::Value>,
 }
 
@@ -165,11 +225,20 @@ pub struct ScheduleValidateParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct SecretSetParams {
-    #[schemars(title = "Path", description = "Dot-separated secret path, e.g. github.token")]
+    #[schemars(
+        title = "Path",
+        description = "Dot-separated secret path, e.g. github.token"
+    )]
     pub path: String,
-    #[schemars(title = "Value", description = "Secret value to store (encrypted at rest)")]
+    #[schemars(
+        title = "Value",
+        description = "Secret value to store (encrypted at rest)"
+    )]
     pub value: String,
-    #[schemars(title = "Description", description = "Optional human-readable note about this secret")]
+    #[schemars(
+        title = "Description",
+        description = "Optional human-readable note about this secret"
+    )]
     pub description: Option<String>,
 }
 
@@ -184,11 +253,20 @@ pub struct SecretGetParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct ResourceBindParams {
-    #[schemars(title = "Path", description = "Dot-separated resource path, e.g. db.main")]
+    #[schemars(
+        title = "Path",
+        description = "Dot-separated resource path, e.g. db.main"
+    )]
     pub path: String,
-    #[schemars(title = "Resource Type", description = "Resource type: postgresql, slack, github, openai, http, aws")]
+    #[schemars(
+        title = "Resource Type",
+        description = "Resource type: postgresql, slack, github, openai, http, aws"
+    )]
     pub resource_type: String,
-    #[schemars(title = "Value", description = "JSON config for the resource (connection string, API key, etc.)")]
+    #[schemars(
+        title = "Value",
+        description = "JSON config for the resource (connection string, API key, etc.)"
+    )]
     pub value: serde_json::Value,
 }
 
@@ -200,7 +278,10 @@ pub struct JobQueueParams {
     pub target_path: String,
     #[schemars(title = "Args", description = "Optional JSON arguments for the job")]
     pub args: Option<serde_json::Value>,
-    #[schemars(title = "Kind", description = "Job kind: \"script\", \"flow\", or \"module\" (default: script)")]
+    #[schemars(
+        title = "Kind",
+        description = "Job kind: \"script\", \"flow\", or \"module\" (default: script)"
+    )]
     pub kind: Option<String>,
 }
 
@@ -218,7 +299,10 @@ pub struct FlowExecuteParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct RunLogsParams {
-    #[schemars(title = "Module Path", description = "Filter runs by module path (omit for all)")]
+    #[schemars(
+        title = "Module Path",
+        description = "Filter runs by module path (omit for all)"
+    )]
     pub module_path: Option<String>,
     #[schemars(title = "Limit", description = "Maximum runs to return (default: 20)")]
     pub limit: Option<usize>,
@@ -240,7 +324,10 @@ pub struct GraphSummarizeParams {}
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct RegistrySearchParams {
-    #[schemars(title = "Query", description = "Substring to match against registered module paths")]
+    #[schemars(
+        title = "Query",
+        description = "Substring to match against registered module paths"
+    )]
     pub query: String,
 }
 
@@ -248,7 +335,10 @@ pub struct RegistrySearchParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct SearchParams {
-    #[schemars(title = "Query", description = "Text query to search graph node names and properties")]
+    #[schemars(
+        title = "Query",
+        description = "Text query to search graph node names and properties"
+    )]
     pub query: String,
 }
 
@@ -259,7 +349,10 @@ pub struct TimeRangeParams {
     pub start: String,
     #[schemars(title = "End", description = "ISO 8601 end timestamp")]
     pub end: String,
-    #[schemars(title = "Kind", description = "Filter by node kind: module, workflow, trigger, resource, run")]
+    #[schemars(
+        title = "Kind",
+        description = "Filter by node kind: module, workflow, trigger, resource, run"
+    )]
     pub kind: Option<String>,
 }
 
@@ -267,11 +360,20 @@ pub struct TimeRangeParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct WebhookRegisterParams {
-    #[schemars(title = "URL", description = "HTTPS endpoint to receive webhook POST requests")]
+    #[schemars(
+        title = "URL",
+        description = "HTTPS endpoint to receive webhook POST requests"
+    )]
     pub url: String,
-    #[schemars(title = "Event", description = "Event type to subscribe to, e.g. \"module.built\", \"flow.completed\"")]
+    #[schemars(
+        title = "Event",
+        description = "Event type to subscribe to, e.g. \"module.built\", \"flow.completed\""
+    )]
     pub event: String,
-    #[schemars(title = "Secret", description = "Optional shared secret for HMAC signature verification")]
+    #[schemars(
+        title = "Secret",
+        description = "Optional shared secret for HMAC signature verification"
+    )]
     pub secret: Option<String>,
 }
 
@@ -290,10 +392,16 @@ pub struct WebhookDeleteParams {
 #[derive(serde::Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct FlowExecuteTelemetryParams {
-    #[schemars(title = "Path", description = "Dot-separated flow path to execute with telemetry")]
+    #[schemars(
+        title = "Path",
+        description = "Dot-separated flow path to execute with telemetry"
+    )]
     pub path: String,
     #[schemars(title = "Input", description = "JSON input payload passed to the flow")]
     pub input: Option<serde_json::Value>,
-    #[schemars(title = "Progress Token", description = "MCP progress token for receiving step-by-step notifications")]
+    #[schemars(
+        title = "Progress Token",
+        description = "MCP progress token for receiving step-by-step notifications"
+    )]
     pub progress_token: Option<String>,
 }

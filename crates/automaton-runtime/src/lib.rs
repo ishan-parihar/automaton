@@ -60,8 +60,9 @@ impl Runtime {
             Ok(Ok(output)) => {
                 if output.status.success() {
                     let stdout = String::from_utf8_lossy(&output.stdout);
-                    serde_json::from_str(&stdout)
-                        .map_err(|e| AutomatonError::ExecutionFailed(format!("Invalid JSON output: {e}")))
+                    serde_json::from_str(&stdout).map_err(|e| {
+                        AutomatonError::ExecutionFailed(format!("Invalid JSON output: {e}"))
+                    })
                 } else {
                     let stderr = String::from_utf8_lossy(&output.stderr);
                     Err(AutomatonError::ExecutionFailed(format!(
@@ -71,7 +72,9 @@ impl Runtime {
                     )))
                 }
             }
-            Ok(Err(e)) => Err(AutomatonError::ExecutionFailed(format!("Process error: {e}"))),
+            Ok(Err(e)) => Err(AutomatonError::ExecutionFailed(format!(
+                "Process error: {e}"
+            ))),
             Err(_) => Err(AutomatonError::Timeout(timeout_ms)),
         }
     }

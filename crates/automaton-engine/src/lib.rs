@@ -8,8 +8,8 @@ use automaton_core::*;
 use automaton_graph::GraphStore;
 use automaton_runtime::Runtime;
 use futures::future::join_all;
-use petgraph::graph::DiGraph;
 use petgraph::algo::toposort;
+use petgraph::graph::DiGraph;
 use petgraph::prelude::*;
 
 /// Options for planning a workflow.
@@ -22,7 +22,11 @@ pub struct PlanOptions {
 
 impl Default for PlanOptions {
     fn default() -> Self {
-        Self { max_depth: 10, include_alternatives: false, dry_run: false }
+        Self {
+            max_depth: 10,
+            include_alternatives: false,
+            dry_run: false,
+        }
     }
 }
 
@@ -35,7 +39,11 @@ pub struct Engine {
 
 impl Engine {
     pub fn new(backend: Arc<dyn RegistryBackend>, graph: GraphStore, runtime: Runtime) -> Self {
-        Self { backend, graph, runtime }
+        Self {
+            backend,
+            graph,
+            runtime,
+        }
     }
 
     pub fn backend(&self) -> &Arc<dyn RegistryBackend> {
@@ -52,7 +60,10 @@ impl Engine {
 
     /// Plan a workflow: discover the dependency graph from the registry.
     pub async fn plan(&self, start_module: &str, options: &PlanOptions) -> Result<RunGraph> {
-        let has_module = self.backend.get_module(start_module).await?
+        let has_module = self
+            .backend
+            .get_module(start_module)
+            .await?
             .ok_or_else(|| AutomatonError::ModuleNotFound(start_module.to_string()))?;
         let _ = has_module;
 
@@ -67,11 +78,23 @@ impl Engine {
             }
 
             if let Some(mod_data) = self.backend.get_module(&path).await? {
-                let deps: Vec<String> = mod_data.manifest.depends_on.iter().map(|d| d.name.clone()).collect();
+                let deps: Vec<String> = mod_data
+                    .manifest
+                    .depends_on
+                    .iter()
+                    .map(|d| d.name.clone())
+                    .collect();
 
                 let node = ModuleNode {
-                    id: format!("{}-{}", path.replace('.', "-"),
-                        uuid::Uuid::new_v4().to_string().split('-').next().unwrap_or("0")),
+                    id: format!(
+                        "{}-{}",
+                        path.replace('.', "-"),
+                        uuid::Uuid::new_v4()
+                            .to_string()
+                            .split('-')
+                            .next()
+                            .unwrap_or("0")
+                    ),
                     module_id: ModuleId {
                         path: path.clone(),
                         version: semver::Version::parse(&mod_data.manifest.version)
@@ -128,9 +151,10 @@ impl Engine {
             };
             for dep in &module.depends_on {
                 if let Some(found) = run_graph.modules.iter().find(|m| m.module_id.path == *dep)
-                    && let Some(source_idx) = node_indices.get(&found.id) {
-                        dag.add_edge(*source_idx, target_idx, ());
-                    }
+                    && let Some(source_idx) = node_indices.get(&found.id)
+                {
+                    dag.add_edge(*source_idx, target_idx, ());
+                }
             }
         }
 
@@ -139,7 +163,11 @@ impl Engine {
             Err(_) => return Err(AutomatonError::CyclicDependency),
         }
 
-        Ok(ExecutableDag { graph: dag, node_indices, run_graph_id: run_graph.id.clone() })
+        Ok(ExecutableDag {
+            graph: dag,
+            node_indices,
+            run_graph_id: run_graph.id.clone(),
+        })
     }
 
     /// Execute a materialized DAG with level-based parallelism.
@@ -148,13 +176,14 @@ impl Engine {
     /// Input templates like `${module_path}` or `${module_path.field}` are resolved
     /// against upstream results before execution.
     pub async fn execute(&self, mut dag: ExecutableDag) -> Result<RunResult> {
-        let order = toposort(&dag.graph, None)
-            .map_err(|_| AutomatonError::CyclicDependency)?;
+        let order = toposort(&dag.graph, None).map_err(|_| AutomatonError::CyclicDependency)?;
 
         // Compute topological levels (max depth from root nodes)
         let mut levels: HashMap<NodeIndex, usize> = HashMap::new();
         for &node_idx in &order {
-            let lvl = dag.graph.neighbors_directed(node_idx, Incoming)
+            let lvl = dag
+                .graph
+                .neighbors_directed(node_idx, Incoming)
                 .filter_map(|incoming| levels.get(&incoming))
                 .max()
                 .map(|l| l + 1)
@@ -185,55 +214,85 @@ impl Engine {
             let mut resolved_inputs = Vec::with_capacity(group.len());
             for &node_idx in group {
                 let input = &dag.graph[node_idx].input;
-                let with_vars = self.backend.resolve_references(input)
+                let with_vars = self
+                    .backend
+                    .resolve_references(input)
                     .await
                     .unwrap_or_else(|_| input.clone());
                 let resolved = resolve_state_refs(&with_vars, &flow_state);
                 resolved_inputs.push(resolved);
             }
 
-            let futs: Vec<_> = group.iter().zip(resolved_inputs.iter()).map(|(&node_idx, resolved_input)| {
-                let exec_id = dag.graph[node_idx].id.clone();
-                let module_path = dag.graph[node_idx].module_name.clone();
-                let input = resolved_input.clone();
-                let retry = dag.graph[node_idx].retry.clone();
-                let timeout = dag.graph[node_idx].timeout_ms;
-                let build_cache_dir = build_cache_dir.clone();
+            let futs: Vec<_> = group
+                .iter()
+                .zip(resolved_inputs.iter())
+                .map(|(&node_idx, resolved_input)| {
+                    let exec_id = dag.graph[node_idx].id.clone();
+                    let module_path = dag.graph[node_idx].module_name.clone();
+                    let input = resolved_input.clone();
+                    let retry = dag.graph[node_idx].retry.clone();
+                    let timeout = dag.graph[node_idx].timeout_ms;
+                    let build_cache_dir = build_cache_dir.clone();
 
-                async move {
-                    tracing::info!(module = %module_path, "Executing module");
+                    async move {
+                        tracing::info!(module = %module_path, "Executing module");
 
-                    let binary_path = build_cache_dir.join(module_path.replace('.', "_"));
+                        let binary_path = build_cache_dir.join(module_path.replace('.', "_"));
 
-                    if binary_path.exists() {
-                        let result = if let Some(retry_cfg) = &retry {
-                            self.runtime.run_with_retry(&binary_path, &input, retry_cfg, timeout).await
+                        if binary_path.exists() {
+                            let result = if let Some(retry_cfg) = &retry {
+                                self.runtime
+                                    .run_with_retry(&binary_path, &input, retry_cfg, timeout)
+                                    .await
+                            } else {
+                                self.runtime.run_binary(&binary_path, &input, timeout).await
+                            };
+                            (node_idx, exec_id, module_path, result)
                         } else {
-                            self.runtime.run_binary(&binary_path, &input, timeout).await
-                        };
-                        (node_idx, exec_id, module_path, result)
-                    } else {
-                        (node_idx, exec_id, module_path, Err(AutomatonError::Other("No compiled binary".into())))
+                            (
+                                node_idx,
+                                exec_id,
+                                module_path,
+                                Err(AutomatonError::Other("No compiled binary".into())),
+                            )
+                        }
                     }
-                }
-            }).collect();
+                })
+                .collect();
 
-            let outcomes: Vec<(NodeIndex, String, String, std::result::Result<serde_json::Value, AutomatonError>)> = join_all(futs).await;
+            let outcomes: Vec<(
+                NodeIndex,
+                String,
+                String,
+                std::result::Result<serde_json::Value, AutomatonError>,
+            )> = join_all(futs).await;
 
             for (node_idx, exec_id, module_path, result) in outcomes {
                 match result {
                     Ok(output) => {
                         tracing::info!(module = %module_path, "Completed");
-                        let _ = self.backend.record_run(&exec_id, &module_path, &serde_json::json!({})).await;
-                        let _ = self.backend.update_run(&exec_id, "completed", Some(&output), None, 1).await;
+                        let _ = self
+                            .backend
+                            .record_run(&exec_id, &module_path, &serde_json::json!({}))
+                            .await;
+                        let _ = self
+                            .backend
+                            .update_run(&exec_id, "completed", Some(&output), None, 1)
+                            .await;
                         states.insert(node_idx, ExecutionState::Completed(output.clone()));
                         flow_state.insert(module_path, output);
                     }
                     Err(e) => {
                         let err_msg = e.to_string();
                         tracing::error!(module = %module_path, error = %err_msg, "Failed");
-                        let _ = self.backend.record_run(&exec_id, &module_path, &serde_json::json!({})).await;
-                        let _ = self.backend.update_run(&exec_id, "failed", None, Some(&err_msg), 1).await;
+                        let _ = self
+                            .backend
+                            .record_run(&exec_id, &module_path, &serde_json::json!({}))
+                            .await;
+                        let _ = self
+                            .backend
+                            .update_run(&exec_id, "failed", None, Some(&err_msg), 1)
+                            .await;
                         states.insert(node_idx, ExecutionState::Failed(err_msg.clone()));
                         flow_state.insert(module_path, serde_json::json!({"error": err_msg}));
                     }
@@ -257,14 +316,17 @@ impl Engine {
 
 /// Resolve state references of the form `${module_path}` or `${module_path.field}`
 /// in a JSON value, using the accumulated flow_state from completed modules.
-pub fn resolve_state_refs(val: &serde_json::Value, state: &HashMap<String, serde_json::Value>) -> serde_json::Value {
+pub fn resolve_state_refs(
+    val: &serde_json::Value,
+    state: &HashMap<String, serde_json::Value>,
+) -> serde_json::Value {
     match val {
         serde_json::Value::String(s) => {
             if s.starts_with("${") && s.ends_with("}") {
-                let inner = &s[2..s.len()-1];
+                let inner = &s[2..s.len() - 1];
                 if let Some(dot_pos) = inner.find('.') {
                     let module_part = &inner[..dot_pos];
-                    let field_part = &inner[dot_pos+1..];
+                    let field_part = &inner[dot_pos + 1..];
                     if let Some(module_output) = state.get(module_part) {
                         if let Some(field_val) = module_output.get(field_part) {
                             return field_val.clone();

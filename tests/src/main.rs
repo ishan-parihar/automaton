@@ -3,9 +3,9 @@ use std::result::Result as StdResult;
 
 use automaton_core::*;
 use automaton_engine::flow::{ExecStep, ExecStepKind, FlowEngine};
-use automaton_scheduler::{CronTicker, Scheduler};
-use automaton_runtime::{Runtime as AutoRuntime, RuntimeConfig};
 use automaton_graph::GraphStore;
+use automaton_runtime::{Runtime as AutoRuntime, RuntimeConfig};
+use automaton_scheduler::{CronTicker, Scheduler};
 
 fn main() {
     println!("===== COMPREHENSIVE INTEGRATION TEST SUITE =====");
@@ -84,7 +84,8 @@ struct TestWorkspace {
 
 impl TestWorkspace {
     fn new(label: &str) -> Self {
-        let base = std::env::temp_dir().join(format!("automaton-test-{}-{}", label, std::process::id()));
+        let base =
+            std::env::temp_dir().join(format!("automaton-test-{}-{}", label, std::process::id()));
         let _ = std::fs::remove_dir_all(&base);
         std::fs::create_dir_all(&base.join("work")).unwrap();
         std::fs::create_dir_all(&base.join("temp")).unwrap();
@@ -263,7 +264,9 @@ fn test_branch_flatten(pass: &mut u32, fail: &mut u32) {
     *pass += 1;
     println!("  ✅ Flatten branch flow");
     test_eq(pass, fail, "Branch has 3 steps", bsteps.len() == 3);
-    let has_branch = bsteps.iter().any(|s| matches!(s.kind, ExecStepKind::BranchOne(_)));
+    let has_branch = bsteps
+        .iter()
+        .any(|s| matches!(s.kind, ExecStepKind::BranchOne(_)));
     test_eq(pass, fail, "Has branch_one step", has_branch);
 }
 
@@ -333,7 +336,10 @@ fn test_shell_basic(pass: &mut u32, fail: &mut u32) {
         Ok(steps) => {
             if let Some((_, output)) = steps.iter().find(|(id, _)| id == "echo") {
                 let stdout = output.get("stdout").and_then(|v| v.as_str()).unwrap_or("");
-                let code = output.get("exit_code").and_then(|v| v.as_i64()).unwrap_or(-1);
+                let code = output
+                    .get("exit_code")
+                    .and_then(|v| v.as_i64())
+                    .unwrap_or(-1);
                 if stdout.contains("Hello World") && code == 0 {
                     *pass += 1;
                     println!("  ✅ Shell basic: echo 'Hello World'");
@@ -363,13 +369,18 @@ fn test_shell_output_capture(pass: &mut u32, fail: &mut u32) {
             if let Some((_, output)) = steps.iter().find(|(id, _)| id == "capture") {
                 let stdout = output.get("stdout").and_then(|v| v.as_str()).unwrap_or("");
                 let stderr = output.get("stderr").and_then(|v| v.as_str()).unwrap_or("");
-                let code = output.get("exit_code").and_then(|v| v.as_i64()).unwrap_or(-1);
+                let code = output
+                    .get("exit_code")
+                    .and_then(|v| v.as_i64())
+                    .unwrap_or(-1);
                 if stdout.contains("out") && stderr.contains("err") && code == 0 {
                     *pass += 1;
                     println!("  ✅ Shell output capture: stdout+stderr");
                 } else {
                     *fail += 1;
-                    println!("  ❌ Shell output capture: stdout={stdout:?} stderr={stderr:?} code={code}");
+                    println!(
+                        "  ❌ Shell output capture: stdout={stdout:?} stderr={stderr:?} code={code}"
+                    );
                 }
             } else {
                 *fail += 1;
@@ -392,7 +403,11 @@ fn test_shell_exit_code(pass: &mut u32, fail: &mut u32) {
         Err(e) => {
             let msg = e.to_string();
             // Should mention failure or error
-            if msg.contains("42") || msg.contains("exit") || msg.contains("fail") || msg.contains("error") {
+            if msg.contains("42")
+                || msg.contains("exit")
+                || msg.contains("fail")
+                || msg.contains("error")
+            {
                 *pass += 1;
                 println!("  ✅ Shell exit code: exit 42 correctly errored");
             } else {
@@ -410,8 +425,15 @@ fn test_shell_exit_code(pass: &mut u32, fail: &mut u32) {
 fn test_shell_stop_if(pass: &mut u32, fail: &mut u32) {
     let ws = TestWorkspace::new("shell-stopif");
     // Step with stop_if = "true" should be skipped
-    let step = shell_step_full("skip-me", "echo 'should not run'", vec![],
-        None, Some("true".into()), None, None);
+    let step = shell_step_full(
+        "skip-me",
+        "echo 'should not run'",
+        vec![],
+        None,
+        Some("true".into()),
+        None,
+        None,
+    );
     let result = run_async(FlowEngine::execute(&[step], None, ws.rt(), ws.cache()));
     match result {
         Ok(steps) => {
@@ -440,13 +462,23 @@ fn test_shell_stop_if(pass: &mut u32, fail: &mut u32) {
 fn test_shell_failure_step(pass: &mut u32, fail: &mut u32) {
     let ws = TestWorkspace::new("shell-failure");
     // Failing step with failure_step → flow continues
-    let step = shell_step_full("failing", "exit 1", vec![],
-        None, None, Some("fallback-handler".into()), None);
+    let step = shell_step_full(
+        "failing",
+        "exit 1",
+        vec![],
+        None,
+        None,
+        Some("fallback-handler".into()),
+        None,
+    );
     let result = run_async(FlowEngine::execute(&[step], None, ws.rt(), ws.cache()));
     match result {
         Ok(steps) => {
             if let Some((_, output)) = steps.iter().find(|(id, _)| id == "failing") {
-                let fallback = output.get("fallback").and_then(|v| v.as_str()).unwrap_or("");
+                let fallback = output
+                    .get("fallback")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
                 if !fallback.is_empty() {
                     *pass += 1;
                     println!("  ✅ Shell failure_step: fallback triggered ({fallback})");
@@ -507,19 +539,28 @@ fn test_shell_dependency_order(pass: &mut u32, fail: &mut u32) {
 fn test_shell_retry_mechanism(pass: &mut u32, fail: &mut u32) {
     let ws = TestWorkspace::new("shell-retry");
     // A step that always fails with retry configured
-    let step = shell_step_full("retry-fail", "exit 1", vec![],
+    let step = shell_step_full(
+        "retry-fail",
+        "exit 1",
+        vec![],
         Some(RetryConfig {
             max_attempts: 2,
             delay_ms: 10,
             backoff: BackoffKind::Fixed,
         }),
-        None, Some("fallback".into()), None);
+        None,
+        Some("fallback".into()),
+        None,
+    );
     let result = run_async(FlowEngine::execute(&[step], None, ws.rt(), ws.cache()));
     match result {
         Ok(steps) => {
             // With failure_step, even a retry failure should be captured
             if let Some((_, output)) = steps.iter().find(|(id, _)| id == "retry-fail") {
-                let fallback = output.get("fallback").and_then(|v| v.as_str()).unwrap_or("");
+                let fallback = output
+                    .get("fallback")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
                 if !fallback.is_empty() {
                     *pass += 1;
                     println!("  ✅ Shell retry: failed after retries, fallback triggered");
@@ -543,8 +584,15 @@ fn test_shell_retry_mechanism(pass: &mut u32, fail: &mut u32) {
 fn test_shell_timeout(pass: &mut u32, fail: &mut u32) {
     let ws = TestWorkspace::new("shell-timeout");
     // A step with very short timeout
-    let step = shell_step_full("timeout-test", "sleep 10", vec![],
-        None, None, None, Some(200));
+    let step = shell_step_full(
+        "timeout-test",
+        "sleep 10",
+        vec![],
+        None,
+        None,
+        None,
+        Some(200),
+    );
     let result = run_async(FlowEngine::execute(&[step], None, ws.rt(), ws.cache()));
     match result {
         Ok(_) => {
@@ -610,7 +658,13 @@ fn test_pipeline(pass: &mut u32, fail: &mut u32) {
     let result = run_async(FlowEngine::execute(&pipeline, None, ws.rt(), ws.cache()));
     match result {
         Ok(outputs) => {
-            let expected = ["phase1_research", "phase2_create", "phase3_review", "phase4_publish", "phase5_report"];
+            let expected = [
+                "phase1_research",
+                "phase2_create",
+                "phase3_review",
+                "phase4_publish",
+                "phase5_report",
+            ];
             let ids: Vec<&str> = outputs.iter().map(|(id, _)| id.as_str()).collect();
 
             // Check all expected steps present
@@ -702,31 +756,35 @@ fn test_pipeline_graph_output(cache_dir: &std::path::Path) -> StdResult<usize, S
     let mut ids = Vec::new();
     for (phase_id, summary) in &phases {
         let mut props = HashMap::new();
-        props.insert("summary".to_string(), serde_json::Value::String(summary.to_string()));
-        props.insert("phase".to_string(), serde_json::Value::String(phase_id.to_string()));
-        props.insert("timestamp".to_string(), serde_json::Value::String(
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .map(|d| d.as_secs().to_string())
-                .unwrap_or_default()
-        ));
+        props.insert(
+            "summary".to_string(),
+            serde_json::Value::String(summary.to_string()),
+        );
+        props.insert(
+            "phase".to_string(),
+            serde_json::Value::String(phase_id.to_string()),
+        );
+        props.insert(
+            "timestamp".to_string(),
+            serde_json::Value::String(
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .map(|d| d.as_secs().to_string())
+                    .unwrap_or_default(),
+            ),
+        );
 
-        let id = store.add_node(
-            NodeKind::Artifact,
-            phase_id,
-            props,
-        ).map_err(|e| e.to_string())?;
+        let id = store
+            .add_node(NodeKind::Artifact, phase_id, props)
+            .map_err(|e| e.to_string())?;
         ids.push(id);
     }
 
     // Link phases sequentially: research → create → review → publish → report
     for i in 0..ids.len() - 1 {
-        store.add_edge(
-            &ids[i],
-            &ids[i + 1],
-            EdgeKind::DependsOn,
-            HashMap::new(),
-        ).map_err(|e| e.to_string())?;
+        store
+            .add_edge(&ids[i], &ids[i + 1], EdgeKind::DependsOn, HashMap::new())
+            .map_err(|e| e.to_string())?;
     }
 
     // Verify
@@ -734,7 +792,11 @@ fn test_pipeline_graph_output(cache_dir: &std::path::Path) -> StdResult<usize, S
     let edges = store.all_edges().map_err(|e| e.to_string())?;
 
     if nodes.len() != 5 || edges.len() != 4 {
-        return Err(format!("Expected 5 nodes + 4 edges, got {} nodes + {} edges", nodes.len(), edges.len()));
+        return Err(format!(
+            "Expected 5 nodes + 4 edges, got {} nodes + {} edges",
+            nodes.len(),
+            edges.len()
+        ));
     }
 
     Ok(nodes.len())
@@ -788,7 +850,12 @@ fn test_graph_create_and_query(pass: &mut u32, fail: &mut u32) {
                     return;
                 }
             };
-            test_eq(pass, fail, "Graph: find by kind works", art_nodes.len() == 1);
+            test_eq(
+                pass,
+                fail,
+                "Graph: find by kind works",
+                art_nodes.len() == 1,
+            );
         }
         Err(e) => {
             *fail += 1;
@@ -807,21 +874,35 @@ fn test_graph_pathfind(pass: &mut u32, fail: &mut u32) {
     match store {
         Ok(store) => {
             // Create a simple graph: A → B → C
-            let a = store.add_node(NodeKind::Artifact, "A", HashMap::new()).unwrap();
-            let b = store.add_node(NodeKind::Artifact, "B", HashMap::new()).unwrap();
-            let c = store.add_node(NodeKind::Artifact, "C", HashMap::new()).unwrap();
+            let a = store
+                .add_node(NodeKind::Artifact, "A", HashMap::new())
+                .unwrap();
+            let b = store
+                .add_node(NodeKind::Artifact, "B", HashMap::new())
+                .unwrap();
+            let c = store
+                .add_node(NodeKind::Artifact, "C", HashMap::new())
+                .unwrap();
 
-            store.add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new()).unwrap();
-            store.add_edge(&b, &c, EdgeKind::DependsOn, HashMap::new()).unwrap();
+            store
+                .add_edge(&a, &b, EdgeKind::DependsOn, HashMap::new())
+                .unwrap();
+            store
+                .add_edge(&b, &c, EdgeKind::DependsOn, HashMap::new())
+                .unwrap();
 
             // Find path from A to C
             match store.find_path(&a, &c) {
                 Ok(paths) => {
                     if !paths.is_empty() {
                         let path = &paths[0];
-                        if path.len() == 3 { // A → B → C = 3 nodes
+                        if path.len() == 3 {
+                            // A → B → C = 3 nodes
                             *pass += 1;
-                            println!("  ✅ Graph pathfind: found path A→B→C ({} nodes)", path.len());
+                            println!(
+                                "  ✅ Graph pathfind: found path A→B→C ({} nodes)",
+                                path.len()
+                            );
                         } else {
                             *fail += 1;
                             println!("  ❌ Graph pathfind: expected 3 nodes, got {}", path.len());
@@ -854,15 +935,28 @@ fn test_graph_summarize(pass: &mut u32, fail: &mut u32) {
     match store {
         Ok(store) => {
             // Create nodes of different kinds
-            store.add_node(NodeKind::Artifact, "art1", HashMap::new()).unwrap();
-            store.add_node(NodeKind::Artifact, "art2", HashMap::new()).unwrap();
-            store.add_node(NodeKind::Module, "mod1", HashMap::new()).unwrap();
-            store.add_node(NodeKind::Workflow, "wf1", HashMap::new()).unwrap();
+            store
+                .add_node(NodeKind::Artifact, "art1", HashMap::new())
+                .unwrap();
+            store
+                .add_node(NodeKind::Artifact, "art2", HashMap::new())
+                .unwrap();
+            store
+                .add_node(NodeKind::Module, "mod1", HashMap::new())
+                .unwrap();
+            store
+                .add_node(NodeKind::Workflow, "wf1", HashMap::new())
+                .unwrap();
 
             // Create edges
             let nodes = store.all_nodes().unwrap();
             if nodes.len() >= 2 {
-                let _ = store.add_edge(&nodes[0].id, &nodes[1].id, EdgeKind::DependsOn, HashMap::new());
+                let _ = store.add_edge(
+                    &nodes[0].id,
+                    &nodes[1].id,
+                    EdgeKind::DependsOn,
+                    HashMap::new(),
+                );
             }
 
             match store.summarize() {
@@ -872,18 +966,26 @@ fn test_graph_summarize(pass: &mut u32, fail: &mut u32) {
                         println!("  ✅ Graph summarize: 4 nodes, 1 edge");
                     } else {
                         *fail += 1;
-                        println!("  ❌ Graph summarize: expected 4n+1e, got {}n+{}e", summary.total_nodes, summary.total_edges);
+                        println!(
+                            "  ❌ Graph summarize: expected 4n+1e, got {}n+{}e",
+                            summary.total_nodes, summary.total_edges
+                        );
                     }
 
-                    let has_artifact = summary.nodes_by_kind.get("Artifact").copied().unwrap_or(0) == 2;
+                    let has_artifact =
+                        summary.nodes_by_kind.get("Artifact").copied().unwrap_or(0) == 2;
                     let has_module = summary.nodes_by_kind.get("Module").copied().unwrap_or(0) == 1;
-                    let has_workflow = summary.nodes_by_kind.get("Workflow").copied().unwrap_or(0) == 1;
+                    let has_workflow =
+                        summary.nodes_by_kind.get("Workflow").copied().unwrap_or(0) == 1;
                     if has_artifact && has_module && has_workflow {
                         *pass += 1;
                         println!("  ✅ Graph summarize: breakdown by kind correct");
                     } else {
                         *fail += 1;
-                        println!("  ❌ Graph summarize: unexpected kind breakdown: {:?}", summary.nodes_by_kind);
+                        println!(
+                            "  ❌ Graph summarize: unexpected kind breakdown: {:?}",
+                            summary.nodes_by_kind
+                        );
                     }
                 }
                 Err(e) => {

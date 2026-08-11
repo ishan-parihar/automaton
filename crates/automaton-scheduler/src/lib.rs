@@ -1,8 +1,8 @@
 //! Cron scheduler for Automaton.
 //! Evaluates cron expressions and triggers execution.
 
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use croner::Cron;
 
@@ -87,7 +87,12 @@ pub struct ScheduledTrigger {
 #[async_trait::async_trait]
 pub trait TriggerProvider: Send + Sync {
     async fn get_cron_triggers(&self) -> Result<Vec<ScheduledTrigger>, String>;
-    async fn enqueue_job(&self, kind: &str, target: &str, args: &serde_json::Value) -> Result<i64, String>;
+    async fn enqueue_job(
+        &self,
+        kind: &str,
+        target: &str,
+        args: &serde_json::Value,
+    ) -> Result<i64, String>;
 }
 
 /// Daemon that polls for cron triggers and fires them into the job queue.
@@ -138,11 +143,7 @@ impl SchedulerDaemon {
                                 .unwrap_or(false);
 
                             if should_fire {
-                                let kind = if t.target_is_flow {
-                                    "flow"
-                                } else {
-                                    "script"
-                                };
+                                let kind = if t.target_is_flow { "flow" } else { "script" };
                                 let args = t.args.as_ref().cloned().unwrap_or_default();
                                 match provider.enqueue_job(kind, &t.target_path, &args).await {
                                     Ok(job_id) => {

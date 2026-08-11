@@ -510,7 +510,8 @@ impl Registry {
                 Ok(serde_json::Value::Object(resolved))
             }
             serde_json::Value::Array(arr) => {
-                let resolved: Result<Vec<_>> = arr.iter().map(|v| self.resolve_references(v)).collect();
+                let resolved: Result<Vec<_>> =
+                    arr.iter().map(|v| self.resolve_references(v)).collect();
                 Ok(serde_json::Value::Array(resolved?))
             }
             other => Ok(other.clone()),
@@ -613,7 +614,8 @@ impl Registry {
         let i = id.clone();
         let p = path.to_string();
         let v = version.to_string();
-        let d = serde_json::to_string(definition).map_err(|e| AutomatonError::Other(e.to_string()))?;
+        let d =
+            serde_json::to_string(definition).map_err(|e| AutomatonError::Other(e.to_string()))?;
         with_registry(&self.db, |db| {
             db.execute(
                 "INSERT INTO flows (id, path, version, definition, summary, on_failure) VALUES (?1, ?2, ?3, ?4, ?5, ?6)
@@ -653,9 +655,8 @@ impl Registry {
 
     pub fn list_flows(&self) -> Result<Vec<serde_json::Value>> {
         with_registry(&self.db, |db| {
-            let mut stmt = db.prepare(
-                "SELECT id, path, version, created_at FROM flows ORDER BY path",
-            )?;
+            let mut stmt =
+                db.prepare("SELECT id, path, version, created_at FROM flows ORDER BY path")?;
             let rows = stmt.query_map([], |row| {
                 Ok(serde_json::json!({
                     "id": row.get::<_, String>(0)?,
@@ -729,7 +730,12 @@ impl Registry {
 
     // ── Webhook management ──
 
-    pub fn register_webhook(&self, target_url: &str, event: &str, secret: Option<&str>) -> Result<String> {
+    pub fn register_webhook(
+        &self,
+        target_url: &str,
+        event: &str,
+        secret: Option<&str>,
+    ) -> Result<String> {
         let id = uuid::Uuid::new_v4().to_string();
         let i = id.clone();
         let u = target_url.to_string();
@@ -801,7 +807,8 @@ impl Registry {
     // ── Execution history ──
 
     pub fn store_execution(&self, execution: &FlowExecution) -> Result<()> {
-        let steps_json = serde_json::to_string(&execution.steps).map_err(|e| AutomatonError::Other(e.to_string()))?;
+        let steps_json = serde_json::to_string(&execution.steps)
+            .map_err(|e| AutomatonError::Other(e.to_string()))?;
         with_registry(&self.db, |db| {
             db.execute(
                 "INSERT INTO executions (id, flow_path, dag_label, status, steps, started_at, completed_at, total_duration_ms) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
@@ -849,7 +856,12 @@ impl Registry {
 
 #[async_trait::async_trait]
 impl automaton_core::backend::RegistryBackend for Registry {
-    async fn register_module(&self, path: &str, source: &str, manifest: &AutomationManifest) -> Result<ModuleId> {
+    async fn register_module(
+        &self,
+        path: &str,
+        source: &str,
+        manifest: &AutomationManifest,
+    ) -> Result<ModuleId> {
         Registry::register(self, path, source, manifest)
     }
 
@@ -869,7 +881,12 @@ impl automaton_core::backend::RegistryBackend for Registry {
         Registry::record_build(self, hash, artifact_path, mode)
     }
 
-    async fn record_run(&self, run_id: &str, module_path: &str, input: &serde_json::Value) -> Result<()> {
+    async fn record_run(
+        &self,
+        run_id: &str,
+        module_path: &str,
+        input: &serde_json::Value,
+    ) -> Result<()> {
         Registry::record_run(self, run_id, module_path, input)
     }
 
@@ -912,7 +929,13 @@ impl automaton_core::backend::RegistryBackend for Registry {
         Registry::list_jobs(self, limit)
     }
 
-    async fn create_trigger(&self, target: &str, is_flow: bool, ttype: &str, config: &serde_json::Value) -> Result<String> {
+    async fn create_trigger(
+        &self,
+        target: &str,
+        is_flow: bool,
+        ttype: &str,
+        config: &serde_json::Value,
+    ) -> Result<String> {
         Registry::create_trigger(self, target, is_flow, ttype, config)
     }
 
@@ -936,7 +959,12 @@ impl automaton_core::backend::RegistryBackend for Registry {
         Registry::get_resource(self, path)
     }
 
-    async fn set_resource(&self, path: &str, resource_type: &str, value: &serde_json::Value) -> Result<()> {
+    async fn set_resource(
+        &self,
+        path: &str,
+        resource_type: &str,
+        value: &serde_json::Value,
+    ) -> Result<()> {
         Registry::set_resource(self, path, resource_type, value)
     }
 
@@ -944,7 +972,14 @@ impl automaton_core::backend::RegistryBackend for Registry {
         Registry::list_resources(self, resource_type)
     }
 
-    async fn store_flow(&self, path: &str, version: &str, definition: &serde_json::Value, summary: Option<&str>, on_failure: Option<&str>) -> Result<String> {
+    async fn store_flow(
+        &self,
+        path: &str,
+        version: &str,
+        definition: &serde_json::Value,
+        summary: Option<&str>,
+        on_failure: Option<&str>,
+    ) -> Result<String> {
         Registry::store_flow(self, path, version, definition, summary, on_failure)
     }
 
@@ -960,7 +995,12 @@ impl automaton_core::backend::RegistryBackend for Registry {
         Registry::delete_flow(self, path)
     }
 
-    async fn register_webhook(&self, target_url: &str, event: &str, secret: Option<&str>) -> Result<String> {
+    async fn register_webhook(
+        &self,
+        target_url: &str,
+        event: &str,
+        secret: Option<&str>,
+    ) -> Result<String> {
         Registry::register_webhook(self, target_url, event, secret)
     }
 
@@ -1001,7 +1041,9 @@ mod tests {
         manifest.summary = Some("A test module".to_string());
         manifest.timeout_ms = 15_000;
 
-        let id = reg.register("test.hello", "fn main() {}", &manifest).unwrap();
+        let id = reg
+            .register("test.hello", "fn main() {}", &manifest)
+            .unwrap();
         assert_eq!(id.path, "test.hello");
         assert_eq!(id.version.to_string(), "0.2.0");
 
@@ -1015,8 +1057,14 @@ mod tests {
     #[test]
     fn test_list_modules() {
         let reg = test_registry();
-        let m1 = AutomationManifest { name: "mod.a".to_string(), ..Default::default() };
-        let m2 = AutomationManifest { name: "mod.b".to_string(), ..Default::default() };
+        let m1 = AutomationManifest {
+            name: "mod.a".to_string(),
+            ..Default::default()
+        };
+        let m2 = AutomationManifest {
+            name: "mod.b".to_string(),
+            ..Default::default()
+        };
         reg.register("mod.a", "// a", &m1).unwrap();
         reg.register("mod.b", "// b", &m2).unwrap();
 
@@ -1029,7 +1077,10 @@ mod tests {
     #[test]
     fn test_mark_built() {
         let reg = test_registry();
-        let m = AutomationManifest { name: "test.built".to_string(), ..Default::default() };
+        let m = AutomationManifest {
+            name: "test.built".to_string(),
+            ..Default::default()
+        };
         reg.register("test.built", "// src", &m).unwrap();
         reg.mark_built("test.built").unwrap();
 
@@ -1041,7 +1092,10 @@ mod tests {
     fn test_variable_roundtrip() {
         let reg = test_registry();
         reg.set_variable("my/key", "hello", false).unwrap();
-        let val = reg.get_variable("my/key").unwrap().expect("Var should exist");
+        let val = reg
+            .get_variable("my/key")
+            .unwrap()
+            .expect("Var should exist");
         assert_eq!(val, "hello");
     }
 
@@ -1059,7 +1113,10 @@ mod tests {
         let reg = test_registry();
         let val = serde_json::json!({"url": "https://example.com"});
         reg.set_resource("my/res", "http", &val).unwrap();
-        let fetched = reg.get_resource("my/res").unwrap().expect("Resource should exist");
+        let fetched = reg
+            .get_resource("my/res")
+            .unwrap()
+            .expect("Resource should exist");
         assert_eq!(fetched["resource_type"], "http");
         assert_eq!(fetched["value"]["url"], "https://example.com");
     }
@@ -1067,8 +1124,10 @@ mod tests {
     #[test]
     fn test_list_resources() {
         let reg = test_registry();
-        reg.set_resource("res/a", "http", &serde_json::json!({})).unwrap();
-        reg.set_resource("res/b", "slack", &serde_json::json!({})).unwrap();
+        reg.set_resource("res/a", "http", &serde_json::json!({}))
+            .unwrap();
+        reg.set_resource("res/b", "slack", &serde_json::json!({}))
+            .unwrap();
         let all = reg.list_resources(None).unwrap();
         assert_eq!(all.len(), 2);
         let filtered = reg.list_resources(Some("http")).unwrap();
@@ -1078,7 +1137,9 @@ mod tests {
     #[test]
     fn test_job_enqueue_dequeue_complete() {
         let reg = test_registry();
-        let job_id = reg.enqueue("script", "test.module", &serde_json::json!({"x": 1})).unwrap();
+        let job_id = reg
+            .enqueue("script", "test.module", &serde_json::json!({"x": 1}))
+            .unwrap();
         assert!(job_id > 0);
 
         let dequeued = reg.dequeue("worker1").unwrap().expect("Should dequeue");
@@ -1096,8 +1157,10 @@ mod tests {
     #[test]
     fn test_list_jobs() {
         let reg = test_registry();
-        reg.enqueue("flow", "flow.a", &serde_json::json!({})).unwrap();
-        reg.enqueue("script", "mod.x", &serde_json::json!({})).unwrap();
+        reg.enqueue("flow", "flow.a", &serde_json::json!({}))
+            .unwrap();
+        reg.enqueue("script", "mod.x", &serde_json::json!({}))
+            .unwrap();
         let jobs = reg.list_jobs(10).unwrap();
         assert_eq!(jobs.len(), 2);
     }
@@ -1106,7 +1169,9 @@ mod tests {
     fn test_trigger_create_and_get() {
         let reg = test_registry();
         let config = serde_json::json!({"schedule": "0 * * * *"});
-        let id = reg.create_trigger("test.module", false, "cron", &config).unwrap();
+        let id = reg
+            .create_trigger("test.module", false, "cron", &config)
+            .unwrap();
         assert!(!id.is_empty());
 
         let triggers = reg.get_enabled_triggers("cron").unwrap();
@@ -1123,10 +1188,15 @@ mod tests {
         let reg = test_registry();
         let def = serde_json::json!([{"id": "step1", "kind": "Script"}]);
 
-        let id = reg.store_flow("test.flow", "0.1.0", &def, Some("test"), None).unwrap();
+        let id = reg
+            .store_flow("test.flow", "0.1.0", &def, Some("test"), None)
+            .unwrap();
         assert!(!id.is_empty());
 
-        let fetched = reg.get_flow("test.flow").unwrap().expect("Flow should exist");
+        let fetched = reg
+            .get_flow("test.flow")
+            .unwrap()
+            .expect("Flow should exist");
         assert_eq!(fetched["path"], "test.flow");
 
         let flows = reg.list_flows().unwrap();
@@ -1140,8 +1210,16 @@ mod tests {
     #[test]
     fn test_run_record_and_query() {
         let reg = test_registry();
-        reg.record_run("run-1", "test.module", &serde_json::json!({})).unwrap();
-        reg.update_run("run-1", "completed", Some(&serde_json::json!({"ok": true})), None, 1).unwrap();
+        reg.record_run("run-1", "test.module", &serde_json::json!({}))
+            .unwrap();
+        reg.update_run(
+            "run-1",
+            "completed",
+            Some(&serde_json::json!({"ok": true})),
+            None,
+            1,
+        )
+        .unwrap();
 
         let runs = reg.get_runs("test.module").unwrap();
         assert_eq!(runs.len(), 1);

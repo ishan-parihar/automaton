@@ -2,8 +2,8 @@
 //! Polls a job queue, compiles scripts, executes them, and stores results.
 
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 
 use automaton_build::BuildCache;
@@ -85,11 +85,7 @@ impl Worker {
 
     /// Process a single job: dequeue, execute, complete.
     /// Returns true if a job was processed.
-    async fn process_job(
-        &self,
-        registry: &Registry,
-        poll_interval: Duration,
-    ) -> bool {
+    async fn process_job(&self, registry: &Registry, poll_interval: Duration) -> bool {
         match registry.dequeue(&self.name) {
             Ok(Some(job)) => {
                 let job_id = job["id"].as_i64().unwrap_or(0);
@@ -106,13 +102,18 @@ impl Worker {
                 match registry.get(&target) {
                     Ok(Some(module)) => {
                         if module.built {
-                            match self.run_module(&target, &module.source, &module.manifest, &args).await {
+                            match self
+                                .run_module(&target, &module.source, &module.manifest, &args)
+                                .await
+                            {
                                 Ok(_output) => {
-                                    registry.record_run(
-                                        &uuid::Uuid::new_v4().to_string(),
-                                        &target,
-                                        &args,
-                                    ).ok();
+                                    registry
+                                        .record_run(
+                                            &uuid::Uuid::new_v4().to_string(),
+                                            &target,
+                                            &args,
+                                        )
+                                        .ok();
                                     tracing::info!(job_id, target = %target, "Job completed");
                                 }
                                 Err(e) => {
@@ -122,18 +123,32 @@ impl Worker {
                         } else {
                             tracing::warn!(job_id, target = %target, "Module not built");
                             if let Some(ref cache) = self.build_cache {
-                                if let Ok((_hash, _path)) = cache.build_rust(&target, &module.source, &module.manifest) {
+                                if let Ok((_hash, _path)) =
+                                    cache.build_rust(&target, &module.source, &module.manifest)
+                                {
                                     registry.mark_built(&target).ok();
-                                    match self.run_module(&target, &module.source, &module.manifest, &args).await {
+                                    match self
+                                        .run_module(
+                                            &target,
+                                            &module.source,
+                                            &module.manifest,
+                                            &args,
+                                        )
+                                        .await
+                                    {
                                         Ok(_output) => {
-                                            registry.record_run(
-                                                &uuid::Uuid::new_v4().to_string(),
-                                                &target,
-                                                &args,
-                                            ).ok();
+                                            registry
+                                                .record_run(
+                                                    &uuid::Uuid::new_v4().to_string(),
+                                                    &target,
+                                                    &args,
+                                                )
+                                                .ok();
                                             tracing::info!(job_id, target = %target, "Built and completed");
                                         }
-                                        Err(e) => tracing::error!(job_id, error = %e, "Run after build failed"),
+                                        Err(e) => {
+                                            tracing::error!(job_id, error = %e, "Run after build failed")
+                                        }
                                     }
                                 } else {
                                     tracing::error!(target = %target, "Build failed on-the-fly");
@@ -169,11 +184,7 @@ impl Worker {
     /// Start the worker pull loop.
     /// When concurrency > 1, spawns N independent polling tasks
     /// each opening its own Registry handle (SQLite WAL supports concurrent access).
-    pub async fn start(
-        &self,
-        registry: &Registry,
-        poll_interval_ms: u64,
-    ) {
+    pub async fn start(&self, registry: &Registry, poll_interval_ms: u64) {
         let concurrency = self.concurrency.max(1);
         tracing::info!(worker = %self.name, concurrency = concurrency, "Worker starting");
 

@@ -253,7 +253,10 @@ impl GraphStore {
             if let Some(node) = self.get_node(from)? {
                 segment.push(NodeAndEdge {
                     node,
-                    edge_kind: raw_path.first().map(|(_, ek)| ek.clone()).unwrap_or(EdgeKind::DependsOn),
+                    edge_kind: raw_path
+                        .first()
+                        .map(|(_, ek)| ek.clone())
+                        .unwrap_or(EdgeKind::DependsOn),
                 });
             }
             for (node_id, edge_kind) in raw_path {
@@ -292,7 +295,11 @@ impl GraphStore {
         })
     }
 
-    pub fn all_nodes_paginated(&self, limit: Option<u32>, offset: Option<u32>) -> Result<Vec<Node>> {
+    pub fn all_nodes_paginated(
+        &self,
+        limit: Option<u32>,
+        offset: Option<u32>,
+    ) -> Result<Vec<Node>> {
         with_db(&self.db, |db| {
             let mut sql = String::from(
                 "SELECT id, kind, name, properties, created_at FROM nodes ORDER BY created_at",
@@ -326,9 +333,8 @@ impl GraphStore {
         properties: &HashMap<String, serde_json::Value>,
     ) -> Result<Vec<NodeAndEdge>> {
         with_db(&self.db, |conn| {
-            let mut sql = String::from(
-                "SELECT id, kind, name, properties, created_at FROM nodes WHERE 1=1",
-            );
+            let mut sql =
+                String::from("SELECT id, kind, name, properties, created_at FROM nodes WHERE 1=1");
             let mut params: Vec<Box<dyn rusqlite::types::ToSql>> = vec![];
 
             for (key, value) in properties {
@@ -367,9 +373,8 @@ impl GraphStore {
         offset: usize,
     ) -> Result<Vec<NodeAndEdge>> {
         with_db(&self.db, |conn| {
-            let mut sql = String::from(
-                "SELECT id, kind, name, properties, created_at FROM nodes WHERE 1=1",
-            );
+            let mut sql =
+                String::from("SELECT id, kind, name, properties, created_at FROM nodes WHERE 1=1");
             let mut params: Vec<Box<dyn rusqlite::types::ToSql>> = vec![];
 
             for (key, value) in properties {
@@ -429,9 +434,8 @@ impl GraphStore {
         end: Option<&str>,
     ) -> Result<Vec<NodeAndEdge>> {
         with_db(&self.db, |conn| {
-            let mut sql = String::from(
-                "SELECT id, kind, name, properties, created_at FROM nodes WHERE 1=1",
-            );
+            let mut sql =
+                String::from("SELECT id, kind, name, properties, created_at FROM nodes WHERE 1=1");
             let mut params: Vec<Box<dyn rusqlite::types::ToSql>> = vec![];
 
             if let Some(start) = start {
@@ -505,8 +509,7 @@ impl GraphStore {
                         .unwrap_or_default(),
                 };
                 let edge_kind: EdgeKind =
-                    serde_json::from_str(&row.get::<_, String>(5)?)
-                        .unwrap_or(EdgeKind::DependsOn);
+                    serde_json::from_str(&row.get::<_, String>(5)?).unwrap_or(EdgeKind::DependsOn);
                 Ok(NodeAndEdge { node, edge_kind })
             })?;
             let mut result = vec![];
@@ -538,12 +541,10 @@ impl GraphStore {
     /// Get aggregated summary statistics about the graph.
     pub fn summarize(&self) -> Result<GraphSummary> {
         with_db(&self.db, |db| {
-            let total_nodes: u64 = db.query_row("SELECT COUNT(*) FROM nodes", [], |row| {
-                row.get(0)
-            })?;
-            let total_edges: u64 = db.query_row("SELECT COUNT(*) FROM edges", [], |row| {
-                row.get(0)
-            })?;
+            let total_nodes: u64 =
+                db.query_row("SELECT COUNT(*) FROM nodes", [], |row| row.get(0))?;
+            let total_edges: u64 =
+                db.query_row("SELECT COUNT(*) FROM edges", [], |row| row.get(0))?;
 
             let mut nodes_by_kind: HashMap<String, u64> = HashMap::new();
             let mut stmt = db.prepare("SELECT kind, COUNT(*) as cnt FROM nodes GROUP BY kind")?;

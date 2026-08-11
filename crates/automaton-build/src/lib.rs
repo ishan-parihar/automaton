@@ -370,11 +370,13 @@ mod tests {
         let diags = BuildCache::diagnose(stderr);
         assert_eq!(diags.len(), 1);
         assert_eq!(diags[0].severity, "warning");
-        assert!(diags[0]
-            .file
-            .as_deref()
-            .unwrap_or("")
-            .contains("src/main.rs"));
+        assert!(
+            diags[0]
+                .file
+                .as_deref()
+                .unwrap_or("")
+                .contains("src/main.rs")
+        );
     }
 
     #[test]
