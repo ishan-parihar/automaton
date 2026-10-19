@@ -18,3 +18,7 @@ Every page under `docs/`, with the question it answers. Pages named `README.md` 
 | [`feed.md`](kb/feed.md) | LIVE | Agent feed | — |
 | [`schema.md`](schema.md) | LIVE | Database Schema for Automaton | — |
 | [`windmill-audit.md`](windmill-audit.md) | EVIDENCE | Automaton → Windmill Production Audit | — |
+| [`HANDOVER.md`](HANDOVER.md) | Automaton — AI-Handover Document — docs/
+| [`RECORDS.md`](RECORDS.md) | LIVE | Records — decisions (AD) and regressions (RG) — Generated zones below are written by genome rec emit; never hand-edit them. Topic → governing record… | — |
+├── agent-ux-flow.md        — AI agent workflow documentation
+├── schema.md               — Database sch… |
