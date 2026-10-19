@@ -375,6 +375,12 @@ export default {
 
 ---
 
+## Documentation
+
+Every doc in `docs/` is listed with the question it answers in [docs/PAGE-INDEX.md](docs/PAGE-INDEX.md).
+
+---
+
 ## License
 
 MIT © [Ishan Parihar](https://github.com/ishan-parihar)
