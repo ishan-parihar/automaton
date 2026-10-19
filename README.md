@@ -6,6 +6,37 @@
 
 # automaton ⚙️
 
+## Contents
+
+- [Why automaton instead of Windmill, cron, or agent loops?](#why-automaton-instead-of-windmill-cron-or-agent-loops)
+- [The Problem: The "Scripting Ceiling"](#the-problem-the-scripting-ceiling)
+- [The Solution: A Graph-Native Substrate](#the-solution-a-graph-native-substrate)
+  - [The Core Architecture](#the-core-architecture)
+- [Engineering Highlights](#engineering-highlights)
+  - [Technical Sophistication](#technical-sophistication)
+  - [Architectural Components](#architectural-components)
+- [Potentialities & Future Scope](#potentialities-future-scope)
+- [Quick Start](#quick-start)
+  - [Installation](#installation)
+  - [Basic Workflow](#basic-workflow)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Graph Model](#graph-model)
+- [MCP Surface (for AI agents)](#mcp-surface-for-ai-agents)
+- [Why Graph-Native Architecture](#why-graph-native-architecture)
+  - [The Script Problem](#the-script-problem)
+  - [The Graph Solution](#the-graph-solution)
+  - [The DAG Execution Model](#the-dag-execution-model)
+- [Module Authoring](#module-authoring)
+- [Design Decisions](#design-decisions)
+- [Agent Integration (AXI §7)](#agent-integration-axi-7)
+  - [Session Hook (Claude Code)](#session-hook-claude-code)
+  - [Session Hook (Codex)](#session-hook-codex)
+  - [Session Hook (OpenCode)](#session-hook-opencode)
+- [Documentation](#documentation)
+- [License](#license)
+- [☕ Support & Sponsorship](#support-sponsorship)
+
 **The Windmill-class, graph-native automation substrate built for AI agents — not for humans.**
 
 [![Rust 1.75+](https://img.shields.io/badge/rust-1.75%2B-blue)](https://www.rust-lang.org)
