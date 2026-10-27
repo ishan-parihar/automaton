@@ -43,7 +43,7 @@
 <img src="https://img.shields.io/badge/Status-Active-brightgreen" alt="Status">
 [![CI](https://github.com/ishan-parihar/automaton/actions/workflows/ci.yml/badge.svg)](https://github.com/ishan-parihar/automaton/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.2.0-orange)](https://github.com/ishan-parihar/automaton/releases)
+[![Version](https://img.shields.io/badge/version-0.3.0-orange)](https://github.com/ishan-parihar/automaton/releases)
 [![Static Binary](https://img.shields.io/badge/build-static--musl-purple)](https://github.com/ishan-parihar/automaton/releases)
 [![MCP](https://img.shields.io/badge/MCP-38%20tools-red)](https://modelcontextprotocol.io)
 
