@@ -1,3 +1,8 @@
+---
+verified: "0b2a2b8"
+covers: "crates/automaton-core/**,crates/automaton-cli/**"
+---
+
 # Database Schema for Automaton
 
 ## Design Principles

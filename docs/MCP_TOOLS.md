@@ -1,3 +1,8 @@
+---
+verified: "0b2a2b8"
+covers: "crates/automaton-mcp/**"
+---
+
 # MCP Tool Reference
 
 Automaton exposes 38 tools via the Model Context Protocol (MCP). This reference documents every tool's parameters, behavior, and example usage. Tools are organized into 9 categories covering module lifecycle, workflow planning, graph manipulation, flow composition, scheduling, secrets management, resource binding, webhooks, and system introspection.
@@ -8,7 +13,7 @@ All param structs enforce `#[serde(deny_unknown_fields)]` to prevent incorrect f
 
 | Category | Tools |
 |----------|-------|
-| Modules | create, build, validate, run, deprecate, search, template, template_list |
+| Modules | create, build, validate, run, deprecate, search, template, list_templates |
 | Workflows | plan, materialize |
 | Graph | query, pathfind, add_edge, summarize, search, time_range |
 | Flows | create, show, execute, execute_telemetry, list, delete |
@@ -29,7 +34,7 @@ The MCP server is built on the `rmcp` crate and communicates over stdio transpor
 
 Module lifecycle tools manage automation units from creation through deprecation. Each module is a Rust source file with an associated manifest (AutomationManifest) that declares the module's version, summary, dependencies (depends_on), execution timeout (timeout_ms), and resource requirements.
 
-Modules are content-addressed in the registry using BLAKE3 hashing, enabling deterministic identity and caching. They can be compiled to binaries (module_build), executed standalone (module_run), searched (module_search), validated (module_validate), removed (module_deprecate), or scaffolded from templates (module_template, template_list). Modules can also be composed into multi-step flows via flow_create.
+Modules are content-addressed in the registry using BLAKE3 hashing, enabling deterministic identity and caching. They can be compiled to binaries (module_build), executed standalone (module_run), searched (module_search), validated (module_validate), removed (module_deprecate), or scaffolded from templates (module_template, module_list_templates). Modules can also be composed into multi-step flows via flow_create.
 
 The typical module lifecycle is: create -> build -> run (iterated during development), then compose into flows for production use. Modules can declare dependencies on other modules via the depends_on field, which the workflow planner uses to build execution graphs.
 
@@ -82,12 +87,12 @@ Scaffold a new module from a built-in template pattern. Automatically generates 
 - **Example**: `{"path":"myapp.health","pattern":"health-check","description":"Ping internal endpoints"}` -> `{"status":"created","path":"myapp.health","pattern":"health-check","source_len":2345}`
 - **Notes**: Available templates: echo, http-fetch, http-server, db-query, slack-notify, data-transform, health-check, rate-limiter, file-watch, cron-worker. If the pattern is not found, falls back to a generic main() stub. The generated source length is returned in source_len for informational purposes.
 
-### template_list
+### module_list_templates
 List all available module templates with their names and descriptions. Use this to discover which patterns can be passed to module_template.
 - **Parameters**: None
 - **Response**: `{"templates":[{"name":"...","description":"..."}], "count":N}`
 - **Example**: `{}` -> `{"templates":[{"name":"echo","description":"Simple JSON echo module"},{"name":"http-fetch","description":"HTTP client module"},{"name":"health-check","description":"Health check module"}],"count":10}`
-- **Notes**: Internally registered as module_list_templates. Returns all 10 built-in templates covering common patterns: echo, http-fetch, http-server, db-query, slack-notify, data-transform, health-check, rate-limiter, file-watch, cron-worker.
+- **Notes**: Returns all 10 built-in templates covering common patterns: echo, http-fetch, http-server, db-query, slack-notify, data-transform, health-check, rate-limiter, file-watch, cron-worker.
 
 ## Workflows (2 tools)
 

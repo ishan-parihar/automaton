@@ -49,7 +49,7 @@
 
 `automaton` is a CLI-based, graph-native automation framework built in Rust, designed specifically for AI agents to create, compose, and execute modular workflows. It transforms automation from a set of fragile scripts into a structured, version-controlled, and observable substrate.
 
-By exposing its entire core through an MCP (Model Context Protocol) server with 39 precision tools, `automaton` allows LLMs to move beyond simple code generation and into the realm of **Autonomous Systems Engineering** — the same graph-level orchestration that Windmill gives human developers, delivered to Claude, Cursor, Codex, and every other agent **as a first-class tool**.
+By exposing its entire core through an MCP (Model Context Protocol) server with 38 precision tools, `automaton` allows LLMs to move beyond simple code generation and into the realm of **Autonomous Systems Engineering** — the same graph-level orchestration that Windmill gives human developers, delivered to Claude, Cursor, Codex, and every other agent **as a first-class tool**.
 
 ---
 
@@ -190,7 +190,7 @@ crates/
 ├── automaton-engine/         # Planner, DAG materializer, executor (with Parallelism)
 ├── automaton-registry/       # SQL-backed module + build + run DB (SQLite/Postgres)
 ├── automaton-graph/          # SQL-backed property graph store
-├── automaton-mcp/            # MCP server (rmcp) — 39 tools
+├── automaton-mcp/            # MCP server (rmcp) — 38 tools
 ├── automaton-runtime/        # Child process runner, retry, timeout, orphan cleanup
 ├── automaton-scheduler/      # Cron daemon (croner) — validate, create, trigger
 ├── automaton-db/             # Unified SQL layer (SQLite/Postgres)
@@ -209,7 +209,7 @@ Two-layer architecture:
 
 ## MCP Surface (for AI agents)
 
-The MCP server exposes **39 tools** across 9 categories, enabling deep substrate control:
+The MCP server exposes **38 tools** across 9 categories, enabling deep substrate control:
 
 | Category | Key Tools | Description |
 |---|---|---|
