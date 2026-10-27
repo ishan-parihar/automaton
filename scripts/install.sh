@@ -6,6 +6,31 @@ set -euo pipefail
 
 REPO="ishan-parihar/automaton"
 INSTALL_DIR="${AUTOMATON_INSTALL_DIR:-$HOME/.local/bin}"
+SKIP_CTA="${SKIP_CTA:-0}"
+[ "${1:-}" = "--no-cta" ] && SKIP_CTA=1
+
+print_cta() {
+  [ "$SKIP_CTA" = "1" ] && return 0
+  printf '\n%s\n' "──────────────────────────────────────────────────────"
+  printf ' ⭐  Found automaton useful? Star it:  https://github.com/ishan-parihar/automaton\n'
+  printf ' 💜  Support development:\n'
+  printf '     GitHub Sponsors : https://github.com/sponsors/ishan-parihar\n'
+  printf '     Razorpay (UPI)  : https://rzp.io/rzp/ishan-parihar\n'
+  printf '     Or run `automaton donate` anytime.\n'
+  printf '%s\n' "──────────────────────────────────────────────────────"
+}
+
+ensure_path() {  # idempotent: grep before append
+  local dir="$1" rc="$HOME/.bashrc"
+  mkdir -p "$dir"
+  case ":$PATH:" in *":$dir:"*) return 0 ;; esac
+  if [ -f "$HOME/.zshrc" ] || [ -n "${ZSH_VERSION:-}" ]; then rc="$HOME/.zshrc"; fi
+  if ! grep -qs "export PATH=\"$dir:\$PATH\"" "$rc"; then
+    printf '\n# added by automaton installer\nexport PATH="%s:$PATH"\n' "$dir" >> "$rc"
+    echo ">>> generated: $rc (PATH export) <<<"
+  fi
+  export PATH="$dir:$PATH"
+}
 
 echo "=== Automaton Installer ==="
 echo ""
@@ -33,31 +58,39 @@ echo ""
 
 # Get latest release
 echo "Fetching latest release..."
-LATEST=$(curl -s "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+LATEST=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 if [ -z "$LATEST" ]; then
-    echo "Error: Could not fetch latest release"
+    echo "Error: Could not fetch latest release for $REPO (network or API issue)" >&2
     exit 1
 fi
 echo "Latest version: $LATEST"
 
-# Download
-TARBALL="automaton-${LATEST#v}-${PLATFORM}.tar.gz"
-DOWNLOAD_URL="https://github.com/$REPO/releases/download/${LATEST}/${TARBALL}"
+# Download. The release asset is a bare `automaton` binary (no tarball is
+# published). Provenance is the HTTPS release URL; the release pipeline
+# publishes no SHA256SUMS asset, so verification is `--version` after install.
+# ponytail: add a checksum asset to the release CI to enable digest verify.
+BINARY_URL="https://github.com/$REPO/releases/download/${LATEST}/automaton"
 TMPDIR=$(mktemp -d)
-trap "rm -rf $TMPDIR" EXIT
+trap 'rm -rf "$TMPDIR"' EXIT
 
 echo "Downloading..."
-curl -L -o "$TMPDIR/$TARBALL" "$DOWNLOAD_URL" 2>/dev/null
-
-# Extract
-tar -xzf "$TMPDIR/$TARBALL" -C "$TMPDIR" 2>/dev/null || cp "$TMPDIR/automaton" "$TMPDIR/automaton_bin"
+curl -fsSL -o "$TMPDIR/automaton" "$BINARY_URL" \
+    || { echo "Error: download failed: $BINARY_URL" >&2; exit 1; }
+[ -s "$TMPDIR/automaton" ] || { echo "Error: downloaded file is empty" >&2; exit 1; }
 
 # Install binary
 mkdir -p "$INSTALL_DIR"
-cp "$TMPDIR/automaton" "$INSTALL_DIR/automaton" 2>/dev/null || cp "$TMPDIR/automaton_bin" "$INSTALL_DIR/automaton"
-chmod +x "$INSTALL_DIR/automaton"
+install -m 0755 "$TMPDIR/automaton" "$INSTALL_DIR/automaton" \
+    || { echo "Error: install to $INSTALL_DIR failed" >&2; exit 1; }
+ensure_path "$INSTALL_DIR"
 
 echo "Installed: $INSTALL_DIR/automaton"
+
+# Verify the binary actually runs before claiming success
+case ":$PATH:" in *":$INSTALL_DIR:"*) ;; *) export PATH="$INSTALL_DIR:$PATH" ;; esac
+"$INSTALL_DIR/automaton" --version >/dev/null 2>&1 \
+    || { echo "Error: installed binary does not run: $INSTALL_DIR/automaton" >&2; exit 1; }
+echo "Verified: $INSTALL_DIR/automaton ($LATEST)"
 echo ""
 
 # ── Install Session Hooks (AXI §7) ─────────────────────────────────────────
@@ -145,3 +178,5 @@ echo "  automaton init                          # Initialize the substrate"
 echo "  automaton mcp                           # Start MCP server"
 echo "  automaton --help                        # Show all commands"
 echo ""
+
+print_cta
