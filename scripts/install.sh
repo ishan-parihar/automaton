@@ -35,24 +35,26 @@ ensure_path() {  # idempotent: grep before append
 echo "=== Automaton Installer ==="
 echo ""
 
-# Detect platform
+# Resolve the exact release asset published by .github/workflows/release.yml.
 ARCH=$(uname -m)
 OS=$(uname -s)
 case "$OS" in
-    Linux)  PLATFORM="x86_64-unknown-linux-musl" ;;
-    Darwin) PLATFORM="aarch64-apple-darwin" ;;
+    Linux)
+        case "$ARCH" in
+            x86_64|amd64) ASSET="automaton-linux-x64" ;;
+            *) echo "Error: Automaton releases do not include Linux/$ARCH." >&2; exit 1 ;;
+        esac
+        ;;
+    Darwin)
+        case "$ARCH" in
+            aarch64|arm64) ASSET="automaton-macos-arm64" ;;
+            *) echo "Error: Automaton releases do not include macOS/$ARCH." >&2; exit 1 ;;
+        esac
+        ;;
     *)      echo "Error: Unsupported OS: $OS"; exit 1 ;;
 esac
-case "$ARCH" in
-    x86_64)  [ "$OS" = "Linux" ] && PLATFORM="x86_64-unknown-linux-musl" ;;
-    aarch64|arm64)
-        [ "$OS" = "Linux" ] && PLATFORM="aarch64-unknown-linux-musl"
-        [ "$OS" = "Darwin" ] && PLATFORM="aarch64-apple-darwin"
-        ;;
-    *)       echo "Error: Unsupported architecture: $ARCH"; exit 1 ;;
-esac
 
-echo "Platform: $PLATFORM"
+echo "Platform: $OS/$ARCH ($ASSET)"
 echo "Install dir: $INSTALL_DIR"
 echo ""
 
@@ -65,23 +67,39 @@ if [ -z "$LATEST" ]; then
 fi
 echo "Latest version: $LATEST"
 
-# Download. The release asset is a bare `automaton` binary (no tarball is
-# published). Provenance is the HTTPS release URL; the release pipeline
-# publishes no SHA256SUMS asset, so verification is `--version` after install.
-# ponytail: add a checksum asset to the release CI to enable digest verify.
-BINARY_URL="https://github.com/$REPO/releases/download/${LATEST}/automaton"
+# Download the exact binary and the checksum published by the same tagged build.
+BINARY_URL="https://github.com/$REPO/releases/download/${LATEST}/${ASSET}"
+SUMS_URL="https://github.com/$REPO/releases/download/${LATEST}/SHA256SUMS"
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
 
 echo "Downloading..."
-curl -fsSL -o "$TMPDIR/automaton" "$BINARY_URL" \
+curl --fail --silent --show-error --location --max-time 180 -o "$TMPDIR/$ASSET" "$BINARY_URL" \
     || { echo "Error: download failed: $BINARY_URL" >&2; exit 1; }
-[ -s "$TMPDIR/automaton" ] || { echo "Error: downloaded file is empty" >&2; exit 1; }
+curl --fail --silent --show-error --location --max-time 30 -o "$TMPDIR/SHA256SUMS" "$SUMS_URL" \
+    || { echo "Error: release has no SHA256SUMS; refusing unverified binary" >&2; exit 1; }
+EXPECTED=$(awk -v f="$ASSET" '$2 == f || $2 == "*"f { print $1; exit }' "$TMPDIR/SHA256SUMS")
+[ -n "$EXPECTED" ] || { echo "Error: SHA256SUMS has no entry for $ASSET" >&2; exit 1; }
+if command -v sha256sum >/dev/null 2>&1; then
+    ACTUAL=$(sha256sum "$TMPDIR/$ASSET" | awk '{print $1}')
+elif command -v shasum >/dev/null 2>&1; then
+    ACTUAL=$(shasum -a 256 "$TMPDIR/$ASSET" | awk '{print $1}')
+else
+    echo "Error: install sha256sum or shasum to verify the release binary" >&2
+    exit 1
+fi
+[ "$ACTUAL" = "$EXPECTED" ] || { echo "Error: SHA-256 mismatch for $ASSET" >&2; exit 1; }
+[ -s "$TMPDIR/$ASSET" ] || { echo "Error: downloaded file is empty" >&2; exit 1; }
 
 # Install binary
 mkdir -p "$INSTALL_DIR"
-install -m 0755 "$TMPDIR/automaton" "$INSTALL_DIR/automaton" \
+install -m 0755 "$TMPDIR/$ASSET" "$INSTALL_DIR/automaton" \
     || { echo "Error: install to $INSTALL_DIR failed" >&2; exit 1; }
+cat > "$INSTALL_DIR/automaton.install-origin.json.tmp" <<EOF
+{"schema":1,"application":"automaton","source":"release-binary","channel":"stable","target":"$ASSET","version":"$LATEST","update_origin":"https://api.github.com/repos/$REPO"}
+EOF
+chmod 0644 "$INSTALL_DIR/automaton.install-origin.json.tmp"
+mv -f "$INSTALL_DIR/automaton.install-origin.json.tmp" "$INSTALL_DIR/automaton.install-origin.json"
 ensure_path "$INSTALL_DIR"
 
 echo "Installed: $INSTALL_DIR/automaton"
@@ -176,6 +194,8 @@ echo ""
 echo "Quick start:"
 echo "  automaton init                          # Initialize the substrate"
 echo "  automaton mcp                           # Start MCP server"
+echo "  automaton update --check                # Check for a verified release update"
+echo "  automaton update                        # Install the latest stable release"
 echo "  automaton --help                        # Show all commands"
 echo ""
 

@@ -30,5 +30,8 @@ anyhow.workspace = true
 serde_yaml.workspace = true
 dirs.workspace = true
 uuid.workspace = true
+reqwest.workspace = true
+semver.workspace = true
+sha2.workspace = true
 
 toon-helper.workspace = true

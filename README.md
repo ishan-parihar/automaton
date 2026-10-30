@@ -129,11 +129,26 @@ Traditional automation tools suffer from a critical limitation: they are designe
 
 ### Installation
 ```bash
-# Download the static musl binary
-curl -L https://github.com/ishan-parihar/automaton/releases/latest/download/automaton -o automaton
-chmod +x automaton
-sudo mv automaton /usr/local/bin/
+# Install the latest verified release into ~/.local/bin
+curl -fsSL https://raw.githubusercontent.com/ishan-parihar/automaton/master/scripts/install.sh | bash
 ```
+
+### Updating
+
+```bash
+automaton update --check
+automaton update
+automaton update --json
+```
+
+The command supports stable and preview channels, a pinned `--version`, and
+`--allow-downgrade`. It verifies the selected release binary against `SHA256SUMS`,
+checks the candidate's reported version, and atomically replaces the binary without
+restarting running processes. It only updates direct binaries installed by the project
+installer; package-manager installs must use their owning manager. Older installations
+without an ownership receipt must rerun `scripts/install.sh` once before self-updating.
+The checksum path is transitional until the suite-wide TUF metadata service and offline
+signing root exist.
 
 ### Basic Workflow
 ```bash

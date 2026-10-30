@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
+mod update;
 
 use std::sync::Arc;
 
@@ -135,6 +136,10 @@ enum Commands {
 
     /// Run system diagnostics
     Doctor,
+
+    /// Check for and install a verified release update (alias: upgrade)
+    #[command(alias = "upgrade")]
+    Update(update::UpdateArgs),
 
     /// Postgres database operations
     Postgres {
@@ -271,6 +276,7 @@ async fn main() -> anyhow::Result<()> {
     let data_dir = default_data_dir();
 
     match cli.command {
+        Some(Commands::Update(options)) => return update::run(options).await,
         // ── AXI §8 + §10: no-args home view shows live state + tool identity ──
         None => {
             let bin_path = std::env::current_exe()
