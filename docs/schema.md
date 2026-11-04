@@ -1,6 +1,6 @@
 ---
-verified: "0b2a2b8"
-covers: "crates/automaton-core/**,crates/automaton-cli/**"
+verified: "888bc0596dfce949ed33a269e7e5751c93093c50"
+covers: "crates/automaton-core/**, crates/automaton-db/**, crates/automaton-graph/**"
 ---
 
 # Database Schema for Automaton
